@@ -20,7 +20,13 @@ public class ProductController {
 
     final ProductService productService;
 
+    @PostMapping(value = "/register", consumes = { MediaType.MULTIPART_FORM_DATA_VALUE, MediaType.APPLICATION_JSON_VALUE })
+    public void productRegister(@RequestPart(value = "imageFileList") List<MultipartFile> imageFileList,
+                                @RequestPart(value = "productInfo") ProductRequest productRequest) {
+        log.info("productRegister() ");
 
+        productService.register(imageFileList, productRequest);
+    }
 
     @GetMapping("/list")
     public List<Product> productList() {
