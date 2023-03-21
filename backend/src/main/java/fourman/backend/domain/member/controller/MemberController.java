@@ -1,5 +1,6 @@
 package fourman.backend.domain.member.controller;
 
+import fourman.backend.domain.member.controller.form.MemberLoginForm;
 import fourman.backend.domain.member.controller.form.MemberRegisterForm;
 import fourman.backend.domain.member.service.MemberService;
 import lombok.RequiredArgsConstructor;
@@ -29,6 +30,13 @@ public class MemberController {
         log.info("signUp(): " + form);
 
         return memberService.signUp(form.toMemberRegisterRequest());
+    }
+
+    @PostMapping("/sign-in")//로그인
+    public String signIn(@RequestBody MemberLoginForm form) {
+        log.info("signIn(): " + form);
+
+        return memberService.signIn(form.toMemberLoginRequest());
     }
 
 
