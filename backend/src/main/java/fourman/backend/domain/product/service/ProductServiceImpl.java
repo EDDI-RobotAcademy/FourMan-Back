@@ -1,6 +1,8 @@
 package fourman.backend.domain.product.service;
 
-import fourman.backend.domain.product.controller.request.ProductRequest;
+import fourman.backend.domain.product.controller.dto.ImageResourceResponse;
+import fourman.backend.domain.product.controller.dto.ProductListResponse;
+import fourman.backend.domain.product.controller.dto.ProductRequest;
 import fourman.backend.domain.product.entity.ImageResource;
 import fourman.backend.domain.product.entity.Product;
 import fourman.backend.domain.product.repository.ImageResourceRepository;
@@ -11,7 +13,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.transaction.Transactional;
-import java.awt.*;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -67,9 +68,33 @@ public class ProductServiceImpl implements ProductService {
     }
 
     @Override
-    public List<Product> list() {
+    public List<ProductListResponse> list() {
         List<Product> productList = productRepository.findAll();
+        List<ProductListResponse> productResponseList = new ArrayList<>();
 
-        return productList;
+        for(Product product: productList) {
+            productResponseList.add(new ProductListResponse(
+                    product.getProductId(), product.getProductName(),
+                    product.getPrice()
+            ));
+        }
+
+        return productResponseList;
+    }
+
+    @Override
+    public List<ImageResourceResponse> loadProductImage() {
+        List<ImageResource> imageResourceList = imageResourceRepository.findAll();
+        List<ImageResourceResponse> imageResourceResponseList = new ArrayList<>();
+
+        for(ImageResource imageResource: imageResourceList) {
+            System.out.println("imageResource Path: " + imageResource.getImageResourcePath());
+
+            imageResourceResponseList.add(new ImageResourceResponse(
+                    imageResource.getImageResourcePath()
+            ));
+        }
+
+        return imageResourceResponseList;
     }
 }

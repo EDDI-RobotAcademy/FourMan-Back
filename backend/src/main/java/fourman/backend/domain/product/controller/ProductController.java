@@ -1,6 +1,8 @@
 package fourman.backend.domain.product.controller;
 
-import fourman.backend.domain.product.controller.request.ProductRequest;
+import fourman.backend.domain.product.controller.dto.ImageResourceResponse;
+import fourman.backend.domain.product.controller.dto.ProductListResponse;
+import fourman.backend.domain.product.controller.dto.ProductRequest;
 import fourman.backend.domain.product.entity.Product;
 import fourman.backend.domain.product.service.ProductService;
 import lombok.RequiredArgsConstructor;
@@ -29,9 +31,17 @@ public class ProductController {
     }
 
     @GetMapping("/list")
-    public List<Product> productList() {
+    public List<ProductListResponse> productList() {
         log.info("productList()");
 
         return productService.list();
+    }
+
+    @GetMapping("/imageList")
+    public List<ImageResourceResponse> readProductImageResource() {
+
+        log.info("readProuductImageResource(): ");
+
+        return productService.loadProductImage();
     }
 }
