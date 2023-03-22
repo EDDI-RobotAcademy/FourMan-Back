@@ -1,6 +1,9 @@
 package fourman.backend.domain.product.service;
 
-import fourman.backend.domain.product.controller.request.ProductRequest;
+import fourman.backend.domain.product.controller.responseForm.ImageResourceResponseForm;
+import fourman.backend.domain.product.controller.responseForm.ProductCartResponseForm;
+import fourman.backend.domain.product.controller.responseForm.ProductListResponseForm;
+import fourman.backend.domain.product.controller.requestForm.ProductRequestForm;
 import fourman.backend.domain.product.entity.ImageResource;
 import fourman.backend.domain.product.entity.Product;
 import fourman.backend.domain.product.repository.ImageResourceRepository;
@@ -11,12 +14,12 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.transaction.Transactional;
-import java.awt.*;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 @Slf4j
 @Service
@@ -28,7 +31,7 @@ public class ProductServiceImpl implements ProductService {
 
     @Transactional
     @Override
-    public void register(List<MultipartFile> imageFileList, ProductRequest productRequest) {
+    public void register(List<MultipartFile> imageFileList, ProductRequestForm productRequestForm) {
 
         List<ImageResource> imageResourceList = new ArrayList<>();
 
@@ -36,8 +39,8 @@ public class ProductServiceImpl implements ProductService {
 
         Product product = new Product();
 
-        product.setProductName(productRequest.getProductName());
-        product.setPrice(productRequest.getPrice());
+        product.setProductName(productRequestForm.getProductName());
+        product.setPrice(productRequestForm.getPrice());
 
         try{
             for(MultipartFile multipartFile: imageFileList) {
@@ -67,9 +70,53 @@ public class ProductServiceImpl implements ProductService {
     }
 
     @Override
-    public List<Product> list() {
+    public List<ProductListResponseForm> list() {
         List<Product> productList = productRepository.findAll();
+        List<ProductListResponseForm> productResponseList = new ArrayList<>();
 
-        return productList;
+        for(Product product: productList) {
+            productResponseList.add(new ProductListResponseForm(
+                    product.getProductId(), product.getProductName(),
+                    product.getPrice()
+            ));
+        }
+
+        return productResponseList;
     }
+
+    @Override
+    public List<ImageResourceResponseForm> loadProductImage() {
+        List<ImageResource> imageResourceList = imageResourceRepository.findAll();
+        List<ImageResourceResponseForm> imageResourceResponseFormList = new ArrayList<>();
+
+        for(ImageResource imageResource: imageResourceList) {
+            System.out.println("imageResource Path: " + imageResource.getImageResourcePath());
+
+            imageResourceResponseFormList.add(new ImageResourceResponseForm(
+                    imageResource.getImageResourcePath()
+            ));
+        }
+
+        return imageResourceResponseFormList;
+    }
+
+    @Override
+    public ProductCartResponseForm cart(Long productId) {
+        Optional<Product> maybeProduct = productRepository.findById(productId);
+
+        if(maybeProduct.isEmpty()) {
+            log.info("상품이 존재하지 않음");
+            return null;
+        }
+
+        Product product = maybeProduct.get();
+
+        ProductCartResponseForm productCartResponseForm = new ProductCartResponseForm(
+                product.getProductName(), product.getPrice()
+        );
+
+        return productCartResponseForm;
+    }
+
+
 }
