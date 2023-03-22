@@ -1,5 +1,6 @@
 package fourman.backend.domain.freeBoard.service;
 
+import fourman.backend.domain.freeBoard.controller.request.FreeBoardRequest;
 import fourman.backend.domain.freeBoard.entity.FreeBoard;
 import fourman.backend.domain.freeBoard.repository.FreeBoardRepository;
 import lombok.RequiredArgsConstructor;
@@ -15,6 +16,17 @@ import java.util.List;
 public class FreeBoardServiceImpl implements FreeBoardService{
 
     final private FreeBoardRepository freeBoardRepository;
+
+    @Override
+    public FreeBoard register(FreeBoardRequest freeBoardRequest) {
+        FreeBoard freeBoard = new FreeBoard();
+        freeBoard.setTitle(freeBoardRequest.getTitle());
+        freeBoard.setWriter(freeBoardRequest.getWriter());
+        freeBoard.setContent(freeBoardRequest.getContent());
+        freeBoardRepository.save(freeBoard);
+
+        return freeBoard;
+    }
 
     @Override
     public List<FreeBoard> list() {
