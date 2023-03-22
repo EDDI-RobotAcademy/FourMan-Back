@@ -1,11 +1,11 @@
-package fourman.backend.domain.product.controller.dto;
+package fourman.backend.domain.product.controller.responseForm;
 
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 
 @Getter
 @RequiredArgsConstructor
-public class ProductListResponse {
+public class ProductListResponseForm {
 
     final private Long productId;
     final private String productName;
