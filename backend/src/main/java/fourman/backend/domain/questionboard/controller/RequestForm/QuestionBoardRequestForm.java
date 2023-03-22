@@ -8,6 +8,9 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class QuestionBoardRequestForm {
 
+
+
+    //받을 폼
     private String title;
     private String questionType;
     private String writer;
