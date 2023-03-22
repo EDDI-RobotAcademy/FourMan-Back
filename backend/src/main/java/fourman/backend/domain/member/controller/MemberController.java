@@ -1,5 +1,7 @@
 package fourman.backend.domain.member.controller;
 
+import fourman.backend.domain.member.controller.form.EmailMatchForm;
+import fourman.backend.domain.member.controller.form.EmailPasswordForm;
 import fourman.backend.domain.member.controller.form.MemberLoginForm;
 import fourman.backend.domain.member.controller.form.MemberRegisterForm;
 import fourman.backend.domain.member.service.MemberService;
@@ -47,6 +49,20 @@ public class MemberController {
         log.info("logout(): " + token);
 
         redisService.deleteByKey(token);
+    }
+    @PostMapping("/emailMatch")// PW찾기시 이메일있는지확인
+    public Boolean emailMatchPhone(@Validated @RequestBody EmailMatchForm form, BindingResult bindingResult) {
+        log.info("MainFormController#emailMatchPhone: {}", form);
+        if (bindingResult.hasFieldErrors()) {
+            return false;
+        }
+        return memberService.emailMatch(form.toEmailMatchRequest());
+    }
+    @PostMapping("/applyNewPassword")// PW찾기시 새로운 비밀번호적용
+    public Boolean applyNewPassword(@Validated @RequestBody EmailPasswordForm form) {
+        log.info("MainFormController#applyNewPassword: {}", form);
+
+        return memberService.applyNewPassword(form.toEmailPasswordRequest());
     }
 
 
