@@ -1,9 +1,9 @@
 package fourman.backend.domain.product.controller;
 
-import fourman.backend.domain.product.controller.dto.ImageResourceResponse;
-import fourman.backend.domain.product.controller.dto.ProductListResponse;
-import fourman.backend.domain.product.controller.dto.ProductRequest;
-import fourman.backend.domain.product.entity.Product;
+import fourman.backend.domain.product.controller.responseForm.ImageResourceResponseForm;
+import fourman.backend.domain.product.controller.responseForm.ProductCartResponseForm;
+import fourman.backend.domain.product.controller.responseForm.ProductListResponseForm;
+import fourman.backend.domain.product.controller.requestForm.ProductRequestForm;
 import fourman.backend.domain.product.service.ProductService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -24,24 +24,31 @@ public class ProductController {
 
     @PostMapping(value = "/register", consumes = { MediaType.MULTIPART_FORM_DATA_VALUE, MediaType.APPLICATION_JSON_VALUE })
     public void productRegister(@RequestPart(value = "imageFileList") List<MultipartFile> imageFileList,
-                                @RequestPart(value = "productInfo") ProductRequest productRequest) {
-        log.info("productRegister() ");
+                                @RequestPart(value = "productInfo") ProductRequestForm productRequestForm) {
+        log.info("productRegister()");
 
-        productService.register(imageFileList, productRequest);
+        productService.register(imageFileList, productRequestForm);
     }
 
     @GetMapping("/list")
-    public List<ProductListResponse> productList() {
+    public List<ProductListResponseForm> productList() {
         log.info("productList()");
 
         return productService.list();
     }
 
     @GetMapping("/imageList")
-    public List<ImageResourceResponse> readProductImageResource() {
+    public List<ImageResourceResponseForm> readProductImageResource() {
 
         log.info("readProuductImageResource(): ");
 
         return productService.loadProductImage();
+    }
+
+    @GetMapping("/cart/{productId}")
+    public ProductCartResponseForm productCart(@PathVariable("productId") Long productId) {
+        log.info("productCard()");
+
+        return productService.cart(productId);
     }
 }
