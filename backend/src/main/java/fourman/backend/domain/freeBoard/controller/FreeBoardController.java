@@ -1,13 +1,11 @@
 package fourman.backend.domain.freeBoard.controller;
 
+import fourman.backend.domain.freeBoard.controller.request.FreeBoardRequest;
 import fourman.backend.domain.freeBoard.entity.FreeBoard;
 import fourman.backend.domain.freeBoard.service.FreeBoardService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -19,6 +17,13 @@ import java.util.List;
 public class FreeBoardController {
 
     final private FreeBoardService freeBoardService;
+
+    @PostMapping("/register")
+    public FreeBoard boardRegister (@RequestBody FreeBoardRequest boardRequest) {
+        log.info("boardRegister()");
+
+        return freeBoardService.register(boardRequest);
+    }
 
     @GetMapping("/list")
     public List<FreeBoard> FreeBoardList () {
