@@ -4,6 +4,8 @@ import fourman.backend.domain.member.entity.BasicAuthentication;
 import fourman.backend.domain.member.entity.Member;
 import fourman.backend.domain.member.repository.AuthenticationRepository;
 import fourman.backend.domain.member.repository.MemberRepository;
+import fourman.backend.domain.member.service.request.EmailMatchRequest;
+import fourman.backend.domain.member.service.request.EmailPasswordRequest;
 import fourman.backend.domain.member.service.request.MemberLoginRequest;
 import fourman.backend.domain.member.service.request.MemberRegisterRequest;
 import fourman.backend.domain.security.service.RedisService;
@@ -75,6 +77,30 @@ public class MemberServiceImpl implements MemberService {
         }
 
         throw new RuntimeException("가입된 사용자가 아닙니다!");
+    }
+    @Override
+    public Boolean applyNewPassword(EmailPasswordRequest emailPasswordRequest) {
+        Optional<Authentication> maybeAuthentication = authenticationRepository.findByEmail(emailPasswordRequest.getEmail());
+        if (!maybeAuthentication.isPresent()){ //인증정보가 존재하지 않을 경우
+            System.out.println("인증정보가 존재하지않습니다.");
+            return false;
+        }
+        BasicAuthentication authentication = (BasicAuthentication)maybeAuthentication.get();
+        authentication.setPassword(emailPasswordRequest.getPassword());
+        authenticationRepository.save(authentication);
+        System.out.println("비밀번호 변경완료");
+
+        return true;
+    }
+
+    @Override
+    public Boolean emailMatch(EmailMatchRequest toEmailMatchRequest) {
+        Optional<Member> maybeMember = memberRepository.findByEmail(toEmailMatchRequest.getEmail());
+        if (!maybeMember.isPresent()){//이메일이 존재하지 않을경우
+            return false;
+        }
+
+        return true;//이미존재하는 이메일
     }
 
 }
