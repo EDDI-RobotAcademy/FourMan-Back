@@ -1,6 +1,6 @@
 package fourman.backend.domain.freeBoard.controller;
 
-import fourman.backend.domain.freeBoard.controller.request.FreeBoardRequest;
+import fourman.backend.domain.freeBoard.controller.requestForm.FreeBoardRequestForm;
 import fourman.backend.domain.freeBoard.entity.FreeBoard;
 import fourman.backend.domain.freeBoard.service.FreeBoardService;
 import lombok.RequiredArgsConstructor;
@@ -19,7 +19,7 @@ public class FreeBoardController {
     final private FreeBoardService freeBoardService;
 
     @PostMapping("/register")
-    public FreeBoard boardRegister (@RequestBody FreeBoardRequest boardRequest) {
+    public FreeBoard boardRegister (@RequestBody FreeBoardRequestForm boardRequest) {
         log.info("boardRegister()");
 
         return freeBoardService.register(boardRequest);
