@@ -1,6 +1,7 @@
 package fourman.backend.freeBoard;
 
 import fourman.backend.domain.freeBoard.controller.requestForm.FreeBoardRequestForm;
+import fourman.backend.domain.freeBoard.entity.FreeBoard;
 import fourman.backend.domain.freeBoard.service.FreeBoardService;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,6 +24,12 @@ public class FreeBoardTest {
     @Test
     public void 게시물_리스트_테스트() {
         System.out.println(freeBoardService.list());
+    }
+
+    @Test
+    public void 게시물_읽기_테스트() {
+        FreeBoard freeBoard = freeBoardService.read(7L);
+        System.out.println(freeBoard);
     }
 
     @Test
