@@ -21,6 +21,11 @@ public class FreeBoardTest {
     }
 
     @Test
+    public void 게시물_리스트_테스트() {
+        System.out.println(freeBoardService.list());
+    }
+
+    @Test
     public void 게시물_삭제_테스트() {
         freeBoardService.remove(6L);
 
