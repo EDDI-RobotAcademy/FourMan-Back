@@ -9,4 +9,6 @@ public interface FreeBoardService {
     public FreeBoard register(FreeBoardRequestForm freeBoardRequest);
 
     List<FreeBoard> list();
+
+    FreeBoard read(Long boardId);
 }

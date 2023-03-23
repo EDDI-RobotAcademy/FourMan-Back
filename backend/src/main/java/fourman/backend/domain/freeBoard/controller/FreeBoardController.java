@@ -31,4 +31,11 @@ public class FreeBoardController {
         return freeBoardService.list();
     }
 
+    @GetMapping("/{boardId}")
+    public FreeBoard boardRead(@PathVariable("boardId") Long boardId) {
+        log.info("boardRead()");
+
+        return freeBoardService.read(boardId);
+    }
+
 }
