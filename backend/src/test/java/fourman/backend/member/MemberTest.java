@@ -30,4 +30,12 @@ public class MemberTest {
                 "서울특별시","중랑구","면목동","어딘가","010-0000-0000");
         memberService.signUp(registerRequest);
     }
+
+    @Test
+    void managerSignUpTest() {
+        MemberRegisterRequest registerRequest = new MemberRegisterRequest(
+                "manager@manager.com", "manager", "박관리", 19931106, AuthorityType.MANAGER,true,
+                "수원특별시","종로구","명동","어딘가","010-0000-0000");
+        memberService.signUp(registerRequest);
+    }
 }
