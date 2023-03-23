@@ -18,7 +18,6 @@ public class Authority {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-
     @Getter
     @Column(nullable = true)
     private AuthorityType authorityName;

@@ -5,6 +5,7 @@ import fourman.backend.domain.member.controller.form.EmailPasswordForm;
 import fourman.backend.domain.member.controller.form.MemberLoginForm;
 import fourman.backend.domain.member.controller.form.MemberRegisterForm;
 import fourman.backend.domain.member.service.MemberService;
+import fourman.backend.domain.member.service.response.MemberLoginResponse;
 import fourman.backend.domain.security.service.RedisService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -47,9 +48,8 @@ public class MemberController {
     }
 
     @PostMapping("/sign-in")//로그인
-    public String signIn(@RequestBody MemberLoginForm form) {
+    public MemberLoginResponse signIn(@RequestBody MemberLoginForm form) {
         log.info("signIn(): " + form);
-
         return memberService.signIn(form.toMemberLoginRequest());
     }
 

@@ -10,6 +10,7 @@ import fourman.backend.domain.member.service.request.EmailMatchRequest;
 import fourman.backend.domain.member.service.request.EmailPasswordRequest;
 import fourman.backend.domain.member.service.request.MemberLoginRequest;
 import fourman.backend.domain.member.service.request.MemberRegisterRequest;
+import fourman.backend.domain.member.service.response.MemberLoginResponse;
 import fourman.backend.domain.security.service.RedisService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -62,7 +63,7 @@ public class MemberServiceImpl implements MemberService {
     }
 
     @Override
-    public String signIn(MemberLoginRequest memberLoginRequest) {
+    public MemberLoginResponse signIn(MemberLoginRequest memberLoginRequest) {
         Optional<Member> maybeMember =
                 memberRepository.findByEmail(memberLoginRequest.getEmail());
 
@@ -87,7 +88,8 @@ public class MemberServiceImpl implements MemberService {
             redisService.deleteByKey(userToken.toString());
             redisService.setKeyAndValue(userToken.toString(), member.getId());
             //레디스에 토큰:유저ID 입력
-            return userToken.toString();
+            MemberLoginResponse memberLoginResponse = new MemberLoginResponse(userToken.toString(),member.getId(),member.getUsername());
+            return memberLoginResponse;
         }
 
         throw new RuntimeException("가입된 사용자가 아닙니다!");
