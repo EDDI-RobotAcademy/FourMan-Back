@@ -24,11 +24,18 @@ public class MemberController {
     final private RedisService redisService;
 
 
-    @PostMapping("/check-email/{email}")//이메일체크
+    @PostMapping("/check-email/{email}")// 가입시 이메일 중복체크
     public Boolean emailValidation(@PathVariable("email") String email) {
         log.info("emailValidation(): " + email);
         return memberService.emailValidation(email);
     }
+    @PostMapping("/check-nickname/{nickname}")
+    public Boolean memberNicknameDuplicateCheck(@PathVariable("nickname") String nickname) {
+        log.info("memberNicknameDuplicateCheck()" + nickname);
+
+        return memberService.memberNicknameValidation(nickname);
+    }
+
 
     @PostMapping("/check-manager/{managerCode}")
     public Boolean managerCodeValidation(@PathVariable("managerCode") String managerCode) {

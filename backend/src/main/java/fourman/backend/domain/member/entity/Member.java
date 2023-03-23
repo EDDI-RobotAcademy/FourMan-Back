@@ -25,7 +25,7 @@ public class Member {
 
     @Getter
     @Column(nullable = false)
-    private String username;
+    private String nickName;
 
     @Getter
     @Column(nullable = false)
@@ -50,7 +50,7 @@ public class Member {
 
     public Member(String email, String username, int birthdate, Authority authority, boolean managerCheck, MemberProfile memberProfile) {
         this.email = email;
-        this.username = username;
+        this.nickName = username;
         this.birthdate = birthdate;
         this.authority = authority;
         this.managerCheck = managerCheck;
@@ -60,7 +60,7 @@ public class Member {
 
     public Member(String email, String username, int birthdate, Authority authority, boolean managerCheck) {
         this.email = email;
-        this.username = username;
+        this.nickName = username;
         this.birthdate = birthdate;
         this.authority = authority;
         this.managerCheck = managerCheck;

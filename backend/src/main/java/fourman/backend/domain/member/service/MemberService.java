@@ -16,5 +16,5 @@ public interface MemberService {
 
     Boolean emailMatch(EmailMatchRequest toEmailMatchRequest);
 
-
+    Boolean memberNicknameValidation(String nickname);
 }
