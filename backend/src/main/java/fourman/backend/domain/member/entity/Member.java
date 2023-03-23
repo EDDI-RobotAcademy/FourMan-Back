@@ -1,5 +1,6 @@
 package fourman.backend.domain.member.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -14,22 +15,55 @@ public class Member {
 
     @Id
     @Getter
+    @Column(name = "member_id")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     @Getter
     @Column(nullable = false)
     private String email;
-    @OneToOne(mappedBy = "member", fetch = FetchType.LAZY, cascade = CascadeType.PERSIST)
-    private MemberProfile memberProfile;
 
-    @OneToMany(mappedBy = "member", fetch = FetchType.LAZY)
+    @Getter
+    @Column(nullable = false)
+    private String username;
+
+    @Getter
+    @Column(nullable = false)
+    private int birthdate;
+
+    @Getter
+    @Column
+    private boolean managerCheck;
+
+    @Getter
+    @JsonIgnore
+    @JoinColumn(name ="authority_id")
+    @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.PERSIST)
+    private Authority authority;
+
+    @OneToMany(mappedBy = "member", fetch = FetchType.LAZY, orphanRemoval = true)
+    //    // orphanRemoval = true :부모 엔티티에서 자식 엔티티 제거
     private Set<Authentication> authentications = new HashSet<>();
 
-    public Member(String email, MemberProfile memberProfile) {
+    @OneToOne(mappedBy = "member", fetch = FetchType.LAZY, cascade = CascadeType.PERSIST, orphanRemoval = true)
+    private MemberProfile memberProfile;
+
+    public Member(String email, String username, int birthdate, Authority authority, boolean managerCheck, MemberProfile memberProfile) {
         this.email = email;
+        this.username = username;
+        this.birthdate = birthdate;
+        this.authority = authority;
+        this.managerCheck = managerCheck;
         this.memberProfile = memberProfile;
         memberProfile.setMember(this);
+    }
+
+    public Member(String email, String username, int birthdate, Authority authority, boolean managerCheck) {
+        this.email = email;
+        this.username = username;
+        this.birthdate = birthdate;
+        this.authority = authority;
+        this.managerCheck = managerCheck;
     }
 
     public boolean isRightPassword(String plainToCheck) {

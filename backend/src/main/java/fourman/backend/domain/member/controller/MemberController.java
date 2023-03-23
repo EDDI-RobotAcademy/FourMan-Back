@@ -38,8 +38,12 @@ public class MemberController {
     @PostMapping("/sign-up")//회원가입
     public Boolean signUp(@RequestBody MemberRegisterForm form) {
         log.info("signUp(): " + form);
-
-        return memberService.signUp(form.toMemberRegisterRequest());
+        log.info("매니저코드: "+ form.getManagerCode());
+        if(form.getManagerCode()== null ||form.getManagerCode().isEmpty()){
+            return memberService.signUp(form.toMemberRegisterRequest());
+        }else{
+            return memberService.signUp(form.toManagerRegisterRequest());
+        }
     }
 
     @PostMapping("/sign-in")//로그인
