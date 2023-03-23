@@ -1,4 +1,50 @@
 package fourman.backend.freeBoard;
 
+import fourman.backend.domain.freeBoard.controller.requestForm.FreeBoardRequestForm;
+import fourman.backend.domain.freeBoard.entity.FreeBoard;
+import fourman.backend.domain.freeBoard.service.FreeBoardService;
+import org.junit.jupiter.api.Test;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.context.SpringBootTest;
+
+@SpringBootTest
 public class FreeBoardTest {
+
+    @Autowired
+    private FreeBoardService freeBoardService;
+
+    @Test
+    public void 게시물_저장_테스트() {
+        FreeBoardRequestForm freeBoardRequestForm =
+                new FreeBoardRequestForm("제목", "작성자", "내용");
+
+        freeBoardService.register(freeBoardRequestForm);
+    }
+
+    @Test
+    public void 게시물_리스트_테스트() {
+        System.out.println(freeBoardService.list());
+    }
+
+    @Test
+    public void 게시물_읽기_테스트() {
+        FreeBoard freeBoard = freeBoardService.read(7L);
+        System.out.println(freeBoard);
+    }
+
+    @Test
+    public void 게시물_수정_테스트() {
+        FreeBoard freeBoard = freeBoardService.modify(7L, new FreeBoardRequestForm(
+                "타이틀 수정", "작성자 수정", "내용 수정"
+        ));
+
+        System.out.println(freeBoard);
+    }
+
+    @Test
+    public void 게시물_삭제_테스트() {
+        freeBoardService.remove(6L);
+
+        freeBoardService.read(6L);
+    }
 }
