@@ -9,6 +9,7 @@ import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 
 @Slf4j
 @Service
@@ -34,5 +35,18 @@ public class QuestionBoardServiceImpl implements QuestionBoardService {
         questionBoardRepository.save(questionBoard);
         return questionBoard;
     }
-}
 
+    @Override
+    public QuestionBoard read(Long boardId) {
+        Optional<QuestionBoard> maybeQuestionBoard = questionBoardRepository.findById(boardId);
+
+        if (maybeQuestionBoard.isPresent()) {
+            return maybeQuestionBoard.get();
+        }
+
+        return null;
+
+
+    }
+
+}

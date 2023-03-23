@@ -10,4 +10,6 @@ public interface QuestionBoardService {
     List<QuestionBoard> list();
 
     public QuestionBoard register(QuestionBoardRequestForm questionBoardRequestForm);
+
+    QuestionBoard read(Long boardId);
 }
