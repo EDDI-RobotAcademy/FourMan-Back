@@ -1,6 +1,7 @@
 package fourman.backend.domain.questionboard.controller;
 
 
+import fourman.backend.domain.questionboard.controller.requestForm.QuestionBoardRequestForm;
 import fourman.backend.domain.questionboard.entity.QuestionBoard;
 import fourman.backend.domain.questionboard.service.QuestionBoardService;
 import lombok.RequiredArgsConstructor;
@@ -17,12 +18,16 @@ import java.util.List;
 public class QuestionBoardController {
 
 
-    final private QuestionBoardService questionService;
+    final private QuestionBoardService questionBoardService;
 
     @GetMapping("/list")
-    public List<QuestionBoard> QuestionBoardlist() {
+    public List<QuestionBoard> QuestionBoardList() {
+       return questionBoardService.list();
+    }
 
-       return questionService.list();
+    @PostMapping("/register")
+    public QuestionBoard QuestionBoardRegister(@RequestBody QuestionBoardRequestForm questionBoardRequestForm) {
+        return questionBoardService.register(questionBoardRequestForm);
     }
 
 

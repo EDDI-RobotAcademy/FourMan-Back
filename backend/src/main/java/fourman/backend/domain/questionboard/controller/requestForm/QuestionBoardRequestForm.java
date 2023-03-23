@@ -1,4 +1,4 @@
-package fourman.backend.domain.questionboard.controller.RequestForm;
+package fourman.backend.domain.questionboard.controller.requestForm;
 
 
 import lombok.Getter;

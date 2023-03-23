@@ -1,5 +1,6 @@
 package fourman.backend.domain.questionboard.service;
 
+import fourman.backend.domain.questionboard.controller.requestForm.QuestionBoardRequestForm;
 import fourman.backend.domain.questionboard.entity.QuestionBoard;
 import fourman.backend.domain.questionboard.repository.QuestionBoardRepository;
 import lombok.RequiredArgsConstructor;
@@ -18,8 +19,20 @@ public class QuestionBoardServiceImpl implements QuestionBoardService {
 
     @Override
     public List<QuestionBoard> list() {
-
         return questionBoardRepository.findAll(Sort.by(Sort.Direction.DESC, "boardId"));
+    }
+
+    @Override
+    public QuestionBoard register(QuestionBoardRequestForm questionBoardRequestForm) {
+
+        QuestionBoard questionBoard = new QuestionBoard();
+        questionBoard.setTitle(questionBoardRequestForm.getTitle());
+        questionBoard.setQuestionType(questionBoardRequestForm.getQuestionType());
+        questionBoard.setContent(questionBoardRequestForm.getContent());
+        questionBoard.setWriter(questionBoardRequestForm.getWriter());
+
+        questionBoardRepository.save(questionBoard);
+        return questionBoard;
     }
 }
 
