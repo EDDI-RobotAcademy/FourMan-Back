@@ -11,7 +11,7 @@ import fourman.backend.domain.member.service.request.MemberRegisterRequest;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-
+import static org.assertj.core.api.Assertions.assertThat;
 @SpringBootTest
 public class MemberTest {
     @Autowired
@@ -34,6 +34,19 @@ public class MemberTest {
         CafeCode cafeCode2 = new CafeCode("cafe2023");
         cafeCodeRepository.save(cafeCode1);
         cafeCodeRepository.save(cafeCode2);
+    }
+    @Test
+    void 이메일_중복_확인체크(){
+        //given
+        MemberRegisterRequest registerRequest = new MemberRegisterRequest(
+                "meme@me.com", "meme", "김미미", 19931106, AuthorityType.MEMBER, false,
+                "서울특별시","중랑구","면목동","어딘가","010-0000-0000");
+        //when
+        memberService.signUp(registerRequest);
+        //then
+        assertThat(memberService.emailValidation("meme@me.com")).isEqualTo(false);
+
+
     }
     @Test
     void memberSignUpTest() {
