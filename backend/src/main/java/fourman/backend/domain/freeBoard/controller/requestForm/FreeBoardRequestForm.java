@@ -1,11 +1,11 @@
-package fourman.backend.domain.freeBoard.controller.request;
+package fourman.backend.domain.freeBoard.controller.requestForm;
 
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 
 @Getter
 @RequiredArgsConstructor
-public class FreeBoardRequest {
+public class FreeBoardRequestForm {
 
     final private String title;
     final private String writer;

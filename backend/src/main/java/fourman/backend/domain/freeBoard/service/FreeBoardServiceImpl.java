@@ -1,6 +1,6 @@
 package fourman.backend.domain.freeBoard.service;
 
-import fourman.backend.domain.freeBoard.controller.request.FreeBoardRequest;
+import fourman.backend.domain.freeBoard.controller.requestForm.FreeBoardRequestForm;
 import fourman.backend.domain.freeBoard.entity.FreeBoard;
 import fourman.backend.domain.freeBoard.repository.FreeBoardRepository;
 import lombok.RequiredArgsConstructor;
@@ -18,7 +18,7 @@ public class FreeBoardServiceImpl implements FreeBoardService{
     final private FreeBoardRepository freeBoardRepository;
 
     @Override
-    public FreeBoard register(FreeBoardRequest freeBoardRequest) {
+    public FreeBoard register(FreeBoardRequestForm freeBoardRequest) {
         FreeBoard freeBoard = new FreeBoard();
         freeBoard.setTitle(freeBoardRequest.getTitle());
         freeBoard.setWriter(freeBoardRequest.getWriter());
