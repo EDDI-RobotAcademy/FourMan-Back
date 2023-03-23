@@ -30,7 +30,16 @@ public class MemberServiceImpl implements MemberService {
     @Override
     public Boolean emailValidation(String email) {
         Optional<Member> maybeMember = memberRepository.findByEmail(email);
-        if (maybeMember.isPresent()) {
+        if (maybeMember.isPresent()) {//이메일이 존재한다면
+            return false;//false면 중복된게 있다는말
+        }
+        return true;
+    }
+    @Override
+    public Boolean memberNicknameValidation(String nickname) {
+        Optional<Member> maybeMemberNickname = memberRepository.findByNickName(nickname);
+
+        if (maybeMemberNickname.isPresent()) {
             return false;
         }
         return true;
@@ -95,7 +104,7 @@ public class MemberServiceImpl implements MemberService {
             redisService.deleteByKey(userToken.toString());
             redisService.setKeyAndValue(userToken.toString(), member.getId());
             //레디스에 토큰:유저ID 입력
-            MemberLoginResponse memberLoginResponse = new MemberLoginResponse(userToken.toString(),member.getId(),member.getUsername(), member.getAuthority().getAuthorityName());
+            MemberLoginResponse memberLoginResponse = new MemberLoginResponse(userToken.toString(),member.getId(),member.getNickName(), member.getAuthority().getAuthorityName());
             return memberLoginResponse;
         }
 
