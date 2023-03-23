@@ -26,8 +26,14 @@ public class MemberController {
     @PostMapping("/check-email/{email}")//이메일체크
     public Boolean emailValidation(@PathVariable("email") String email) {
         log.info("emailValidation(): " + email);
-
         return memberService.emailValidation(email);
+    }
+
+    @PostMapping("/check-manager/{managerCode}")
+    public Boolean managerCodeValidation(@PathVariable("managerCode") String managerCode) {
+        log.info("managerCodeValidation(): " + managerCode);
+
+        return memberService.managerCodeValidation(managerCode);
     }
     @PostMapping("/sign-up")//회원가입
     public Boolean signUp(@RequestBody MemberRegisterForm form) {

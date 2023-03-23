@@ -7,6 +7,7 @@ import fourman.backend.domain.member.service.request.MemberRegisterRequest;
 
 public interface MemberService {
     Boolean emailValidation(String email);
+    Boolean managerCodeValidation(String managerCode);
     Boolean signUp(MemberRegisterRequest memberRegisterRequest);
     String signIn(MemberLoginRequest memberLoginRequest);
     Boolean applyNewPassword(EmailPasswordRequest toEmailPasswordRequest);

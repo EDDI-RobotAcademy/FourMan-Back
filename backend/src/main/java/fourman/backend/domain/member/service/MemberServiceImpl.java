@@ -1,8 +1,10 @@
 package fourman.backend.domain.member.service;
 import fourman.backend.domain.member.entity.Authentication;
 import fourman.backend.domain.member.entity.BasicAuthentication;
+import fourman.backend.domain.member.entity.ManagerCode;
 import fourman.backend.domain.member.entity.Member;
 import fourman.backend.domain.member.repository.AuthenticationRepository;
+import fourman.backend.domain.member.repository.ManagerCodeRepository;
 import fourman.backend.domain.member.repository.MemberRepository;
 import fourman.backend.domain.member.service.request.EmailMatchRequest;
 import fourman.backend.domain.member.service.request.EmailPasswordRequest;
@@ -10,6 +12,7 @@ import fourman.backend.domain.member.service.request.MemberLoginRequest;
 import fourman.backend.domain.member.service.request.MemberRegisterRequest;
 import fourman.backend.domain.security.service.RedisService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.Optional;
@@ -20,6 +23,8 @@ import java.util.UUID;
 public class MemberServiceImpl implements MemberService {
 
     final private MemberRepository memberRepository;
+    @Autowired
+    final private ManagerCodeRepository managerCodeRepository;
     final private AuthenticationRepository authenticationRepository;
     final private RedisService redisService;
 
@@ -30,6 +35,15 @@ public class MemberServiceImpl implements MemberService {
             return false;
         }
         return true;
+    }
+
+    @Override
+    public Boolean managerCodeValidation(String managerCode) {
+        Optional<ManagerCode> maybeManager = managerCodeRepository.findByCode(managerCode);
+        if (maybeManager.isPresent()) {
+            return true;
+        }
+        return false;
     }
 
     @Override
