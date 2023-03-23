@@ -45,4 +45,13 @@ public class FreeBoardController {
         freeBoardService.remove(boardId);
     }
 
+    @PutMapping("/{boardId}")
+    public FreeBoard boardModify(@PathVariable("boardId") Long boardId,
+                             @RequestBody FreeBoardRequestForm boardRequest) {
+
+        log.info("boardModify(): " + boardRequest + "id: " + boardId);
+
+        return freeBoardService.modify(boardId, boardRequest);
+    }
+
 }

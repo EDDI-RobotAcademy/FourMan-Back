@@ -50,4 +50,18 @@ public class FreeBoardServiceImpl implements FreeBoardService{
         freeBoardRepository.deleteById(boardId);
     }
 
+    @Override
+    public FreeBoard modify(Long boardId, FreeBoardRequestForm boardRequest) {
+        Optional<FreeBoard> maybeBoard = freeBoardRepository.findById(boardId);
+        if (maybeBoard.isEmpty()) {
+            System.out.println("Board 정보를 찾지 못했습니다: " + boardId);
+            return null;
+        }
+        FreeBoard freeBoard = maybeBoard.get();
+        freeBoard.setTitle(boardRequest.getTitle());
+        freeBoard.setContent(boardRequest.getContent());
+        freeBoardRepository.save(freeBoard);
+        return freeBoard;
+    }
+
 }

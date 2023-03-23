@@ -13,4 +13,6 @@ public interface FreeBoardService {
     FreeBoard read(Long boardId);
 
     void remove(Long boardId);
+
+    FreeBoard modify(Long boardId, FreeBoardRequestForm boardRequest);
 }
