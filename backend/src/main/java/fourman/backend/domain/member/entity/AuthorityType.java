@@ -6,7 +6,9 @@ import lombok.Getter;
 public enum AuthorityType {
 
 
-    MANAGER("관리자"), MEMBER("일반회원");
+    MANAGER("관리자"),
+    CAFE("카페회원"),
+    MEMBER("일반회원");
 
     private final String AUTHORITY_TYPE;
 

@@ -36,6 +36,13 @@ public class MemberController {
 
         return memberService.managerCodeValidation(managerCode);
     }
+    @PostMapping("/check-cafe/{cafeCode}")
+    public Boolean cafeCodeValidation(@PathVariable("cafeCode") String cafeCode) {
+        log.info("cafeCodeValidation(): " + cafeCode);
+
+        return memberService.cafeCodeValidation(cafeCode);
+    }
+
     @PostMapping("/sign-up")//회원가입
     public Boolean signUp(@RequestBody MemberRegisterForm form) {
         log.info("signUp(): " + form);

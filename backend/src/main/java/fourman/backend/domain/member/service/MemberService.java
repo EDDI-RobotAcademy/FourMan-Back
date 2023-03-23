@@ -9,10 +9,12 @@ import fourman.backend.domain.member.service.response.MemberLoginResponse;
 public interface MemberService {
     Boolean emailValidation(String email);
     Boolean managerCodeValidation(String managerCode);
+    Boolean cafeCodeValidation(String cafeCode);
     Boolean signUp(MemberRegisterRequest memberRegisterRequest);
     MemberLoginResponse signIn(MemberLoginRequest memberLoginRequest);
     Boolean applyNewPassword(EmailPasswordRequest toEmailPasswordRequest);
 
     Boolean emailMatch(EmailMatchRequest toEmailMatchRequest);
+
 
 }

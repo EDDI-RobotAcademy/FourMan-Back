@@ -17,9 +17,7 @@ public class MemberRegisterForm {
     private String password;
     private String username;
     private int birthdate;
-
     private AuthorityType authorityName;
-
     private boolean managerCheck;
     private String managerCode;
     private String city;

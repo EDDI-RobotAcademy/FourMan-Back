@@ -1,9 +1,7 @@
 package fourman.backend.domain.member.service;
-import fourman.backend.domain.member.entity.Authentication;
-import fourman.backend.domain.member.entity.BasicAuthentication;
-import fourman.backend.domain.member.entity.ManagerCode;
-import fourman.backend.domain.member.entity.Member;
+import fourman.backend.domain.member.entity.*;
 import fourman.backend.domain.member.repository.AuthenticationRepository;
+import fourman.backend.domain.member.repository.CafeCodeRepository;
 import fourman.backend.domain.member.repository.ManagerCodeRepository;
 import fourman.backend.domain.member.repository.MemberRepository;
 import fourman.backend.domain.member.service.request.EmailMatchRequest;
@@ -24,8 +22,8 @@ import java.util.UUID;
 public class MemberServiceImpl implements MemberService {
 
     final private MemberRepository memberRepository;
-    @Autowired
     final private ManagerCodeRepository managerCodeRepository;
+    final private CafeCodeRepository cafeCodeRepository;
     final private AuthenticationRepository authenticationRepository;
     final private RedisService redisService;
 
@@ -42,6 +40,15 @@ public class MemberServiceImpl implements MemberService {
     public Boolean managerCodeValidation(String managerCode) {
         Optional<ManagerCode> maybeManager = managerCodeRepository.findByCode(managerCode);
         if (maybeManager.isPresent()) {
+            return true;
+        }
+        return false;
+    }
+
+    @Override
+    public Boolean cafeCodeValidation(String cafeCode) {
+        Optional<CafeCode> maybeCafe = cafeCodeRepository.findByCode(cafeCode);
+        if (maybeCafe.isPresent()) {
             return true;
         }
         return false;
@@ -88,7 +95,7 @@ public class MemberServiceImpl implements MemberService {
             redisService.deleteByKey(userToken.toString());
             redisService.setKeyAndValue(userToken.toString(), member.getId());
             //레디스에 토큰:유저ID 입력
-            MemberLoginResponse memberLoginResponse = new MemberLoginResponse(userToken.toString(),member.getId(),member.getUsername());
+            MemberLoginResponse memberLoginResponse = new MemberLoginResponse(userToken.toString(),member.getId(),member.getUsername(), member.getAuthority().getAuthorityName());
             return memberLoginResponse;
         }
 
