@@ -11,8 +11,11 @@ import fourman.backend.domain.member.service.request.MemberRegisterRequest;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.transaction.annotation.Transactional;
+
 import static org.assertj.core.api.Assertions.assertThat;
 @SpringBootTest
+@Transactional
 public class MemberTest {
     @Autowired
     private MemberService memberService;
@@ -45,8 +48,17 @@ public class MemberTest {
         memberService.signUp(registerRequest);
         //then
         assertThat(memberService.emailValidation("meme@me.com")).isEqualTo(false);
-
-
+    }
+    @Test
+    void 닉네임_중복_확인체크(){
+        //given
+        MemberRegisterRequest registerRequest = new MemberRegisterRequest(
+                "meme@me.com", "meme", "김영진", 19931106, AuthorityType.MEMBER, false,
+                "서울특별시","중랑구","면목동","어딘가","010-0000-0000");
+        //when
+        memberService.signUp(registerRequest);
+        //then
+        assertThat(memberService.memberNicknameValidation("김영진")).isEqualTo(false);
     }
     @Test
     void memberSignUpTest() {
