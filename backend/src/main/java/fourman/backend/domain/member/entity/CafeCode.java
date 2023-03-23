@@ -21,6 +21,9 @@ public class CafeCode {
     @Getter
     @Column(nullable = false)
     private String code;
+    @Getter
+    @Column(nullable = false)
+    private String cafeName;
 
     public CafeCode(String code){
         this.code = code;
