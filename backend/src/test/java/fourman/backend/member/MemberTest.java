@@ -1,7 +1,9 @@
 package fourman.backend.member;
 
 import fourman.backend.domain.member.entity.AuthorityType;
+import fourman.backend.domain.member.entity.CafeCode;
 import fourman.backend.domain.member.entity.ManagerCode;
+import fourman.backend.domain.member.repository.CafeCodeRepository;
 import fourman.backend.domain.member.repository.ManagerCodeRepository;
 import fourman.backend.domain.member.service.MemberService;
 import fourman.backend.domain.member.service.request.MemberLoginRequest;
@@ -16,13 +18,22 @@ public class MemberTest {
     private MemberService memberService;
     @Autowired
     private  ManagerCodeRepository managerCodeRepository;
+    @Autowired
+    private CafeCodeRepository cafeCodeRepository;
 
     @Test
     void managerCodeTest() {
-        ManagerCode managerCode1 = new ManagerCode("cafe2022");
-        ManagerCode managerCode2 = new ManagerCode("cafe2023");
+        ManagerCode managerCode1 = new ManagerCode("manager2022");
+        ManagerCode managerCode2 = new ManagerCode("manager2023");
         managerCodeRepository.save(managerCode1);
         managerCodeRepository.save(managerCode2);
+    }
+    @Test
+    void cafeCodeTest() {
+        CafeCode cafeCode1 = new CafeCode("cafe2022");
+        CafeCode cafeCode2 = new CafeCode("cafe2023");
+        cafeCodeRepository.save(cafeCode1);
+        cafeCodeRepository.save(cafeCode2);
     }
     @Test
     void memberSignUpTest() {
