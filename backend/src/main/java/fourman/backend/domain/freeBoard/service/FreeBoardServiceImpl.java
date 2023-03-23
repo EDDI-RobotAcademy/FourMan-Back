@@ -45,4 +45,9 @@ public class FreeBoardServiceImpl implements FreeBoardService{
         return maybeBoard.get();
     }
 
+    @Override
+    public void remove(Long boardId) {
+        freeBoardRepository.deleteById(boardId);
+    }
+
 }

@@ -38,4 +38,11 @@ public class FreeBoardController {
         return freeBoardService.read(boardId);
     }
 
+    @DeleteMapping("/{boardId}")
+    public void boardRemove(@PathVariable("boardId") Long boardId) {
+        log.info("boardRemove()");
+
+        freeBoardService.remove(boardId);
+    }
+
 }
