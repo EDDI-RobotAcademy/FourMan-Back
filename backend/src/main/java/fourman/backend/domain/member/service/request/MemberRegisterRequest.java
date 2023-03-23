@@ -17,7 +17,7 @@ public class MemberRegisterRequest {
     private final String email;
     private final String password;
 
-    private final String username;
+    private final String nickName;
     private final int birthdate;
 
     private final AuthorityType authorityName;
@@ -30,10 +30,10 @@ public class MemberRegisterRequest {
     private String zipcode;
     private final String phoneNumber;
 
-    public MemberRegisterRequest(String email, String password, String username, int birthdate, AuthorityType authorityName, boolean managerCheck, String city, String street, String addressDetail, String zipcode, String phoneNumber){
+    public MemberRegisterRequest(String email, String password, String nickname, int birthdate, AuthorityType authorityName, boolean managerCheck, String city, String street, String addressDetail, String zipcode, String phoneNumber){
         this.email= email;
         this.password = password;
-        this.username= username;
+        this.nickName= nickname;
         this.birthdate = birthdate;
 //        this.authorityNo = authorityNo;
         this.authorityName = authorityName;
@@ -48,7 +48,7 @@ public class MemberRegisterRequest {
     public MemberRegisterRequest(String email, String password, String username, int birthdate, AuthorityType authorityName,boolean managerCheck, String phoneNumber){
         this.email = email;
         this.password = password;
-        this.username= username;
+        this.nickName= username;
         this.birthdate = birthdate;
 //        this.authorityNo = authorityNo;
         this.authorityName = authorityName;
@@ -59,7 +59,7 @@ public class MemberRegisterRequest {
     public Member toMember () {
         return new Member(
                 email,
-                username,
+                nickName,
                 birthdate,
                 Authority.ofMember(authorityName),
                 managerCheck,
@@ -70,7 +70,7 @@ public class MemberRegisterRequest {
     public Member toManager() {
         return new Member(
                 email,
-                username,
+                nickName,
                 birthdate,
                 Authority.ofMember(authorityName),
                 managerCheck
