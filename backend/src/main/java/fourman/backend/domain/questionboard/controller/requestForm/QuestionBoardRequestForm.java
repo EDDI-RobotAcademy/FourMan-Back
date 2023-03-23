@@ -11,8 +11,8 @@ public class QuestionBoardRequestForm {
 
 
     //받을 폼
-    private String title;
-    private String questionType;
-    private String writer;
-    private String content;
+    final private String title;
+    final private String questionType;
+    final private String writer;
+    final private String content;
 }
