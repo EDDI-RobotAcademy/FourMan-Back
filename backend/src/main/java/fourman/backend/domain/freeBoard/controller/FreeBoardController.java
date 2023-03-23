@@ -31,4 +31,27 @@ public class FreeBoardController {
         return freeBoardService.list();
     }
 
+    @GetMapping("/{boardId}")
+    public FreeBoard boardRead(@PathVariable("boardId") Long boardId) {
+        log.info("boardRead()");
+
+        return freeBoardService.read(boardId);
+    }
+
+    @DeleteMapping("/{boardId}")
+    public void boardRemove(@PathVariable("boardId") Long boardId) {
+        log.info("boardRemove()");
+
+        freeBoardService.remove(boardId);
+    }
+
+    @PutMapping("/{boardId}")
+    public FreeBoard boardModify(@PathVariable("boardId") Long boardId,
+                             @RequestBody FreeBoardRequestForm boardRequest) {
+
+        log.info("boardModify(): " + boardRequest + "id: " + boardId);
+
+        return freeBoardService.modify(boardId, boardRequest);
+    }
+
 }
