@@ -51,4 +51,22 @@ public class QuestionBoardServiceImpl implements QuestionBoardService {
 
     }
 
+    @Override
+    public QuestionBoard modify(Long boardId, QuestionBoardRequestForm questionBoardRequestForm) {
+        Optional<QuestionBoard> maybeQuestionBoard = questionBoardRepository.findById(boardId);
+        if(maybeQuestionBoard.isEmpty()) {
+            return null;
+        }
+         QuestionBoard questionBoard = maybeQuestionBoard.get();
+        questionBoard.setTitle(questionBoardRequestForm.getTitle());
+        questionBoard.setContent(questionBoardRequestForm.getContent());
+        questionBoardRepository.save(questionBoard);
+        return questionBoard;
+    }
+
+    @Override
+    public void delete(Long boardId) {
+        questionBoardRepository.deleteById(boardId);
+    }
+
 }

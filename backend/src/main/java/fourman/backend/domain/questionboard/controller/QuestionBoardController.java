@@ -21,18 +21,28 @@ public class QuestionBoardController {
     final private QuestionBoardService questionBoardService;
 
     @GetMapping("/list")
-    public List<QuestionBoard> QuestionBoardList() {
+    public List<QuestionBoard> questionBoardList() {
        return questionBoardService.list();
     }
 
     @PostMapping("/register")
-    public QuestionBoard QuestionBoardRegister(@RequestBody QuestionBoardRequestForm questionBoardRequestForm) {
+    public QuestionBoard questionBoardRegister(@RequestBody QuestionBoardRequestForm questionBoardRequestForm) {
         return questionBoardService.register(questionBoardRequestForm);
     }
 
     @GetMapping("/{boardId}") //boardId 받기
-    public QuestionBoard QuestionBoardRead(@PathVariable("boardId") Long boardId) {
+    public QuestionBoard questionBoardRead(@PathVariable("boardId") Long boardId) {
         return questionBoardService.read(boardId);
     }
 
+    @PutMapping("/{boardId}")
+    public QuestionBoard questionBoardModify(@PathVariable("boardId") Long boardId,
+                                                @RequestBody QuestionBoardRequestForm questionBoardRequestForm) {
+        return questionBoardService.modify(boardId, questionBoardRequestForm);
+    }
+
+    @DeleteMapping("/{boardId}")
+    public void questionBoardDelete(@PathVariable("boardId") Long boardId) {
+        questionBoardService.delete(boardId);
+    }
 }
