@@ -30,7 +30,7 @@ public class QuestionBoardController {
         return questionBoardService.register(questionBoardRequestForm);
     }
 
-    @GetMapping("/{boardId}")
+    @GetMapping("/{boardId}") //boardId 받기
     public QuestionBoard QuestionBoardRead(@PathVariable("boardId") Long boardId) {
         return questionBoardService.read(boardId);
     }
