@@ -42,7 +42,7 @@ public class MemberTest {
     void 이메일_중복_확인체크(){
         //given
         MemberRegisterRequest registerRequest = new MemberRegisterRequest(
-                "meme@me.com", "meme", "김미미", 19931106, AuthorityType.MEMBER, false,
+                "meme@me.com", "meme", "김미미", 19931106, AuthorityType.MEMBER,null,
                 "서울특별시","중랑구","면목동","어딘가","010-0000-0000");
         //when
         memberService.signUp(registerRequest);
@@ -53,7 +53,7 @@ public class MemberTest {
     void 닉네임_중복_확인체크(){
         //given
         MemberRegisterRequest registerRequest = new MemberRegisterRequest(
-                "meme@me.com", "meme", "김영진", 19931106, AuthorityType.MEMBER, false,
+                "meme@me.com", "meme", "김영진", 19931106, AuthorityType.MEMBER, null,
                 "서울특별시","중랑구","면목동","어딘가","010-0000-0000");
         //when
         memberService.signUp(registerRequest);
@@ -61,25 +61,41 @@ public class MemberTest {
         assertThat(memberService.memberNicknameValidation("김영진")).isEqualTo(false);
     }
     @Test
+    void 매니저_회원가입_체크(){
+        //given
+        ManagerCode managerCode1 = new ManagerCode("manager1");
+        MemberRegisterRequest registerRequest = new MemberRegisterRequest(
+                "manager1@manager.com", "manager1", "김영진", 19931106, AuthorityType.MANAGER,"manager1",
+                "서울특별시","중랑구","면목동","어딘가","010-0000-0000");
+        //when
+        memberService.signUp(registerRequest);
+        //then
+    }
+    @Test
+    void 카페사업자_회원가입_체크(){
+        //given
+        CafeCode cafeCode1 = new CafeCode("cafe1");
+        MemberRegisterRequest registerRequest = new MemberRegisterRequest(
+                "cafe1@cafe.com", "cafe1", "김영진", 19931106, AuthorityType.CAFE,"cafe1",
+                "서울특별시","중랑구","면목동","어딘가","010-0000-0000");
+        //when
+        memberService.signUp(registerRequest);
+        //then
+    }
+    @Test
     void memberSignUpTest() {
         MemberRegisterRequest registerRequest = new MemberRegisterRequest(
-                "meme@me.com", "meme", "김미미", 19931106, AuthorityType.MEMBER, false,
+                "meme@me.com", "meme", "김미미", 19931106, AuthorityType.MEMBER, null,
                 "서울특별시","중랑구","면목동","어딘가","010-0000-0000");
         memberService.signUp(registerRequest);
     }
 
-    @Test
-    void managerSignUpTest() {
-        MemberRegisterRequest registerRequest = new MemberRegisterRequest(
-                "manager@manager.com", "manager", "박관리", 19931106, AuthorityType.MANAGER,true,
-                "수원특별시","종로구","명동","어딘가","010-0000-0000");
-        memberService.signUp(registerRequest);
-    }
+
 
     @Test
     void memberSignInTest() {
         MemberRegisterRequest registerRequest = new MemberRegisterRequest(
-                "meme@me.com", "meme", "김영진", 19931106, AuthorityType.MEMBER, false,
+                "meme@me.com", "meme", "김영진", 19931106, AuthorityType.MEMBER, null,
                 "서울특별시","중랑구","면목동","어딘가","010-0000-0000");
         memberService.signUp(registerRequest);
         MemberLoginRequest loginRequest = new MemberLoginRequest("meme@me.com", "meme");
