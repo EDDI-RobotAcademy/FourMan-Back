@@ -32,8 +32,8 @@ public class MemberTest {
     }
     @Test
     void cafeCodeTest() {
-        CafeCode cafeCode1 = new CafeCode("cafe2022");
-        CafeCode cafeCode2 = new CafeCode("cafe2023");
+        CafeCode cafeCode1 = new CafeCode("cafe2022","starbucks");
+        CafeCode cafeCode2 = new CafeCode("cafe2023","starbucks");
         cafeCodeRepository.save(cafeCode1);
         cafeCodeRepository.save(cafeCode2);
     }
@@ -63,17 +63,20 @@ public class MemberTest {
     void 매니저_회원가입_체크(){
         //given
         ManagerCode managerCode1 = new ManagerCode("manager1");
+        managerCodeRepository.save(managerCode1);
         MemberRegisterRequest registerRequest = new MemberRegisterRequest(
                 "manager1@manager.com", "manager1", "김영진", 19931106, AuthorityType.MANAGER,"manager1",
                 "서울특별시","중랑구","면목동","어딘가","010-0000-0000");
         //when
         memberService.signUp(registerRequest);
+
         //then
     }
     @Test
     void 카페사업자_회원가입_체크(){
         //given
-        CafeCode cafeCode1 = new CafeCode("cafe1");
+        CafeCode cafeCode1 = new CafeCode("cafe1","starbucks");
+        cafeCodeRepository.save(cafeCode1);
         MemberRegisterRequest registerRequest = new MemberRegisterRequest(
                 "cafe1@cafe.com", "cafe1", "김영진", 19931106, AuthorityType.CAFE,"cafe1",
                 "서울특별시","중랑구","면목동","어딘가","010-0000-0000");
@@ -92,12 +95,40 @@ public class MemberTest {
 
 
     @Test
-    void memberSignInTest() {
+    void 일반_회원_로그인() {
         MemberRegisterRequest registerRequest = new MemberRegisterRequest(
                 "meme@me.com", "meme", "김미미", 19931106, AuthorityType.MEMBER, null,
                 "서울특별시","중랑구","면목동","어딘가","010-0000-0000");
         memberService.signUp(registerRequest);
         MemberLoginRequest loginRequest = new MemberLoginRequest("meme@me.com","meme");
         memberService.signIn(loginRequest);
+    }
+
+    @Test
+    void 카페사업자_로그인() {
+        CafeCode cafeCode1 = new CafeCode("cafe1","starbucks");
+        cafeCodeRepository.save(cafeCode1);
+        MemberRegisterRequest registerRequest = new MemberRegisterRequest(
+                "cafe1@cafe.com", "cafe1", "김영진", 19931106, AuthorityType.CAFE,"cafe1",
+                "서울특별시","중랑구","면목동","어딘가","010-0000-0000");
+        //when
+        memberService.signUp(registerRequest);
+        MemberLoginRequest loginRequest = new MemberLoginRequest("cafe1@cafe.com","cafe1");
+        memberService.signIn(loginRequest);
+        //then
+    }
+
+    @Test
+    void 관리자_로그인() {
+        ManagerCode managerCode1 = new ManagerCode("manager1");
+        cafeCodeRepository.save(managerCode1);
+        MemberRegisterRequest registerRequest = new MemberRegisterRequest(
+                "cafe1@cafe.com", "cafe1", "김영진", 19931106, AuthorityType.CAFE,"cafe1",
+                "서울특별시","중랑구","면목동","어딘가","010-0000-0000");
+        //when
+        memberService.signUp(registerRequest);
+        MemberLoginRequest loginRequest = new MemberLoginRequest("cafe1@cafe.com","cafe1");
+        memberService.signIn(loginRequest);
+        //then
     }
 }
