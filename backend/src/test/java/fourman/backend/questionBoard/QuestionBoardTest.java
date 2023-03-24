@@ -33,4 +33,9 @@ public class QuestionBoardTest {
 
         System.out.println(questionBoard);
     }
+
+    @Test
+    public void removeTest() {
+        questionBoardService.delete(1L);
+    }
 }
