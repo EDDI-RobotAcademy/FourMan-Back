@@ -16,28 +16,23 @@ public class MemberRegisterRequest {
 
     private final String email;
     private final String password;
-
     private final String nickName;
     private final int birthdate;
-
     private final AuthorityType authorityName;
-
-    private boolean managerCheck;
-    private String managerCode;
+    private String code;
     private String city;
     private String street;
     private String addressDetail;
     private String zipcode;
     private final String phoneNumber;
 
-    public MemberRegisterRequest(String email, String password, String nickname, int birthdate, AuthorityType authorityName, boolean managerCheck, String city, String street, String addressDetail, String zipcode, String phoneNumber){
+    public MemberRegisterRequest(String email, String password, String nickName, int birthdate, AuthorityType authorityName, String code, String city, String street, String addressDetail, String zipcode, String phoneNumber){
         this.email= email;
         this.password = password;
-        this.nickName= nickname;
+        this.nickName= nickName;
         this.birthdate = birthdate;
-//        this.authorityNo = authorityNo;
         this.authorityName = authorityName;
-        this.managerCheck = managerCheck;
+        this.code=code;
         this.city= city;
         this.street = street;
         this.addressDetail = addressDetail;
@@ -45,14 +40,13 @@ public class MemberRegisterRequest {
         this.phoneNumber = phoneNumber;
     }
 
-    public MemberRegisterRequest(String email, String password, String username, int birthdate, AuthorityType authorityName,boolean managerCheck, String phoneNumber){
+    public MemberRegisterRequest(String email, String password, String username, int birthdate, AuthorityType authorityName,String code , String phoneNumber){
         this.email = email;
         this.password = password;
         this.nickName= username;
         this.birthdate = birthdate;
-//        this.authorityNo = authorityNo;
         this.authorityName = authorityName;
-        this.managerCheck = managerCheck;
+        this.code = code;
         this.phoneNumber =phoneNumber;
     }
 
@@ -62,7 +56,7 @@ public class MemberRegisterRequest {
                 nickName,
                 birthdate,
                 Authority.ofMember(authorityName),
-                managerCheck,
+                code,
                 MemberProfile.of(city, street, addressDetail, zipcode,phoneNumber)
         );
     }
@@ -73,7 +67,7 @@ public class MemberRegisterRequest {
                 nickName,
                 birthdate,
                 Authority.ofMember(authorityName),
-                managerCheck
+                code
         );
     }
 }

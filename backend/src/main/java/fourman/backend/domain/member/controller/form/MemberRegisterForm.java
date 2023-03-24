@@ -15,11 +15,10 @@ public class MemberRegisterForm {
 
     private String email;
     private String password;
-    private String username;
+    private String nickName;
     private int birthdate;
     private AuthorityType authorityName;
-    private boolean managerCheck;
-    private String managerCode;
+    private String code;
     private String city;
     private String street;
     private String addressDetail;
@@ -27,10 +26,10 @@ public class MemberRegisterForm {
     private String phoneNumber;
 
     public MemberRegisterRequest toMemberRegisterRequest () {
-        return new MemberRegisterRequest( email, password, username, birthdate, authorityName,managerCheck, city,street,addressDetail,zipcode, phoneNumber);
+        return new MemberRegisterRequest( email, password, nickName, birthdate, authorityName,code, city,street,addressDetail,zipcode, phoneNumber);
     }
 
     public MemberRegisterRequest toManagerRegisterRequest() {
-        return new MemberRegisterRequest( email, password, username, birthdate, authorityName,managerCheck, phoneNumber);
+        return new MemberRegisterRequest( email, password,nickName, birthdate, authorityName,code, phoneNumber);
     }
 }

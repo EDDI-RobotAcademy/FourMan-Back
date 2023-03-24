@@ -29,21 +29,19 @@ public class MemberController {
         log.info("emailValidation(): " + email);
         return memberService.emailValidation(email);
     }
-    @PostMapping("/check-nickname/{nickname}")
-    public Boolean memberNicknameDuplicateCheck(@PathVariable("nickname") String nickname) {
-        log.info("memberNicknameDuplicateCheck()" + nickname);
+    @PostMapping("/check-nickName/{nickName}")//닉네임 중복체크
+    public Boolean memberNicknameDuplicateCheck(@PathVariable("nickName") String nickName) {
+        log.info("memberNicknameDuplicateCheck()" + nickName);
 
-        return memberService.memberNicknameValidation(nickname);
+        return memberService.memberNicknameValidation(nickName);
     }
-
-
-    @PostMapping("/check-manager/{managerCode}")
+    @PostMapping("/check-manager/{managerCode}")//회원가입시  관리자코드 인증확인
     public Boolean managerCodeValidation(@PathVariable("managerCode") String managerCode) {
         log.info("managerCodeValidation(): " + managerCode);
 
         return memberService.managerCodeValidation(managerCode);
     }
-    @PostMapping("/check-cafe/{cafeCode}")
+    @PostMapping("/check-cafe/{cafeCode}")//회원가입시 카페사업자 코드 인증확인
     public Boolean cafeCodeValidation(@PathVariable("cafeCode") String cafeCode) {
         log.info("cafeCodeValidation(): " + cafeCode);
 
@@ -53,10 +51,13 @@ public class MemberController {
     @PostMapping("/sign-up")//회원가입
     public Boolean signUp(@RequestBody MemberRegisterForm form) {
         log.info("signUp(): " + form);
-        log.info("매니저코드: "+ form.getManagerCode());
-        if(form.getManagerCode()== null ||form.getManagerCode().isEmpty()){
+        log.info("카페사업자 또는 관리자 여부: "+ form.getAuthorityName());
+        log.info("코드: "+ form.getCode());
+        if(form.getCode()== null ||form.getCode().isEmpty()){
+            //일반회원 회원가입
             return memberService.signUp(form.toMemberRegisterRequest());
         }else{
+            //카페사업자또는 관리자 회원가입
             return memberService.signUp(form.toManagerRegisterRequest());
         }
     }

@@ -13,4 +13,5 @@ public class MemberLoginResponse {
     private Long id;
     private String username;
     private AuthorityType authorityName;
+    private String code;
 }

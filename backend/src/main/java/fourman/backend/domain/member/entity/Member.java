@@ -30,10 +30,12 @@ public class Member {
     @Getter
     @Column(nullable = false)
     private int birthdate;
-
+//
+//    @Getter
+//    @Column
+//    private boolean managerCheck;
     @Getter
-    @Column
-    private boolean managerCheck;
+    private String code;
 
     @Getter
     @JsonIgnore
@@ -48,22 +50,22 @@ public class Member {
     @OneToOne(mappedBy = "member", fetch = FetchType.LAZY, cascade = CascadeType.PERSIST, orphanRemoval = true)
     private MemberProfile memberProfile;
 
-    public Member(String email, String username, int birthdate, Authority authority, boolean managerCheck, MemberProfile memberProfile) {
+    public Member(String email, String username, int birthdate, Authority authority,String code,  MemberProfile memberProfile) {
         this.email = email;
         this.nickName = username;
         this.birthdate = birthdate;
         this.authority = authority;
-        this.managerCheck = managerCheck;
+        this.code=code;
         this.memberProfile = memberProfile;
         memberProfile.setMember(this);
     }
 
-    public Member(String email, String username, int birthdate, Authority authority, boolean managerCheck) {
+    public Member(String email, String username, int birthdate, Authority authority,String code) {
         this.email = email;
         this.nickName = username;
         this.birthdate = birthdate;
         this.authority = authority;
-        this.managerCheck = managerCheck;
+        this.code=code;
     }
 
     public boolean isRightPassword(String plainToCheck) {

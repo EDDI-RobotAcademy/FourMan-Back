@@ -36,8 +36,8 @@ public class MemberServiceImpl implements MemberService {
         return true;
     }
     @Override
-    public Boolean memberNicknameValidation(String nickname) {
-        Optional<Member> maybeMemberNickname = memberRepository.findByNickName(nickname);
+    public Boolean memberNicknameValidation(String nickName) {
+        Optional<Member> maybeMemberNickname = memberRepository.findByNickName(nickName);
 
         if (maybeMemberNickname.isPresent()) {
             return false;
@@ -67,14 +67,12 @@ public class MemberServiceImpl implements MemberService {
     public Boolean signUp(MemberRegisterRequest memberRegisterRequest) {
         final Member member = memberRegisterRequest.toMember();
         memberRepository.save(member);
-
         final BasicAuthentication authentication = new BasicAuthentication(
                 member,
                 Authentication.BASIC_AUTH,//authenticationType칼럼에 값을 멤버변수 BASIC_AUTH의 값을 넣음
                 memberRegisterRequest.getPassword()
         );
         authenticationRepository.save(authentication);
-
         return true;
     }
 
@@ -104,7 +102,7 @@ public class MemberServiceImpl implements MemberService {
             redisService.deleteByKey(userToken.toString());
             redisService.setKeyAndValue(userToken.toString(), member.getId());
             //레디스에 토큰:유저ID 입력
-            MemberLoginResponse memberLoginResponse = new MemberLoginResponse(userToken.toString(),member.getId(),member.getNickName(), member.getAuthority().getAuthorityName());
+            MemberLoginResponse memberLoginResponse = new MemberLoginResponse(userToken.toString(),member.getId(),member.getNickName(), member.getAuthority().getAuthorityName(), member.getCode());
             return memberLoginResponse;
         }
 
