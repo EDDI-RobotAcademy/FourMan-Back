@@ -20,10 +20,10 @@ public class QuestionBoard {
     @Column(length = 256, nullable= false)
     private String title;
 
-    @Column(length = 30, nullable = false)
+    @Column(length = 50, nullable = false)
     private String writer;
 
-    @Column(length = 25, nullable = false)
+    @Column(length = 50, nullable = false)
     private String questionType;
 
     @Lob
