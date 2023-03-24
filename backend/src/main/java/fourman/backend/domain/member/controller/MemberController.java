@@ -5,9 +5,11 @@ import fourman.backend.domain.member.controller.form.EmailPasswordForm;
 import fourman.backend.domain.member.controller.form.MemberLoginForm;
 import fourman.backend.domain.member.controller.form.MemberRegisterForm;
 import fourman.backend.domain.member.service.MemberService;
+import fourman.backend.domain.member.service.response.MemberLoginResponse;
 import fourman.backend.domain.security.service.RedisService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 
 import org.springframework.validation.BindingResult;
@@ -23,23 +25,48 @@ public class MemberController {
     final private RedisService redisService;
 
 
-    @PostMapping("/check-email/{email}")//이메일체크
+    @PostMapping("/check-email/{email}")// 가입시 이메일 중복체크
     public Boolean emailValidation(@PathVariable("email") String email) {
         log.info("emailValidation(): " + email);
-
         return memberService.emailValidation(email);
     }
+    @PostMapping("/check-nickName/{nickName}")//닉네임 중복체크
+    public Boolean memberNicknameDuplicateCheck(@PathVariable("nickName") String nickName) {
+        log.info("memberNicknameDuplicateCheck()" + nickName);
+
+        return memberService.memberNicknameValidation(nickName);
+    }
+    @PostMapping("/check-manager/{managerCode}")//회원가입시  관리자코드 인증확인
+    public Boolean managerCodeValidation(@PathVariable("managerCode") String managerCode) {
+        log.info("managerCodeValidation(): " + managerCode);
+
+        return memberService.managerCodeValidation(managerCode);
+    }
+    @PostMapping("/check-cafe/{cafeCode}")//회원가입시 카페사업자 코드 인증확인
+    public Boolean cafeCodeValidation(@PathVariable("cafeCode") String cafeCode) {
+        log.info("cafeCodeValidation(): " + cafeCode);
+
+        return memberService.cafeCodeValidation(cafeCode);
+    }
+
     @PostMapping("/sign-up")//회원가입
     public Boolean signUp(@RequestBody MemberRegisterForm form) {
         log.info("signUp(): " + form);
-
-        return memberService.signUp(form.toMemberRegisterRequest());
+        log.info("카페사업자 또는 관리자 여부: "+ form.getAuthorityName());
+        log.info("코드: "+ form.getCode());
+        if(form.getCode()== null ||form.getCode().isEmpty()){
+            //일반회원 회원가입
+            return memberService.signUp(form.toMemberRegisterRequest());
+        }else{
+            //카페사업자또는 관리자 회원가입
+            return memberService.signUp(form.toManagerRegisterRequest());
+        }
     }
 
-    @PostMapping("/sign-in")//로그인
-    public String signIn(@RequestBody MemberLoginForm form) {
-        log.info("signIn(): " + form);
 
+    @PostMapping("/sign-in")//로그인
+    public MemberLoginResponse signIn(@RequestBody MemberLoginForm form) {
+        log.info("signIn(): " + form);
         return memberService.signIn(form.toMemberLoginRequest());
     }
 
