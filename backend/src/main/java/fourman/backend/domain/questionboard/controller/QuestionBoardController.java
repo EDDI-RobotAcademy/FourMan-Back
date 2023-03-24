@@ -30,7 +30,7 @@ public class QuestionBoardController {
         return questionBoardService.register(questionBoardRequestForm);
     }
 
-    @GetMapping("/read")
+    @GetMapping("/{boardId}")
     public QuestionBoard QuestionBoardRead(@PathVariable("boardId") Long boardId) {
         return questionBoardService.read(boardId);
     }
