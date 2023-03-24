@@ -40,11 +40,13 @@ public class QuestionBoardServiceImpl implements QuestionBoardService {
     public QuestionBoard read(Long boardId) {
         Optional<QuestionBoard> maybeQuestionBoard = questionBoardRepository.findById(boardId);
 
-        if (maybeQuestionBoard.isPresent()) {
-            return maybeQuestionBoard.get();
-        }
+        if (maybeQuestionBoard.isEmpty()) {
 
-        return null;
+            System.out.println("읽을 수 없음");
+            return null;
+        }
+            return maybeQuestionBoard.get();
+        //처리 로직
 
 
     }
