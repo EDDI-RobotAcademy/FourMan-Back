@@ -41,4 +41,8 @@ public class QuestionBoardController {
         return questionBoardService.modify(boardId, questionBoardRequestForm);
     }
 
+    @DeleteMapping("/{boardId}")
+    public void questionBoardDelete(@PathVariable("boardId") Long boardId) {
+        questionBoardService.delete(boardId);
+    }
 }

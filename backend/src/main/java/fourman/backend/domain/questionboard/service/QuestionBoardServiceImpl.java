@@ -64,4 +64,9 @@ public class QuestionBoardServiceImpl implements QuestionBoardService {
         return questionBoard;
     }
 
+    @Override
+    public void delete(Long boardId) {
+        questionBoardRepository.deleteById(boardId);
+    }
+
 }
