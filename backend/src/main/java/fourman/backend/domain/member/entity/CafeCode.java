@@ -25,11 +25,12 @@ public class CafeCode {
     @Column(nullable = false)
     private String cafeName;
 
-    public CafeCode(String code){
+    public CafeCode(String code, String cafeName){
         this.code = code;
+        this.cafeName=cafeName;
     }
 
-    public static CafeCode of(String code) {
-        return new CafeCode(code);
+    public static CafeCode of(String code , String cafeName) {
+        return new CafeCode(code,cafeName);
     }
 }
