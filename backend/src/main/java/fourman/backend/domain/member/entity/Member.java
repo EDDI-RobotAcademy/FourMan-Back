@@ -30,10 +30,7 @@ public class Member {
     @Getter
     @Column(nullable = false)
     private int birthdate;
-//
-//    @Getter
-//    @Column
-//    private boolean managerCheck;
+
     @Getter
     private String code;
 
@@ -43,9 +40,10 @@ public class Member {
     @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.PERSIST)
     private Authority authority;
 
-    @OneToMany(mappedBy = "member", fetch = FetchType.LAZY, orphanRemoval = true)
     //    // orphanRemoval = true :부모 엔티티에서 자식 엔티티 제거
+    @OneToMany(mappedBy = "member", fetch = FetchType.LAZY, orphanRemoval = true)
     private Set<Authentication> authentications = new HashSet<>();
+
 
     @OneToOne(mappedBy = "member", fetch = FetchType.LAZY, cascade = CascadeType.PERSIST, orphanRemoval = true)
     private MemberProfile memberProfile;
@@ -60,22 +58,16 @@ public class Member {
         memberProfile.setMember(this);
     }
 
-    public Member(String email, String username, int birthdate, Authority authority,String code) {
-        this.email = email;
-        this.nickName = username;
-        this.birthdate = birthdate;
-        this.authority = authority;
-        this.code=code;
-    }
 
     public boolean isRightPassword(String plainToCheck) {
         final Optional<Authentication> maybeBasicAuth = findBasicAuthentication();
 
         if (maybeBasicAuth.isPresent()) {
+            System.out.println("maybeBasicAuth가 존재함");
             final BasicAuthentication authentication = (BasicAuthentication) maybeBasicAuth.get();
             return authentication.isRightPassword(plainToCheck);
         }
-
+        System.out.println("maybeBasicAuth 가 존재하지않음");
         return false;
     }
 

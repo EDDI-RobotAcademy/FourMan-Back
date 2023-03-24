@@ -18,26 +18,28 @@ public class MemberRegisterRequest {
     private final String password;
     private final String nickName;
     private final int birthdate;
+    private final String phoneNumber;
     private final AuthorityType authorityName;
-    private String code;
+    private final String code;
     private String city;
     private String street;
     private String addressDetail;
     private String zipcode;
-    private final String phoneNumber;
+
 
     public MemberRegisterRequest(String email, String password, String nickName, int birthdate, AuthorityType authorityName, String code, String city, String street, String addressDetail, String zipcode, String phoneNumber){
         this.email= email;
         this.password = password;
         this.nickName= nickName;
         this.birthdate = birthdate;
+        this.phoneNumber = phoneNumber;
         this.authorityName = authorityName;
         this.code=code;
         this.city= city;
         this.street = street;
         this.addressDetail = addressDetail;
         this.zipcode = zipcode;
-        this.phoneNumber = phoneNumber;
+
     }
 
     public MemberRegisterRequest(String email, String password, String username, int birthdate, AuthorityType authorityName,String code , String phoneNumber){
@@ -45,9 +47,9 @@ public class MemberRegisterRequest {
         this.password = password;
         this.nickName= username;
         this.birthdate = birthdate;
+        this.phoneNumber =phoneNumber;
         this.authorityName = authorityName;
         this.code = code;
-        this.phoneNumber =phoneNumber;
     }
 
     public Member toMember () {
@@ -61,13 +63,4 @@ public class MemberRegisterRequest {
         );
     }
 
-    public Member toManager() {
-        return new Member(
-                email,
-                nickName,
-                birthdate,
-                Authority.ofMember(authorityName),
-                code
-        );
-    }
 }
