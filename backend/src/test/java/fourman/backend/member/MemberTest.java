@@ -121,13 +121,13 @@ public class MemberTest {
     @Test
     void 관리자_로그인() {
         ManagerCode managerCode1 = new ManagerCode("manager1");
-        cafeCodeRepository.save(managerCode1);
+        managerCodeRepository.save(managerCode1);
         MemberRegisterRequest registerRequest = new MemberRegisterRequest(
-                "cafe1@cafe.com", "cafe1", "김영진", 19931106, AuthorityType.CAFE,"cafe1",
+                "manager1@manager.com", "manager1", "김영진", 19931106, AuthorityType.MANAGER,"manager1",
                 "서울특별시","중랑구","면목동","어딘가","010-0000-0000");
         //when
         memberService.signUp(registerRequest);
-        MemberLoginRequest loginRequest = new MemberLoginRequest("cafe1@cafe.com","cafe1");
+        MemberLoginRequest loginRequest = new MemberLoginRequest("manager1@manager.com","manager1");
         memberService.signIn(loginRequest);
         //then
     }
