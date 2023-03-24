@@ -40,13 +40,33 @@ public class QuestionBoardServiceImpl implements QuestionBoardService {
     public QuestionBoard read(Long boardId) {
         Optional<QuestionBoard> maybeQuestionBoard = questionBoardRepository.findById(boardId);
 
-        if (maybeQuestionBoard.isPresent()) {
-            return maybeQuestionBoard.get();
+        if (maybeQuestionBoard.isEmpty()) {
+
+            System.out.println("읽을 수 없음");
+            return null;
         }
+            return maybeQuestionBoard.get();
+        //처리 로직
 
-        return null;
 
+    }
 
+    @Override
+    public QuestionBoard modify(Long boardId, QuestionBoardRequestForm questionBoardRequestForm) {
+        Optional<QuestionBoard> maybeQuestionBoard = questionBoardRepository.findById(boardId);
+        if(maybeQuestionBoard.isEmpty()) {
+            return null;
+        }
+         QuestionBoard questionBoard = maybeQuestionBoard.get();
+        questionBoard.setTitle(questionBoardRequestForm.getTitle());
+        questionBoard.setContent(questionBoardRequestForm.getContent());
+        questionBoardRepository.save(questionBoard);
+        return questionBoard;
+    }
+
+    @Override
+    public void delete(Long boardId) {
+        questionBoardRepository.deleteById(boardId);
     }
 
 }
