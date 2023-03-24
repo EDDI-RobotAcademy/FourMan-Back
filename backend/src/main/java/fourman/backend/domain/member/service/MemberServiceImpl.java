@@ -13,6 +13,7 @@ import fourman.backend.domain.security.service.RedisService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Optional;
 import java.util.UUID;
@@ -76,6 +77,7 @@ public class MemberServiceImpl implements MemberService {
         return true;
     }
 
+    @Transactional(readOnly = true)
     @Override
     public MemberLoginResponse signIn(MemberLoginRequest memberLoginRequest) {
         Optional<Member> maybeMember =
@@ -89,7 +91,6 @@ public class MemberServiceImpl implements MemberService {
 
             System.out.println("사용자가 입력한 비번: " + memberLoginRequest.getPassword());
             System.out.println("비밀번호 일치 검사: " + member.isRightPassword(memberLoginRequest.getPassword()));
-
             if (!member.isRightPassword(memberLoginRequest.getPassword())) {
                 System.out.println("잘 들어오나 ?");
                 throw new RuntimeException("이메일 및 비밀번호 입력이 잘못되었습니다!");

@@ -4,8 +4,6 @@ import lombok.Getter;
 
 @Getter
 public enum AuthorityType {
-
-
     MANAGER("관리자"),
     CAFE("카페회원"),
     MEMBER("일반회원");

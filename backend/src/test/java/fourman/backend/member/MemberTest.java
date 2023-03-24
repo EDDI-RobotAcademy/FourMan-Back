@@ -95,10 +95,11 @@ public class MemberTest {
     @Test
     void memberSignInTest() {
         MemberRegisterRequest registerRequest = new MemberRegisterRequest(
-                "meme@me.com", "meme", "김영진", 19931106, AuthorityType.MEMBER, null,
-                "서울특별시","중랑구","면목동","어딘가","010-0000-0000");
+                "meme@me.com", "meme", "김미미", 19931106, AuthorityType.MEMBER, null,
+                "서울특별시","중랑구","면목동","11234","010-0000-0000");
         memberService.signUp(registerRequest);
-        MemberLoginRequest loginRequest = new MemberLoginRequest("meme@me.com", "meme");
+        MemberLoginRequest loginRequest = new MemberLoginRequest("meme@me.com","meme");
+//        MemberLoginRequest loginRequest = new MemberLoginRequest("test@test.com","0000");
         memberService.signIn(loginRequest);
     }
 }

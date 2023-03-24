@@ -9,6 +9,7 @@ import fourman.backend.domain.member.service.response.MemberLoginResponse;
 import fourman.backend.domain.security.service.RedisService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 
 import org.springframework.validation.BindingResult;
@@ -61,6 +62,7 @@ public class MemberController {
             return memberService.signUp(form.toManagerRegisterRequest());
         }
     }
+
 
     @PostMapping("/sign-in")//로그인
     public MemberLoginResponse signIn(@RequestBody MemberLoginForm form) {
