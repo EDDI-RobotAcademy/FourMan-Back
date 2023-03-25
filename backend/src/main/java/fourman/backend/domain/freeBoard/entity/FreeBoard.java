@@ -29,4 +29,6 @@ public class FreeBoard {
 
     @UpdateTimestamp
     private Date updDate;
+
+    private Long memberId;
 }

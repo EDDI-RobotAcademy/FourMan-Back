@@ -24,6 +24,7 @@ public class FreeBoardServiceImpl implements FreeBoardService{
         freeBoard.setTitle(freeBoardRequest.getTitle());
         freeBoard.setWriter(freeBoardRequest.getWriter());
         freeBoard.setContent(freeBoardRequest.getContent());
+        freeBoard.setMemberId(freeBoardRequest.getMemberId());
         freeBoardRepository.save(freeBoard);
 
         return freeBoard;
