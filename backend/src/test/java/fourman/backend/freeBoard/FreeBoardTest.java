@@ -16,7 +16,7 @@ public class FreeBoardTest {
     @Test
     public void 게시물_저장_테스트() {
         FreeBoardRequestForm freeBoardRequestForm =
-                new FreeBoardRequestForm("제목", "작성자", "내용");
+                new FreeBoardRequestForm("제목", "작성자", "내용", 1L);
 
         freeBoardService.register(freeBoardRequestForm);
     }
@@ -35,7 +35,7 @@ public class FreeBoardTest {
     @Test
     public void 게시물_수정_테스트() {
         FreeBoard freeBoard = freeBoardService.modify(7L, new FreeBoardRequestForm(
-                "타이틀 수정", "작성자 수정", "내용 수정"
+                "타이틀 수정", "작성자 수정", "내용 수정", 1L
         ));
 
         System.out.println(freeBoard);
