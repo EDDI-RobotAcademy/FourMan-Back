@@ -11,7 +11,7 @@ import lombok.ToString;
 public class MemberLoginResponse {
     private String token;
     private Long id;
-    private String username;
+    private String nickName;
     private AuthorityType authorityName;
     private String code;
 }
