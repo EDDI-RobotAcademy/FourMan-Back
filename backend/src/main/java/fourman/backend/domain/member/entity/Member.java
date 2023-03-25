@@ -48,9 +48,9 @@ public class Member {
     @OneToOne(mappedBy = "member", fetch = FetchType.LAZY, cascade = CascadeType.PERSIST, orphanRemoval = true)
     private MemberProfile memberProfile;
 
-    public Member(String email, String username, int birthdate, Authority authority,String code,  MemberProfile memberProfile) {
+    public Member(String email, String nickName, int birthdate, Authority authority,String code,  MemberProfile memberProfile) {
         this.email = email;
-        this.nickName = username;
+        this.nickName = nickName;
         this.birthdate = birthdate;
         this.authority = authority;
         this.code=code;

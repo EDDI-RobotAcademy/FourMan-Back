@@ -92,7 +92,7 @@ public class MemberServiceImpl implements MemberService {
             System.out.println("사용자가 입력한 비번: " + memberLoginRequest.getPassword());
             System.out.println("비밀번호 일치 검사: " + member.isRightPassword(memberLoginRequest.getPassword()));
             if (!member.isRightPassword(memberLoginRequest.getPassword())) {
-                System.out.println("잘 들어오나 ?");
+                System.out.println("비밀번호가 맞지 않습니다. ?");
                 throw new RuntimeException("이메일 및 비밀번호 입력이 잘못되었습니다!");
                 //있는 이메일인데 비번이 잘못입력됨
             }
