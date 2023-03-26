@@ -18,7 +18,6 @@ import org.springframework.validation.annotation.Validated;
 @RestController
 @RequestMapping("/member")
 @RequiredArgsConstructor
-@CrossOrigin(origins = "http://localhost:8887", allowedHeaders = "*")
 public class MemberController {
 
     final private MemberService memberService;
