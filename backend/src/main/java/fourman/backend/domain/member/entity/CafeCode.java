@@ -20,10 +20,10 @@ public class CafeCode {
     private Long id;
 
     @Getter
-    @Column(nullable = false)
+    @Column(nullable = false ,unique=true)
     private String code;
     @Getter
-    @Column(nullable = false)
+    @Column(nullable = false ,unique=true)
     private String cafeName;
 
     @OneToOne(mappedBy="cafeCode")

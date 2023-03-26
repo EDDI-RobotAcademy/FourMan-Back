@@ -4,9 +4,11 @@ import fourman.backend.domain.cafeIntroduce.entity.Cafe;
 import fourman.backend.domain.cafeIntroduce.entity.CafeInfo;
 import fourman.backend.domain.cafeIntroduce.repository.CafeRepository;
 import fourman.backend.domain.member.entity.CafeCode;
+import fourman.backend.domain.member.repository.CafeCodeRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.FileNotFoundException;
@@ -17,11 +19,15 @@ import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
+
 @Slf4j
+@Transactional
 @Service
 @RequiredArgsConstructor
 public class CafeIntroduceServiceImpl implements CafeIntroduceService {
     private final CafeRepository cafeRepository;
+    private final CafeCodeRepository cafeCodeRepository;
     @Override
     public void registerCafe(List<MultipartFile> thumbnail, List<MultipartFile> fileList, CafeIntroRequestForm cafeIntroRequestForm) {
         // 1. cafe 저장
@@ -31,9 +37,8 @@ public class CafeIntroduceServiceImpl implements CafeIntroduceService {
         cafe.setCafeTel(cafeIntroRequestForm.getCafeTel());
         cafe.setStartTime(cafeIntroRequestForm.getStartTime());
         cafe.setEndTime(cafeIntroRequestForm.getEndTime());
-
-        CafeCode cafeCode= new CafeCode("temporaryCafeCode","임시카페코드");
-        cafe.setCafeCode(cafeCode);
+        Optional<CafeCode> op= cafeCodeRepository.findByCode(cafeIntroRequestForm.getCode());
+        cafe.setCafeCode(op.get());
         //3. cafeInfo 저장
         // cafeInfo-> String thumbnailFileName,List<String> cafeImagesName,List<String>  String subTitle,String description
         CafeInfo cafeInfo = new CafeInfo();

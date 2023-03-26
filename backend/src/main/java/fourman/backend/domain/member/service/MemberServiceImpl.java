@@ -11,6 +11,7 @@ import fourman.backend.domain.member.service.request.MemberRegisterRequest;
 import fourman.backend.domain.member.service.response.MemberLoginResponse;
 import fourman.backend.domain.security.service.RedisService;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -18,8 +19,10 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.Optional;
 import java.util.UUID;
 
+@Transactional
 @Service
 @RequiredArgsConstructor
+@Slf4j
 public class MemberServiceImpl implements MemberService {
 
     final private MemberRepository memberRepository;
@@ -45,6 +48,7 @@ public class MemberServiceImpl implements MemberService {
         }
         return true;
     }
+
 
     @Override
     public Boolean managerCodeValidation(String managerCode) {
@@ -77,7 +81,7 @@ public class MemberServiceImpl implements MemberService {
         return true;
     }
 
-    @Transactional(readOnly = true)
+
     @Override
     public MemberLoginResponse signIn(MemberLoginRequest memberLoginRequest) {
         Optional<Member> maybeMember =
@@ -103,7 +107,17 @@ public class MemberServiceImpl implements MemberService {
             redisService.deleteByKey(userToken.toString());
             redisService.setKeyAndValue(userToken.toString(), member.getId());
             //레디스에 토큰:유저ID 입력
-            MemberLoginResponse memberLoginResponse = new MemberLoginResponse(userToken.toString(),member.getId(),member.getNickName(), member.getAuthority().getAuthorityName(), member.getCode());
+
+            MemberLoginResponse memberLoginResponse;
+            System.out.println("member.getAuthority().getAuthorityName(): "+member.getAuthority().getAuthorityName());
+            if(member.getAuthority().getAuthorityName().equals(AuthorityType.CAFE)){ //카페사업자의 경우카페명 UI로 보내줌
+                log.info("카페사업자 입니다!");
+                Optional<CafeCode> op= cafeCodeRepository.findByCode(member.getCode());
+                memberLoginResponse = new MemberLoginResponse(userToken.toString(),member.getId(),member.getNickName(), member.getAuthority().getAuthorityName(), member.getCode(),op.get().getCafeName());
+            }else {
+                log.info("카페사업자가 아닙니다.");
+                memberLoginResponse = new MemberLoginResponse(userToken.toString(), member.getId(), member.getNickName(), member.getAuthority().getAuthorityName(), member.getCode(), null);
+            }
             return memberLoginResponse;
         }
 
