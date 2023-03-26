@@ -3,6 +3,7 @@ import fourman.backend.domain.cafeIntroduce.controller.requestForm.CafeIntroRequ
 import fourman.backend.domain.cafeIntroduce.entity.Cafe;
 import fourman.backend.domain.cafeIntroduce.entity.CafeInfo;
 import fourman.backend.domain.cafeIntroduce.repository.CafeRepository;
+import fourman.backend.domain.member.entity.CafeCode;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -31,6 +32,8 @@ public class CafeIntroduceServiceImpl implements CafeIntroduceService {
         cafe.setStartTime(cafeIntroRequestForm.getStartTime());
         cafe.setEndTime(cafeIntroRequestForm.getEndTime());
 
+        CafeCode cafeCode= new CafeCode("temporaryCafeCode","임시카페코드");
+        cafe.setCafeCode(cafeCode);
         //3. cafeInfo 저장
         // cafeInfo-> String thumbnailFileName,List<String> cafeImagesName,List<String>  String subTitle,String description
         CafeInfo cafeInfo = new CafeInfo();
@@ -49,7 +52,7 @@ public class CafeIntroduceServiceImpl implements CafeIntroduceService {
                 String thumbnailReName = 't'+thumbnailRandomName + multipartFile.getOriginalFilename();
 
                 //저장 경로 지정 + 파일네임
-                FileOutputStream writer1 = new FileOutputStream("../../FourMan-Front/frontend/src/assets/cafe/uploadImg/" + thumbnailReName);
+                FileOutputStream writer1 = new FileOutputStream("../../FourMan-Front/frontend/src/assets/cafe/uploadImgs/" + thumbnailReName);
                 log.info("디렉토리에 파일 배치 성공!");
 
                 //파일 저장(저장할때는 byte 형식으로 저장해야 해서 파라미터로 받은 multipartFile 파일들의 getBytes() 메소드 적용해서 저장하는 듯)
@@ -67,7 +70,7 @@ public class CafeIntroduceServiceImpl implements CafeIntroduceService {
                 String fileRandomName = now.format(dtf);
                 String fileReName = 'f' + fileRandomName + multipartFile.getOriginalFilename();
 
-                FileOutputStream writer2 = new FileOutputStream("../../FourMan-Front/frontend/src/assets/cafe/uploadImg/" + fileReName);
+                FileOutputStream writer2 = new FileOutputStream("../../FourMan-Front/frontend/src/assets/cafe/uploadImgs/" + fileReName);
                 log.info("디렉토리에 파일 배치 성공!");
 
                 writer2.write(multipartFile.getBytes());
