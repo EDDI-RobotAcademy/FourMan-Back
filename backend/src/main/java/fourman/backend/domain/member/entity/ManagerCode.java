@@ -14,12 +14,12 @@ public class ManagerCode {
 
     @Id
     @Getter
-    @Column(name = "managerCode_id")
+    @Column(name = "manager_code_id")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     @Getter
-    @Column(nullable = false)
+    @Column(nullable = false,unique=true)
     private String code;
 
     public ManagerCode(String code){
