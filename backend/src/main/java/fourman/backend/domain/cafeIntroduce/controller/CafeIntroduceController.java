@@ -13,7 +13,6 @@ import java.util.List;
 @RestController
 @RequestMapping("/cafe")
 @RequiredArgsConstructor
-@CrossOrigin(origins = "http://localhost:8887", allowedHeaders = "*")
 public class CafeIntroduceController {
 
     private final CafeIntroduceService cafeIntroduceService;
