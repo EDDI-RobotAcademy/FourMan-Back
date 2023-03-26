@@ -52,6 +52,7 @@ public class MemberRegisterRequest {
         this.code = code;
     }
 
+
     public Member toMember () {
         return new Member(
                 email,

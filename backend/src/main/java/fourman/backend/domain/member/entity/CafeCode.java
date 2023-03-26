@@ -1,6 +1,7 @@
 package fourman.backend.domain.member.entity;
 
 
+import fourman.backend.domain.cafeIntroduce.entity.Cafe;
 import lombok.*;
 import javax.persistence.*;
 
@@ -14,7 +15,7 @@ public class CafeCode {
 
     @Id
     @Getter
-    @Column(name = "cafeCode_id")
+    @Column(name = "cafe_code_id")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
@@ -24,6 +25,10 @@ public class CafeCode {
     @Getter
     @Column(nullable = false)
     private String cafeName;
+
+    @OneToOne(mappedBy="cafeCode")
+    private Cafe cafe;
+
 
     public CafeCode(String code, String cafeName){
         this.code = code;
