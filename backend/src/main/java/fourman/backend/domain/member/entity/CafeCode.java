@@ -15,7 +15,7 @@ public class CafeCode {
 
     @Id
     @Getter
-    @Column(name = "cafeCode_id")
+    @Column(name = "cafe_code_id")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
@@ -26,8 +26,7 @@ public class CafeCode {
     @Column(nullable = false)
     private String cafeName;
 
-    @OneToOne
-    @JoinColumn(name="cafe_id")
+    @OneToOne(mappedBy="cafeCode")
     private Cafe cafe;
 
 
