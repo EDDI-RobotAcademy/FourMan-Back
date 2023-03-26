@@ -27,7 +27,7 @@ public class cafeIntroduceTest {
         CafeCode cafeCode1 = new CafeCode("cafe2023","starbucks");
         cafeCodeRepository.save(cafeCode1);
 
-        CafeIntroRequestForm cafeIntroRequestForm= new CafeIntroRequestForm("스타벅스","강남역","02-111-1234","9:00","22:00","간단설명","상세설명");
+//        CafeIntroRequestForm cafeIntroRequestForm= new CafeIntroRequestForm("스타벅스","강남역","02-111-1234","9:00","22:00","간단설명","상세설명");
 //        cafeIntroduceService.registerCafe(null,null,cafeIntroRequestForm);
         //사진이 없으면 오류난다 UI로 테스트시 성공했음.
     }
