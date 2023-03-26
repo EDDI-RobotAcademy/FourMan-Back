@@ -13,7 +13,6 @@ import java.util.List;
 @RestController
 @RequestMapping("/free-board")
 @RequiredArgsConstructor
-@CrossOrigin(origins = "http://localhost:8887", allowedHeaders = "*")
 public class FreeBoardController {
 
     final private FreeBoardService freeBoardService;
