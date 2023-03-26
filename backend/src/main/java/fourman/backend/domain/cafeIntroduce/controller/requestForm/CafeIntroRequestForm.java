@@ -17,6 +17,7 @@ public class CafeIntroRequestForm{
         private String endTime;
         private String subTitle;
         private String description;
+        private String code;
 
 
         public CafeIntroRegisterRequest toCafeIntroRegisterRequest () {
