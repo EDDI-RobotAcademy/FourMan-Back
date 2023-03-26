@@ -7,6 +7,7 @@ import fourman.backend.domain.member.entity.CafeCode;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.FileNotFoundException;
@@ -18,6 +19,7 @@ import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 @Slf4j
+@Transactional
 @Service
 @RequiredArgsConstructor
 public class CafeIntroduceServiceImpl implements CafeIntroduceService {

@@ -19,6 +19,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.Optional;
 import java.util.UUID;
 
+@Transactional
 @Service
 @RequiredArgsConstructor
 @Slf4j
@@ -80,7 +81,7 @@ public class MemberServiceImpl implements MemberService {
         return true;
     }
 
-    @Transactional(readOnly = true)
+
     @Override
     public MemberLoginResponse signIn(MemberLoginRequest memberLoginRequest) {
         Optional<Member> maybeMember =
