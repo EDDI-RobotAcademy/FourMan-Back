@@ -35,7 +35,9 @@ public class Cafe {
     private String endTime;
     @Embedded
     private CafeInfo cafeInfo;
-    @OneToOne(mappedBy="cafe")
+
+    @OneToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name="cafe_code_id")
     private CafeCode cafeCode;
 
     public Cafe(String cafeName, String cafeAddress, String cafeTel, String startTime, String endTime, CafeInfo cafeInfo, CafeCode cafeCode) {
