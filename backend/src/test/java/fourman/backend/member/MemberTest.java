@@ -32,8 +32,8 @@ public class MemberTest {
     }
     @Test
     void cafeCodeTest() {
-        CafeCode cafeCode1 = new CafeCode("cafe2022","starbucks");
-        CafeCode cafeCode2 = new CafeCode("cafe2023","starbucks");
+        CafeCode cafeCode1 = new CafeCode("cafe2022","starbucks1");
+        CafeCode cafeCode2 = new CafeCode("cafe2023","starbucks2");
         cafeCodeRepository.save(cafeCode1);
         cafeCodeRepository.save(cafeCode2);
     }

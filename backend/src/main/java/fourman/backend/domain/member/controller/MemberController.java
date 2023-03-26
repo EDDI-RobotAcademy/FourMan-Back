@@ -54,13 +54,8 @@ public class MemberController {
         log.info("signUp(): " + form);
         log.info("카페사업자 또는 관리자 여부: "+ form.getAuthorityName());
         log.info("코드: "+ form.getCode());
-        if(form.getCode()== null ||form.getCode().isEmpty()){
-            //일반회원 회원가입
-            return memberService.signUp(form.toMemberRegisterRequest());
-        }else{
-            //카페사업자또는 관리자 회원가입
-            return memberService.signUp(form.toManagerRegisterRequest());
-        }
+        return memberService.signUp(form.toMemberRegisterRequest());
+
     }
 
 

@@ -29,7 +29,4 @@ public class MemberRegisterForm {
         return new MemberRegisterRequest( email, password, nickName, birthdate, authorityName,code, city,street,addressDetail,zipcode, phoneNumber);
     }
 
-    public MemberRegisterRequest toManagerRegisterRequest() {
-        return new MemberRegisterRequest( email, password,nickName, birthdate, authorityName,code, phoneNumber);
-    }
 }
