@@ -1,9 +1,13 @@
 package fourman.backend.domain.cafeIntroduce.controller.requestForm;
-
-import lombok.Getter;
+import fourman.backend.domain.cafeIntroduce.service.request.CafeIntroRegisterRequest;
+import lombok.*;
 
 import java.util.List;
 @Getter
+@Setter
+@ToString
+@NoArgsConstructor
+@AllArgsConstructor
 public class CafeIntroRequestForm{
 
         private String cafeName;
@@ -13,4 +17,9 @@ public class CafeIntroRequestForm{
         private String endTime;
         private String subTitle;
         private String description;
+
+
+        public CafeIntroRegisterRequest toCafeIntroRegisterRequest () {
+                return new CafeIntroRegisterRequest( cafeName, cafeAddress,cafeTel, startTime,endTime,subTitle,description);
+        }
 }
