@@ -14,7 +14,6 @@ import java.util.List;
 @RestController
 @RequestMapping("/question-board")
 @RequiredArgsConstructor
-@CrossOrigin(origins = "http://localhost:8887", allowedHeaders = "*")
 public class QuestionBoardController {
 
 
