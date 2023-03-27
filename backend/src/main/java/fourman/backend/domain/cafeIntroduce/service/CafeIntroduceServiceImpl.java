@@ -28,6 +28,7 @@ import java.util.Optional;
 public class CafeIntroduceServiceImpl implements CafeIntroduceService {
     private final CafeRepository cafeRepository;
     private final CafeCodeRepository cafeCodeRepository;
+    //
     @Override
     public void registerCafe(List<MultipartFile> thumbnail, List<MultipartFile> fileList, CafeIntroRequestForm cafeIntroRequestForm) {
         // 1. cafe 저장
