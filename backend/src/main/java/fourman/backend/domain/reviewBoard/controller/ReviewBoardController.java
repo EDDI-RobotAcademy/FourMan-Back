@@ -1,0 +1,36 @@
+package fourman.backend.domain.reviewBoard.controller;
+
+import fourman.backend.domain.reviewBoard.controller.requestForm.ReviewBoardRequestForm;
+import fourman.backend.domain.reviewBoard.service.ReviewBoardService;
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.MediaType;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestPart;
+import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.multipart.MultipartFile;
+
+import java.util.List;
+
+@Slf4j
+@RestController
+@RequestMapping("/review-board")
+@RequiredArgsConstructor
+public class ReviewBoardController {
+
+    final private ReviewBoardService reviewBoardService;
+
+    @PostMapping(value = "/register",
+            consumes = { MediaType.MULTIPART_FORM_DATA_VALUE, MediaType.APPLICATION_JSON_VALUE })
+    public void productRegister(
+            // formData 형태로 받아온 상품 이미지파일 리스트와 상품 정보를 @RequestPart로 각각 받아옴
+            @RequestPart(value = "fileList", required = false) List<MultipartFile> fileList,
+            @RequestPart(value = "reviewBoardInfo") ReviewBoardRequestForm reviewBoardRequest) {
+        log.info("reviewBoardRegister()");
+
+        // 받아온 상품 이미지파일 리스트와 상품 정보를 productService의 register 메서드의 매개변수로 넘겨줌
+        reviewBoardService.register(fileList, reviewBoardRequest);
+    }
+
+}
