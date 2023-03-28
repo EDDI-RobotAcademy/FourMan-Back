@@ -9,10 +9,10 @@ import lombok.ToString;
 @ToString
 @AllArgsConstructor
 public class MemberLoginResponse {
-    private String token;
-    private Long id;
-    private String nickName;
-    private AuthorityType authorityName;
-    private String code;
-    private String cafeName;
+    private final String token;
+    private final Long id;
+    private final String nickName;
+    private final AuthorityType authorityName;
+    private final String code;
+    private final String cafeName;
 }

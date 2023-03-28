@@ -25,17 +25,31 @@ public class MemberTest {
 
     @Test
     void managerCodeTest() {
-        ManagerCode managerCode1 = new ManagerCode("manager2022");
-        ManagerCode managerCode2 = new ManagerCode("manager2023");
+        ManagerCode managerCode1 = new ManagerCode("manager1");
+        ManagerCode managerCode2 = new ManagerCode("manager2");
         managerCodeRepository.save(managerCode1);
         managerCodeRepository.save(managerCode2);
     }
     @Test
     void cafeCodeTest() {
-        CafeCode cafeCode1 = new CafeCode("cafe2022","starbucks1");
-        CafeCode cafeCode2 = new CafeCode("cafe2023","starbucks2");
+        CafeCode cafeCode1 = new CafeCode("cafe1","Starbucks");
+        CafeCode cafeCode2 = new CafeCode("cafe2","TomNToms");
+        CafeCode cafeCode3 = new CafeCode("cafe3","Hollys");
+        CafeCode cafeCode4 = new CafeCode("cafe4","TwoSomePlace");
+        CafeCode cafeCode5 = new CafeCode("cafe5","EDIYA");
+        CafeCode cafeCode6 = new CafeCode("cafe6","Angelinus");
+        CafeCode cafeCode7 = new CafeCode("cafe7","Caffebene");
+        CafeCode cafeCode8 = new CafeCode("cafe8","CoffeeBean");
+        CafeCode cafeCode9 = new CafeCode("cafe9","Pascucci");
         cafeCodeRepository.save(cafeCode1);
         cafeCodeRepository.save(cafeCode2);
+        cafeCodeRepository.save(cafeCode3);
+        cafeCodeRepository.save(cafeCode4);
+        cafeCodeRepository.save(cafeCode5);
+        cafeCodeRepository.save(cafeCode6);
+        cafeCodeRepository.save(cafeCode7);
+        cafeCodeRepository.save(cafeCode8);
+        cafeCodeRepository.save(cafeCode9);
     }
     @Test
     void 이메일_중복_확인체크(){
