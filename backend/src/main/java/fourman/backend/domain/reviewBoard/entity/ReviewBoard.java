@@ -19,8 +19,10 @@ public class ReviewBoard {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long reviewBoardId;
 
-    @Column(length = 128, nullable = false)
     private String cafeName;
+
+    @Column(length = 128, nullable = false)
+    private String title;
 
     @Column(length = 32, nullable = false)
     private String writer;
