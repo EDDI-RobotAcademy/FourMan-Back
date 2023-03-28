@@ -24,4 +24,8 @@ public class ReviewBoardTest {
         reviewBoardService.register(fileList, reviewBoardRequestForm);
     }
 
+    @Test void 게시물_리스트_조회_테스트() {
+        System.out.println(reviewBoardService.list());
+    }
+
 }
