@@ -10,4 +10,6 @@ public interface CafeIntroduceService {
     public void registerCafe(List<MultipartFile> thumbnail, List<MultipartFile> fileList, CafeIntroRequestForm cafeIntroRequestForm);
 
     List<CafeIntroListResponse> list();
+
+    Boolean cafeNumValidation(String code);
 }

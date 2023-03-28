@@ -38,4 +38,11 @@ public class CafeIntroduceController {
             return cafeIntroduceService.list();
         }
 
+    @PostMapping("/check-code/{code}")// 카페코드로 카페등록을 이미 했는지 확인
+    public Boolean cafeNumValidation(@PathVariable("code") String code) {
+        log.info("cafeNumValidation(): " + code);
+
+        return cafeIntroduceService.cafeNumValidation(code);
+    }
+
 }
