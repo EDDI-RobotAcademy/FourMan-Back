@@ -18,6 +18,7 @@ public class QuestionBoardServiceImpl implements QuestionBoardService {
 
     final private QuestionBoardRepository questionBoardRepository;
 
+
     @Override
     public List<QuestionBoard> list() {
         return questionBoardRepository.findAll(Sort.by(Sort.Direction.DESC, "boardId"));
@@ -31,6 +32,7 @@ public class QuestionBoardServiceImpl implements QuestionBoardService {
         questionBoard.setQuestionType(questionBoardRequestForm.getQuestionType());
         questionBoard.setContent(questionBoardRequestForm.getContent());
         questionBoard.setWriter(questionBoardRequestForm.getWriter());
+
 
         questionBoardRepository.save(questionBoard);
         return questionBoard;

@@ -1,43 +1,37 @@
 package fourman.backend.domain.questionboard.entity;
 
-import com.fasterxml.jackson.annotation.JsonFormat;
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import fourman.backend.domain.member.entity.Member;
 import lombok.Data;
-import lombok.Getter;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 import org.springframework.format.annotation.DateTimeFormat;
 
 import javax.persistence.*;
-import java.util.ArrayList;
 import java.util.Date;
-import java.util.List;
 
 @Data
 @Entity
-public class QuestionBoard {
-
+public class Comment {
 
     @Id
-    @Column(name="board_id")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long boardId;
-
-    @Column(length = 256, nullable= false)
-    private String title;
-
-    @Column(length = 50, nullable = false)
-    private String writer;
-
-    @Column(length = 50, nullable = false)
-    private String questionType;
+    private Long commentId;
 
     @Lob
-    private String content;
+    private String comment;
+
+    @Column(length = 50, nullable = false)
+    private String commentWriter;
 
     @CreationTimestamp
     private Date regDate;
 
-    @UpdateTimestamp
-    private Date updDate;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name="question_no")
+    private QuestionBoard questionBoard;
+
+
 
 }
