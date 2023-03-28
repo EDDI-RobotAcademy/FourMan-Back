@@ -3,10 +3,12 @@ import fourman.backend.domain.cafeIntroduce.controller.requestForm.CafeIntroRequ
 import fourman.backend.domain.cafeIntroduce.entity.Cafe;
 import fourman.backend.domain.cafeIntroduce.entity.CafeInfo;
 import fourman.backend.domain.cafeIntroduce.repository.CafeRepository;
+import fourman.backend.domain.cafeIntroduce.service.response.CafeIntroListResponse;
 import fourman.backend.domain.member.entity.CafeCode;
 import fourman.backend.domain.member.repository.CafeCodeRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
@@ -95,5 +97,20 @@ public class CafeIntroduceServiceImpl implements CafeIntroduceService {
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
+    }
+
+    @Override
+    public List<CafeIntroListResponse> list() {
+        List<Cafe> cafeList= cafeRepository.findAll(Sort.by(Sort.Direction.DESC, "cafeId"));
+        List<CafeIntroListResponse> cafeReponseList= new ArrayList<>();
+        log.info("1번");
+        for(Cafe cafe: cafeList){
+            log.info("2번");
+            cafeReponseList.add(new CafeIntroListResponse(
+                    cafe.getCafeId(),cafe.getCafeName(),cafe.getCafeAddress(),cafe.getCafeTel(),
+                    cafe.getStartTime(),cafe.getEndTime(), cafe.getCafeInfo() ));
+        }
+        return cafeReponseList;
+
     }
 }
