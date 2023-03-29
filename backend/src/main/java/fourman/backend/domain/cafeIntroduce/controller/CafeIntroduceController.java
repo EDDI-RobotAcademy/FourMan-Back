@@ -2,6 +2,7 @@ package fourman.backend.domain.cafeIntroduce.controller;
 
 import fourman.backend.domain.cafeIntroduce.controller.requestForm.CafeIntroRequestForm;
 import fourman.backend.domain.cafeIntroduce.service.CafeIntroduceService;
+import fourman.backend.domain.cafeIntroduce.service.response.CafeIntroDetailResponse;
 import fourman.backend.domain.cafeIntroduce.service.response.CafeIntroListResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -43,6 +44,12 @@ public class CafeIntroduceController {
         log.info("cafeNumValidation(): " + code);
 
         return cafeIntroduceService.cafeNumValidation(code);
+    }
+
+    @GetMapping("detail/{cafeId}")
+    public CafeIntroDetailResponse cafeRead(@PathVariable("cafeId") Long cafeId) {
+        log.info("cafeRead()");
+        return cafeIntroduceService.read(cafeId);
     }
 
 }
