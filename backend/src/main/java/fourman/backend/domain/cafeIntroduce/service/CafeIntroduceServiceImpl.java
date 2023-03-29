@@ -3,6 +3,7 @@ import fourman.backend.domain.cafeIntroduce.controller.requestForm.CafeIntroRequ
 import fourman.backend.domain.cafeIntroduce.entity.Cafe;
 import fourman.backend.domain.cafeIntroduce.entity.CafeInfo;
 import fourman.backend.domain.cafeIntroduce.repository.CafeRepository;
+import fourman.backend.domain.cafeIntroduce.service.response.CafeIntroDetailResponse;
 import fourman.backend.domain.cafeIntroduce.service.response.CafeIntroListResponse;
 import fourman.backend.domain.member.entity.CafeCode;
 import fourman.backend.domain.member.repository.CafeCodeRepository;
@@ -103,14 +104,39 @@ public class CafeIntroduceServiceImpl implements CafeIntroduceService {
     public List<CafeIntroListResponse> list() {
         List<Cafe> cafeList= cafeRepository.findAll(Sort.by(Sort.Direction.DESC, "cafeId"));
         List<CafeIntroListResponse> cafeReponseList= new ArrayList<>();
-        log.info("1번");
         for(Cafe cafe: cafeList){
-            log.info("2번");
             cafeReponseList.add(new CafeIntroListResponse(
                     cafe.getCafeId(),cafe.getCafeName(),cafe.getCafeAddress(),cafe.getCafeTel(),
                     cafe.getStartTime(),cafe.getEndTime(), cafe.getCafeInfo() ));
         }
         return cafeReponseList;
+    }
 
+    @Override
+    public Boolean cafeNumValidation(String code) {
+        Optional<CafeCode> maybeCafeCode = cafeCodeRepository.findByCode(code);
+        Optional<Cafe> maybeCafe = cafeRepository.findByCafeCode(maybeCafeCode.get());
+        if (maybeCafe.isPresent()) {
+            log.info("카페가 존재합니다");
+            return true;
+        }
+        log.info("카페가 존재하지않습니다");
+        return false;
+    }
+
+    @Override
+    public CafeIntroDetailResponse read(Long cafeId) {
+        Optional<Cafe> maybeCafe = cafeRepository.findById(cafeId);
+        if (maybeCafe.isEmpty()) {
+            log.info("카페가 없습니다.");
+            return null;
+        }
+        Cafe cafe = maybeCafe.get();
+        CafeIntroDetailResponse cafeIntroDetailResponse = new CafeIntroDetailResponse(
+                cafe.getCafeId(),cafe.getCafeName(),cafe.getCafeAddress(),cafe.getCafeTel(),
+                cafe.getStartTime(),cafe.getEndTime(),cafe.getCafeInfo());
+        //글내용만 보내기
+        log.info("카페read 서비스 완료");
+        return cafeIntroDetailResponse;
     }
 }
