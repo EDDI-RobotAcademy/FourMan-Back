@@ -1,6 +1,8 @@
 package fourman.backend.domain.reviewBoard.service;
 
 import fourman.backend.domain.reviewBoard.controller.requestForm.ReviewBoardRequestForm;
+import fourman.backend.domain.reviewBoard.controller.responseForm.ReviewBoardImageResourceResponseForm;
+import fourman.backend.domain.reviewBoard.controller.responseForm.ReviewBoardReadResponseForm;
 import fourman.backend.domain.reviewBoard.controller.responseForm.ReviewBoardResponseForm;
 import fourman.backend.domain.reviewBoard.entity.ReviewBoard;
 import fourman.backend.domain.reviewBoard.entity.ReviewBoardImageResource;
@@ -12,11 +14,13 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.transaction.Transactional;
+import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 @Slf4j
 @Service
@@ -88,7 +92,7 @@ public class ReviewBoardServiceImpl implements ReviewBoardService {
         // 불러온 상품 리스트를 반복문을 통해 productResponseList에 추가
         for (ReviewBoard reviewBoard: reviewBoardList) {
             String firstPhoto = null;
-            List<ReviewBoardImageResource> images = reviewBoardImageResourceRepository.findAllImagesByProductId(reviewBoard.getReviewBoardId());
+            List<ReviewBoardImageResource> images = reviewBoardImageResourceRepository.findAllImagesByReviewBoardId(reviewBoard.getReviewBoardId());
             if (!images.isEmpty()) {
                 firstPhoto = images.get(0).getReviewBoardImageResourcePath();
             }
@@ -100,8 +104,64 @@ public class ReviewBoardServiceImpl implements ReviewBoardService {
             ));
         }
 
-        // 추가한 productResponseList를 반환
+        // 추가한 reviewBoardResponseList를 반환
         return reviewBoardResponseList;
+    }
+
+    @Override
+    public ReviewBoardReadResponseForm read(Long reviewBoardId) {
+        // 매개변수로 받아온 상품 아이디를 조건으로 DB에서 상품 정보를 불러와 maybeProduct에 저장
+        Optional<ReviewBoard> maybeReviewBoard = reviewBoardRepository.findById(reviewBoardId);
+
+        // maybeProduct 값이 비어있다면 null을 리턴
+        if (maybeReviewBoard.isEmpty()) {
+            log.info("읽을 수가 없드아!");
+            return null;
+        }
+
+        // 값이 있다면 product 객체에 값을 저장
+        ReviewBoard reviewBoard = maybeReviewBoard.get();
+
+        // 상품 상세 정보를 Response 해줄 객체에 정보를 담음
+        ReviewBoardReadResponseForm reviewBoardReadResponseForm = new ReviewBoardReadResponseForm(
+                reviewBoard.getReviewBoardId(), reviewBoard.getCafeName(), reviewBoard.getTitle(), reviewBoard.getWriter(),
+                reviewBoard.getContent(), reviewBoard.getRegDate(), reviewBoard.getMemberId(), reviewBoard.getRating()
+        );
+
+        // productReadResponse 응답
+        return reviewBoardReadResponseForm;
+    }
+
+    @Override
+    public List<ReviewBoardImageResourceResponseForm> findReviewBoardImage(Long reviewBoardId) {
+        List<ReviewBoardImageResource> reviewBoardImageResourceList = reviewBoardImageResourceRepository.findImagePathByReviewBoardId(reviewBoardId);
+        List<ReviewBoardImageResourceResponseForm> reviewBoardImageResourceResponseFormList = new ArrayList<>();
+
+        for (ReviewBoardImageResource reviewBoardImageResource: reviewBoardImageResourceList) {
+            System.out.println("imageResource path: " + reviewBoardImageResource.getReviewBoardImageResourcePath());
+
+            reviewBoardImageResourceResponseFormList.add(new ReviewBoardImageResourceResponseForm(
+                    reviewBoardImageResource.getReviewBoardImageResourcePath()));
+        }
+
+        return reviewBoardImageResourceResponseFormList;
+    }
+
+    @Override
+    public void remove(Long reviewBoardId) {
+
+        // 상품 아이디로 해당 상품 이미지 파일 정보 리스트로 가져옴
+        List<ReviewBoardImageResource> imagePath = reviewBoardImageResourceRepository.findImagePathByReviewBoardId(reviewBoardId);
+
+        // 가져온 이미지 파일 리스트 반복문을 통해 DB와 로컬에 저장되어있는 이미지 파일 삭제
+        for (ReviewBoardImageResource i: imagePath) {
+            reviewBoardImageResourceRepository.deleteById(i.getId());
+
+            String filePath = "../../FourMan-Front/frontend/src/assets/reviewImage/" + i.getReviewBoardImageResourcePath();
+            File file = new File(filePath);
+            file.delete();
+        }
+        reviewBoardRepository.deleteById(reviewBoardId);
     }
 
 }
