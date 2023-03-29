@@ -1,6 +1,8 @@
 package fourman.backend.domain.reviewBoard.controller;
 
 import fourman.backend.domain.reviewBoard.controller.requestForm.ReviewBoardRequestForm;
+import fourman.backend.domain.reviewBoard.controller.responseForm.ReviewBoardImageResourceResponseForm;
+import fourman.backend.domain.reviewBoard.controller.responseForm.ReviewBoardReadResponseForm;
 import fourman.backend.domain.reviewBoard.controller.responseForm.ReviewBoardResponseForm;
 import fourman.backend.domain.reviewBoard.service.ReviewBoardService;
 import lombok.RequiredArgsConstructor;
@@ -36,6 +38,22 @@ public class ReviewBoardController {
         log.info("reviewBoardList()");
 
         return reviewBoardService.list();
+    }
+
+    @GetMapping("/{reviewBoardId}")
+    public ReviewBoardReadResponseForm productRead(@PathVariable("reviewBoardId") Long reviewBoardId) {
+        log.info("productRead()");
+
+        return reviewBoardService.read(reviewBoardId);
+    }
+
+    @GetMapping("/imageList/{reviewBoardId}")
+    public List<ReviewBoardImageResourceResponseForm> readProductImageResource(
+            @PathVariable("reviewBoardId") Long reviewBoardId) {
+
+        log.info("readProductImageResource(): " + reviewBoardId);
+
+        return reviewBoardService.findReviewBoardImage(reviewBoardId);
     }
 
 }
