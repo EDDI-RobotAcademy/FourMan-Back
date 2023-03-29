@@ -30,4 +30,10 @@ public class CommentController {
         log.info("commentList");
         return commentService.commentList(boardId);
     }
+
+    @DeleteMapping("/{commentId}")
+        public void commentDelete(@PathVariable("commentId") Long commentId) {
+            log.info("commentDelete()");
+            commentService.commentDelete(commentId);
+    }
 }
