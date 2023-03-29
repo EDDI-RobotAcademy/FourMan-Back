@@ -1,5 +1,6 @@
 package fourman.backend.domain.product.controller;
 
+import fourman.backend.domain.product.controller.responseForm.AllProductResponseForm;
 import fourman.backend.domain.product.controller.responseForm.ImageResourceResponseForm;
 import fourman.backend.domain.product.controller.responseForm.ProductCartResponseForm;
 import fourman.backend.domain.product.controller.responseForm.ProductListResponseForm;
@@ -42,6 +43,13 @@ public class ProductController {
         log.info("readProuductImageResource(): ");
 
         return productService.loadProductImage();
+    }
+
+    @GetMapping("/all")
+    public List<AllProductResponseForm> allProductList () {
+        log.info("allProductList()");
+
+        return productService.all();
     }
 
     @GetMapping("/cart/{productId}")
