@@ -18,4 +18,6 @@ public interface ReviewBoardService {
     ReviewBoardReadResponseForm read(Long reviewBoardId);
 
     List<ReviewBoardImageResourceResponseForm> findReviewBoardImage(Long reviewBoardId);
+
+    void remove(Long reviewBoardId);
 }

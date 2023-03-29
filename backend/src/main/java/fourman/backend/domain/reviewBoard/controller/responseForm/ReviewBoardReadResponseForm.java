@@ -19,5 +19,7 @@ public class ReviewBoardReadResponseForm {
     private String writer;
     private String content;
     private Date regDate;
+    private Long memberId;
+    private Long rating;
 
 }

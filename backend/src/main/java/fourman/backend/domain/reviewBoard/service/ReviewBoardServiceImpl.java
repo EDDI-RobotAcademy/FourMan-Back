@@ -14,6 +14,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.transaction.Transactional;
+import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -124,7 +125,7 @@ public class ReviewBoardServiceImpl implements ReviewBoardService {
         // 상품 상세 정보를 Response 해줄 객체에 정보를 담음
         ReviewBoardReadResponseForm reviewBoardReadResponseForm = new ReviewBoardReadResponseForm(
                 reviewBoard.getReviewBoardId(), reviewBoard.getCafeName(), reviewBoard.getTitle(), reviewBoard.getWriter(),
-                reviewBoard.getContent(), reviewBoard.getRegDate()
+                reviewBoard.getContent(), reviewBoard.getRegDate(), reviewBoard.getMemberId(), reviewBoard.getRating()
         );
 
         // productReadResponse 응답
@@ -144,6 +145,23 @@ public class ReviewBoardServiceImpl implements ReviewBoardService {
         }
 
         return reviewBoardImageResourceResponseFormList;
+    }
+
+    @Override
+    public void remove(Long reviewBoardId) {
+
+        // 상품 아이디로 해당 상품 이미지 파일 정보 리스트로 가져옴
+        List<ReviewBoardImageResource> imagePath = reviewBoardImageResourceRepository.findImagePathByReviewBoardId(reviewBoardId);
+
+        // 가져온 이미지 파일 리스트 반복문을 통해 DB와 로컬에 저장되어있는 이미지 파일 삭제
+        for (ReviewBoardImageResource i: imagePath) {
+            reviewBoardImageResourceRepository.deleteById(i.getId());
+
+            String filePath = "../../FourMan-Front/frontend/src/assets/reviewImage/" + i.getReviewBoardImageResourcePath();
+            File file = new File(filePath);
+            file.delete();
+        }
+        reviewBoardRepository.deleteById(reviewBoardId);
     }
 
 }

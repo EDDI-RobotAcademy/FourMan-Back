@@ -56,4 +56,11 @@ public class ReviewBoardController {
         return reviewBoardService.findReviewBoardImage(reviewBoardId);
     }
 
+    @DeleteMapping("/{reviewBoardId}")
+    public void reviewBoardRemove(@PathVariable("reviewBoardId") Long reviewBoardId) {
+        log.info("productRemove()");
+
+        reviewBoardService.remove(reviewBoardId);
+    }
+
 }
