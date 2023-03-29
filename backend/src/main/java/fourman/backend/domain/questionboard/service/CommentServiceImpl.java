@@ -1,17 +1,18 @@
 package fourman.backend.domain.questionboard.service;
 
-import fourman.backend.domain.member.entity.Member;
-import fourman.backend.domain.member.repository.MemberRepository;
 import fourman.backend.domain.questionboard.controller.requestForm.CommentRequestForm;
 import fourman.backend.domain.questionboard.entity.Comment;
 import fourman.backend.domain.questionboard.entity.QuestionBoard;
 import fourman.backend.domain.questionboard.repository.CommentRepository;
 import fourman.backend.domain.questionboard.repository.QuestionBoardRepository;
+import fourman.backend.domain.questionboard.service.response.CommentResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -43,4 +44,15 @@ public class CommentServiceImpl implements CommentService{
         commentRepository.save(comment);
 
     }
+
+    @Override
+    public List<Comment> commentList(Long boardId) {
+        return commentRepository.findCommentByBoardId(boardId);
+    }
+
+
 }
+
+
+
+
