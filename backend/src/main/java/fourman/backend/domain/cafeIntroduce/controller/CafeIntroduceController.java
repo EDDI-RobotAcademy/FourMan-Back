@@ -2,6 +2,7 @@ package fourman.backend.domain.cafeIntroduce.controller;
 
 import fourman.backend.domain.cafeIntroduce.controller.requestForm.CafeIntroRequestForm;
 import fourman.backend.domain.cafeIntroduce.service.CafeIntroduceService;
+import fourman.backend.domain.cafeIntroduce.service.response.CafeIntroDetailResponse;
 import fourman.backend.domain.cafeIntroduce.service.response.CafeIntroListResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -37,5 +38,18 @@ public class CafeIntroduceController {
     public List<CafeIntroListResponse> cafeList() {
             return cafeIntroduceService.list();
         }
+
+    @PostMapping("/check-code/{code}")// 카페코드로 카페등록을 이미 했는지 확인
+    public Boolean cafeNumValidation(@PathVariable("code") String code) {
+        log.info("cafeNumValidation(): " + code);
+
+        return cafeIntroduceService.cafeNumValidation(code);
+    }
+
+    @GetMapping("detail/{cafeId}")
+    public CafeIntroDetailResponse cafeRead(@PathVariable("cafeId") Long cafeId) {
+        log.info("cafeRead()");
+        return cafeIntroduceService.read(cafeId);
+    }
 
 }

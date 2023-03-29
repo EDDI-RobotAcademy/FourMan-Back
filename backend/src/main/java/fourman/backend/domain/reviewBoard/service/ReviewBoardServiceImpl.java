@@ -1,6 +1,7 @@
 package fourman.backend.domain.reviewBoard.service;
 
 import fourman.backend.domain.reviewBoard.controller.requestForm.ReviewBoardRequestForm;
+import fourman.backend.domain.reviewBoard.controller.responseForm.ReviewBoardResponseForm;
 import fourman.backend.domain.reviewBoard.entity.ReviewBoard;
 import fourman.backend.domain.reviewBoard.entity.ReviewBoardImageResource;
 import fourman.backend.domain.reviewBoard.repository.ReviewBoardImageResourceRepository;
@@ -40,6 +41,7 @@ public class ReviewBoardServiceImpl implements ReviewBoardService {
 
         // 받아온 상품정보 값 setting
         reviewBoard.setCafeName(reviewBoardRequest.getCafeName());
+        reviewBoard.setTitle(reviewBoardRequest.getTitle());
         reviewBoard.setWriter(reviewBoardRequest.getWriter());
         reviewBoard.setContent(reviewBoardRequest.getContent());
         reviewBoard.setRating(reviewBoardRequest.getRating());
@@ -75,4 +77,31 @@ public class ReviewBoardServiceImpl implements ReviewBoardService {
 
         reviewBoardRepository.save(reviewBoard);
     }
+
+    @Override
+    public List<ReviewBoardResponseForm> list() {
+        // DB에서 모든 상품을 불러와 리스트에 저장
+        List<ReviewBoard> reviewBoardList = reviewBoardRepository.findAll();
+        // 응답 파일 리스트를 응답할 리스트 생성
+        List<ReviewBoardResponseForm> reviewBoardResponseList = new ArrayList<>();
+
+        // 불러온 상품 리스트를 반복문을 통해 productResponseList에 추가
+        for (ReviewBoard reviewBoard: reviewBoardList) {
+            String firstPhoto = null;
+            List<ReviewBoardImageResource> images = reviewBoardImageResourceRepository.findAllImagesByProductId(reviewBoard.getReviewBoardId());
+            if (!images.isEmpty()) {
+                firstPhoto = images.get(0).getReviewBoardImageResourcePath();
+            }
+
+            reviewBoardResponseList.add(new ReviewBoardResponseForm(
+                    reviewBoard.getReviewBoardId(), reviewBoard.getCafeName(), reviewBoard.getTitle(),
+                    reviewBoard.getWriter(), reviewBoard.getContent(), reviewBoard.getRating(),
+                    reviewBoard.getMemberId(), reviewBoard.getRegDate(), reviewBoard.getUpdDate(), firstPhoto
+            ));
+        }
+
+        // 추가한 productResponseList를 반환
+        return reviewBoardResponseList;
+    }
+
 }
