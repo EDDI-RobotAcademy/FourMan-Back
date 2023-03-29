@@ -41,6 +41,7 @@ public class ProductServiceImpl implements ProductService {
 
         product.setProductName(productRequestForm.getProductName());
         product.setPrice(productRequestForm.getPrice());
+        product.setDrinkType(productRequestForm.getDrinkType());
 
         try{
             for(MultipartFile multipartFile: imageFileList) {

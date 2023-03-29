@@ -24,6 +24,9 @@ public class Product {
     @Column(nullable = false)
     private Integer price;
 
+    @Column(nullable = false)
+    private String drinkType;
+
     @OneToMany(mappedBy = "product", fetch = FetchType.EAGER)
     private List<ImageResource> imageResourceList = new ArrayList<>();
 
