@@ -28,4 +28,9 @@ public class ReviewBoardTest {
         System.out.println(reviewBoardService.list());
     }
 
+    @Test void 게시믈_삭제_테스트() {
+        reviewBoardService.remove(5L);
+        System.out.println(reviewBoardService.list());
+    }
+
 }
