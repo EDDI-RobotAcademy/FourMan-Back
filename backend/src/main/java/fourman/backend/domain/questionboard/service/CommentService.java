@@ -11,4 +11,6 @@ public interface CommentService {
     void register(CommentRequestForm commentRequestForm);
 
     List<Comment> commentList(Long boardId);
+
+    void commentDelete(Long commentId);
 }

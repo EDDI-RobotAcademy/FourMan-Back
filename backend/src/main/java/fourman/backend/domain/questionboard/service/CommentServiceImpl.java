@@ -50,6 +50,11 @@ public class CommentServiceImpl implements CommentService{
         return commentRepository.findCommentByBoardId(boardId);
     }
 
+    @Override
+    public void commentDelete(Long commentId) {
+        commentRepository.deleteById(commentId);
+    }
+
 
 }
 
