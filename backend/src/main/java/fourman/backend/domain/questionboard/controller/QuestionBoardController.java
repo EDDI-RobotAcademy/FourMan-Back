@@ -19,9 +19,10 @@ public class QuestionBoardController {
 
     final private QuestionBoardService questionBoardService;
 
+
     @GetMapping("/list")
     public List<QuestionBoard> questionBoardList() {
-       return questionBoardService.list();
+        return questionBoardService.list();
     }
 
     @PostMapping("/register")
@@ -36,7 +37,7 @@ public class QuestionBoardController {
 
     @PutMapping("/{boardId}")
     public QuestionBoard questionBoardModify(@PathVariable("boardId") Long boardId,
-                                                @RequestBody QuestionBoardRequestForm questionBoardRequestForm) {
+                                             @RequestBody QuestionBoardRequestForm questionBoardRequestForm) {
         return questionBoardService.modify(boardId, questionBoardRequestForm);
     }
 
@@ -44,4 +45,6 @@ public class QuestionBoardController {
     public void questionBoardDelete(@PathVariable("boardId") Long boardId) {
         questionBoardService.delete(boardId);
     }
+
+
 }
