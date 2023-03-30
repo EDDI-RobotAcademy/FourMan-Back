@@ -18,6 +18,9 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.time.LocalDateTime;
+import java.time.ZoneId;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -51,13 +54,19 @@ public class ReviewBoardServiceImpl implements ReviewBoardService {
         reviewBoard.setRating(reviewBoardRequest.getRating());
         reviewBoard.setMemberId(reviewBoardRequest.getMemberId());
 
+        LocalDateTime now = LocalDateTime.now(ZoneId.of("Asia/Seoul"));
+        DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyyMMddHHmmss");
+
         if(fileList != null) {
             try {
                 for (MultipartFile multipartFile: fileList) {
                     log.info("requestFileUploadWithText() - filename: " + multipartFile.getOriginalFilename());
 
+                    String thumbnailRandomName = now.format(dtf);
+                    String thumbnailReName = 't'+thumbnailRandomName + multipartFile.getOriginalFilename();
+
                     // 파일 저장 위치에 파일 이름을 더해 fullPath 문자열 저장
-                    String fullPath = fixedStringPath + multipartFile.getOriginalFilename();
+                    String fullPath = fixedStringPath + thumbnailReName;
 
 
                     FileOutputStream writer = new FileOutputStream(fullPath);
@@ -66,7 +75,7 @@ public class ReviewBoardServiceImpl implements ReviewBoardService {
                     writer.close();
 
                     // 이미지 경로를 DB에 저장할때 경로를 제외한 이미지파일 이름만 저장하도록 함 (프론트에서 경로 지정하여 사용하기 위함)
-                    ReviewBoardImageResource reviewBoardImageResource = new ReviewBoardImageResource(multipartFile.getOriginalFilename());
+                    ReviewBoardImageResource reviewBoardImageResource = new ReviewBoardImageResource(thumbnailReName);
                     reviewBoardImageResourceList.add(reviewBoardImageResource);
                     reviewBoard.setReviewBoardImageResource(reviewBoardImageResource);
                 }
@@ -162,6 +171,25 @@ public class ReviewBoardServiceImpl implements ReviewBoardService {
             file.delete();
         }
         reviewBoardRepository.deleteById(reviewBoardId);
+    }
+
+    @Override
+    public ReviewBoard modify(Long reviewBoardId, ReviewBoardRequestForm reviewBoardRequest) {
+        Optional<ReviewBoard> maybeReviewBoard = reviewBoardRepository.findById(reviewBoardId);
+
+        if (maybeReviewBoard.isEmpty()) {
+            System.out.println("ReviewBoard 정보를 찾지 못했습니다: " + reviewBoardId);
+            return null;
+        }
+
+        ReviewBoard reviewBoard = maybeReviewBoard.get();
+        reviewBoard.setTitle(reviewBoardRequest.getTitle());
+        reviewBoard.setContent(reviewBoardRequest.getContent());
+        reviewBoard.setRating(reviewBoardRequest.getRating());
+
+        reviewBoardRepository.save(reviewBoard);
+
+        return reviewBoard;
     }
 
 }
