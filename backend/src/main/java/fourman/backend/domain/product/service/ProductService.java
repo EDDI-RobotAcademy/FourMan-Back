@@ -1,5 +1,6 @@
 package fourman.backend.domain.product.service;
 
+import fourman.backend.domain.product.controller.responseForm.AllProductResponseForm;
 import fourman.backend.domain.product.controller.responseForm.ImageResourceResponseForm;
 import fourman.backend.domain.product.controller.responseForm.ProductCartResponseForm;
 import fourman.backend.domain.product.controller.responseForm.ProductListResponseForm;
@@ -13,4 +14,5 @@ public interface ProductService {
     List<ProductListResponseForm> list();
     List<ImageResourceResponseForm> loadProductImage();
     ProductCartResponseForm cart(Long productId);
+    List<AllProductResponseForm> all();
 }

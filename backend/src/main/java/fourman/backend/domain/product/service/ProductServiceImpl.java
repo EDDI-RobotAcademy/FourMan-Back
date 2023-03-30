@@ -1,5 +1,6 @@
 package fourman.backend.domain.product.service;
 
+import fourman.backend.domain.product.controller.responseForm.AllProductResponseForm;
 import fourman.backend.domain.product.controller.responseForm.ImageResourceResponseForm;
 import fourman.backend.domain.product.controller.responseForm.ProductCartResponseForm;
 import fourman.backend.domain.product.controller.responseForm.ProductListResponseForm;
@@ -41,6 +42,7 @@ public class ProductServiceImpl implements ProductService {
 
         product.setProductName(productRequestForm.getProductName());
         product.setPrice(productRequestForm.getPrice());
+        product.setDrinkType(productRequestForm.getDrinkType());
 
         try{
             for(MultipartFile multipartFile: imageFileList) {
@@ -77,7 +79,8 @@ public class ProductServiceImpl implements ProductService {
         for(Product product: productList) {
             productResponseList.add(new ProductListResponseForm(
                     product.getProductId(), product.getProductName(),
-                    product.getPrice()
+                    product.getPrice(),
+                    product.getDrinkType()
             ));
         }
 
@@ -101,6 +104,22 @@ public class ProductServiceImpl implements ProductService {
     }
 
     @Override
+    public List<AllProductResponseForm> all() {
+        List<Product> productList = productRepository.findAll();
+        List<AllProductResponseForm> allProductList = new ArrayList<>();
+
+        for (Product product: productList) {
+            List<ImageResource> imageResourceList = imageResourceRepository.findImagePathByProductId(product.getProductId());
+
+            allProductList.add(new AllProductResponseForm(
+                    product.getProductId(), product.getProductName(), product.getDrinkType(), product.getPrice(),
+                    1, product.getPrice(), imageResourceList));
+        }
+
+        return allProductList;
+    }
+
+    @Override
     public ProductCartResponseForm cart(Long productId) {
         Optional<Product> maybeProduct = productRepository.findById(productId);
 
@@ -117,6 +136,7 @@ public class ProductServiceImpl implements ProductService {
 
         return productCartResponseForm;
     }
+
 
 
 }
