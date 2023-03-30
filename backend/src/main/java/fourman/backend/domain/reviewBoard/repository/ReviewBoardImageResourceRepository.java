@@ -9,6 +9,9 @@ import java.util.List;
 public interface ReviewBoardImageResourceRepository extends JpaRepository<ReviewBoardImageResource, Long> {
 
     @Query("select I from ReviewBoardImageResource I join I.reviewBoard R where R.reviewBoardId = :reviewBoardId")
-    List<ReviewBoardImageResource> findAllImagesByProductId(Long reviewBoardId);
+    List<ReviewBoardImageResource> findAllImagesByReviewBoardId(Long reviewBoardId);
+
+    @Query("select ir from ReviewBoardImageResource ir join ir.reviewBoard p where p.reviewBoardId = :reviewBoardId")
+    List<ReviewBoardImageResource> findImagePathByReviewBoardId(Long reviewBoardId);
 
 }
