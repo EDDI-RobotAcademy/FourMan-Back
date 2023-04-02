@@ -10,6 +10,7 @@ import fourman.backend.domain.reviewBoard.repository.ReviewBoardImageResourceRep
 import fourman.backend.domain.reviewBoard.repository.ReviewBoardRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -94,7 +95,7 @@ public class ReviewBoardServiceImpl implements ReviewBoardService {
     @Override
     public List<ReviewBoardResponseForm> list() {
         // DB에서 모든 상품을 불러와 리스트에 저장
-        List<ReviewBoard> reviewBoardList = reviewBoardRepository.findAll();
+        List<ReviewBoard> reviewBoardList = reviewBoardRepository.findAll(Sort.by(Sort.Direction.DESC, "reviewBoardId"));
         // 응답 파일 리스트를 응답할 리스트 생성
         List<ReviewBoardResponseForm> reviewBoardResponseList = new ArrayList<>();
 
@@ -190,6 +191,12 @@ public class ReviewBoardServiceImpl implements ReviewBoardService {
         reviewBoardRepository.save(reviewBoard);
 
         return reviewBoard;
+    }
+
+    @Override
+    public List<Long> Rating(String cafeName) {
+
+        return reviewBoardRepository.findRatingByCafeName(cafeName);
     }
 
 }

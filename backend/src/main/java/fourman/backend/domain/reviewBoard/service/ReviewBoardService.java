@@ -23,4 +23,6 @@ public interface ReviewBoardService {
     void remove(Long reviewBoardId);
 
     ReviewBoard modify(Long reivewBoardId, ReviewBoardRequestForm reviewBoardRequest);
+
+    List<Long> Rating(String cafeName);
 }

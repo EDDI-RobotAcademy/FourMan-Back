@@ -73,4 +73,11 @@ public class ReviewBoardController {
         return reviewBoardService.modify(reviewBoardId, reviewBoardRequest);
     }
 
+    @GetMapping("/rating/{cafeName}")
+    public List<Long> Rating (@PathVariable("cafeName")String cafeName) {
+        log.info("Rating()");
+
+        return reviewBoardService.Rating(cafeName);
+    }
+
 }
