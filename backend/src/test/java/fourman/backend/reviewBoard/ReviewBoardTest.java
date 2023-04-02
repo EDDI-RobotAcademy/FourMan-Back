@@ -39,4 +39,10 @@ public class ReviewBoardTest {
         reviewBoardService.modify(113L, reviewBoardRequestForm);
     }
 
+    @Test
+    public void 카페이름으로_별점_불러오기() {
+
+        System.out.println(reviewBoardService.Rating("명진카페"));
+    }
+
 }
