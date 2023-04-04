@@ -41,6 +41,7 @@ public class CommentServiceImpl implements CommentService{
         comment.setCommentWriter(commentRequestForm.getComment());
         comment.setQuestionBoard(questionBoard);
         comment.setCommentWriter(commentRequestForm.getCommentWriter());
+        comment.setMemberId(commentRequestForm.getMemberId());
         commentRepository.save(comment);
 
     }

@@ -37,7 +37,7 @@ public class Comment {
     @JoinColumn(name="board_id")
     private QuestionBoard questionBoard;
 
-
+    private Long memberId;
 
 
 
