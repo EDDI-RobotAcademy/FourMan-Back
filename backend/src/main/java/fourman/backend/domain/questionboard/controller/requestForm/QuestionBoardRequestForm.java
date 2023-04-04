@@ -19,4 +19,5 @@ public class QuestionBoardRequestForm {
     final private String questionType;
     final private String writer;
     final private String content;
+    final private Long memberId;
 }

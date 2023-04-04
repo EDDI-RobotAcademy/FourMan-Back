@@ -39,7 +39,7 @@ public class QuestionBoardServiceImpl implements QuestionBoardService {
         questionBoard.setQuestionType(questionBoardRequestForm.getQuestionType());
         questionBoard.setContent(questionBoardRequestForm.getContent());
         questionBoard.setWriter(questionBoardRequestForm.getWriter());
-
+        questionBoard.setMemberId(questionBoardRequestForm.getMemberId());
 
         questionBoardRepository.save(questionBoard);
         return questionBoard;
