@@ -43,4 +43,5 @@ public class QuestionBoard {
     @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     private Date updDate;
 
+    private Long memberId;
 }
