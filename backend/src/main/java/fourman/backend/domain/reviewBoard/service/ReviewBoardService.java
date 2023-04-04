@@ -4,6 +4,7 @@ import fourman.backend.domain.reviewBoard.controller.requestForm.ReviewBoardRequ
 import fourman.backend.domain.reviewBoard.controller.responseForm.ReviewBoardImageResourceResponseForm;
 import fourman.backend.domain.reviewBoard.controller.responseForm.ReviewBoardReadResponseForm;
 import fourman.backend.domain.reviewBoard.controller.responseForm.ReviewBoardResponseForm;
+import fourman.backend.domain.reviewBoard.entity.ReviewBoard;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
@@ -20,4 +21,8 @@ public interface ReviewBoardService {
     List<ReviewBoardImageResourceResponseForm> findReviewBoardImage(Long reviewBoardId);
 
     void remove(Long reviewBoardId);
+
+    ReviewBoard modify(Long reivewBoardId, ReviewBoardRequestForm reviewBoardRequest);
+
+    List<Long> Rating(String cafeName);
 }

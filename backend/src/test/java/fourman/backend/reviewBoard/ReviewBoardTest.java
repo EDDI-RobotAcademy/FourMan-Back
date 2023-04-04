@@ -33,4 +33,16 @@ public class ReviewBoardTest {
         System.out.println(reviewBoardService.list());
     }
 
+    @Test void 게시물_수정_테스트() {
+        ReviewBoardRequestForm reviewBoardRequestForm = new ReviewBoardRequestForm("카페이름", "제목", "작성자", "내용", 3L, 1L);
+
+        reviewBoardService.modify(113L, reviewBoardRequestForm);
+    }
+
+    @Test
+    public void 카페이름으로_별점_불러오기() {
+
+        System.out.println(reviewBoardService.Rating("명진카페"));
+    }
+
 }

@@ -4,6 +4,7 @@ import fourman.backend.domain.reviewBoard.controller.requestForm.ReviewBoardRequ
 import fourman.backend.domain.reviewBoard.controller.responseForm.ReviewBoardImageResourceResponseForm;
 import fourman.backend.domain.reviewBoard.controller.responseForm.ReviewBoardReadResponseForm;
 import fourman.backend.domain.reviewBoard.controller.responseForm.ReviewBoardResponseForm;
+import fourman.backend.domain.reviewBoard.entity.ReviewBoard;
 import fourman.backend.domain.reviewBoard.service.ReviewBoardService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -41,14 +42,14 @@ public class ReviewBoardController {
     }
 
     @GetMapping("/{reviewBoardId}")
-    public ReviewBoardReadResponseForm productRead(@PathVariable("reviewBoardId") Long reviewBoardId) {
+    public ReviewBoardReadResponseForm reivewBoardRead(@PathVariable("reviewBoardId") Long reviewBoardId) {
         log.info("productRead()");
 
         return reviewBoardService.read(reviewBoardId);
     }
 
     @GetMapping("/imageList/{reviewBoardId}")
-    public List<ReviewBoardImageResourceResponseForm> readProductImageResource(
+    public List<ReviewBoardImageResourceResponseForm> readReviewBoardImageResource(
             @PathVariable("reviewBoardId") Long reviewBoardId) {
 
         log.info("readProductImageResource(): " + reviewBoardId);
@@ -61,6 +62,22 @@ public class ReviewBoardController {
         log.info("productRemove()");
 
         reviewBoardService.remove(reviewBoardId);
+    }
+
+    @PutMapping("/{reviewBoardId}")
+    public ReviewBoard reviewBoardModify(@PathVariable("reviewBoardId") Long reviewBoardId,
+                                     @RequestBody ReviewBoardRequestForm reviewBoardRequest) {
+
+        log.info("productModify(): " + reviewBoardRequest + "id: " + reviewBoardId);
+
+        return reviewBoardService.modify(reviewBoardId, reviewBoardRequest);
+    }
+
+    @GetMapping("/rating/{cafeName}")
+    public List<Long> Rating (@PathVariable("cafeName")String cafeName) {
+        log.info("Rating()");
+
+        return reviewBoardService.Rating(cafeName);
     }
 
 }
