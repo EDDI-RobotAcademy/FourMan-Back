@@ -1,10 +1,13 @@
 package fourman.backend.domain.questionboard.service;
 
 import fourman.backend.domain.questionboard.controller.requestForm.QuestionBoardRequestForm;
+import fourman.backend.domain.questionboard.entity.Comment;
 import fourman.backend.domain.questionboard.entity.QuestionBoard;
+import fourman.backend.domain.questionboard.repository.CommentRepository;
 import fourman.backend.domain.questionboard.repository.QuestionBoardRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
@@ -16,7 +19,11 @@ import java.util.Optional;
 @RequiredArgsConstructor
 public class QuestionBoardServiceImpl implements QuestionBoardService {
 
+    @Autowired
     final private QuestionBoardRepository questionBoardRepository;
+
+    @Autowired
+    final private CommentRepository commentRepository;
 
 
     @Override
@@ -68,6 +75,13 @@ public class QuestionBoardServiceImpl implements QuestionBoardService {
 
     @Override
     public void delete(Long boardId) {
+
+        List<Comment> commentList = commentRepository.findCommentByBoardId(boardId);
+
+        //댓글 먼저 삭제
+        for(Comment comment : commentList) {
+            commentRepository.delete(comment);
+        }
         questionBoardRepository.deleteById(boardId);
     }
 
