@@ -2,7 +2,9 @@ package fourman.backend.domain.questionboard.controller;
 
 
 import fourman.backend.domain.questionboard.controller.requestForm.CommentRequestForm;
+import fourman.backend.domain.questionboard.controller.requestForm.QuestionBoardRequestForm;
 import fourman.backend.domain.questionboard.entity.Comment;
+import fourman.backend.domain.questionboard.entity.QuestionBoard;
 import fourman.backend.domain.questionboard.service.CommentService;
 import fourman.backend.domain.questionboard.service.response.CommentResponse;
 import lombok.extern.slf4j.Slf4j;
@@ -36,4 +38,9 @@ public class CommentController {
             log.info("commentDelete()");
             commentService.commentDelete(commentId);
     }
+    @PutMapping("/{commentId}")
+    public Comment commentModify(@PathVariable("commentId") Long commentId,
+                                 @RequestBody CommentRequestForm commentRequestForm) {
+        return commentService.commentModify(commentId, commentRequestForm);
+}
 }

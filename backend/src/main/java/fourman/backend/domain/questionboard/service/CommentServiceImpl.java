@@ -55,6 +55,18 @@ public class CommentServiceImpl implements CommentService{
         commentRepository.deleteById(commentId);
     }
 
+    @Override
+    public Comment commentModify(Long commentId, CommentRequestForm commentRequestForm) {
+        Optional<Comment> maybeComment = commentRepository.findById(commentId);
+        if (maybeComment.isEmpty()) {
+            return null;
+        }
+        Comment comment = maybeComment.get();
+        comment.setComment(commentRequestForm.getComment());
+        commentRepository.save(comment);
+        return comment;
+    }
+
 
 }
 
