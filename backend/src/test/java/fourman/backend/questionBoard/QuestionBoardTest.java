@@ -15,7 +15,7 @@ public class QuestionBoardTest {
     @Test
     public void registerTest() {
         QuestionBoardRequestForm questionBoardRequestForm =
-                new QuestionBoardRequestForm("1", "2", "3","4");
+                new QuestionBoardRequestForm("1", "2", "3","4", 1L);
 
         questionBoardService.register(questionBoardRequestForm);
     }
@@ -29,7 +29,7 @@ public class QuestionBoardTest {
     @Test
     public void modifyTest() {
         QuestionBoard questionBoard = questionBoardService.modify(4L,
-                new QuestionBoardRequestForm("우앙1","예약 문의","으이이이이이익","히이이이이이이익"));
+                new QuestionBoardRequestForm("우앙1","예약 문의","으이이이이이익","히이이이이이이익",5L));
 
         System.out.println(questionBoard);
     }
