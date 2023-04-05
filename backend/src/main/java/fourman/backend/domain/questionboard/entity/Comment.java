@@ -33,9 +33,11 @@ public class Comment {
     @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     private Date udpDate;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name="board_id")
     private QuestionBoard questionBoard;
+
+    private Long memberId;
 
 
 
