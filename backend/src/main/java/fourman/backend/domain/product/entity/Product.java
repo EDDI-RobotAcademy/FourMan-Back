@@ -1,6 +1,7 @@
 package fourman.backend.domain.product.entity;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
+import fourman.backend.domain.order.entity.OrderInfo;
 import lombok.Data;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -29,7 +30,7 @@ public class Product {
     private String drinkType;
 
     @JsonBackReference
-    @OneToMany(mappedBy = "product", fetch = FetchType.EAGER)
+    @OneToMany(mappedBy = "product", fetch = FetchType.LAZY, cascade = CascadeType.REMOVE)
     private List<ImageResource> imageResourceList = new ArrayList<>();
 
     public void setImageResource(ImageResource imageResource) {
