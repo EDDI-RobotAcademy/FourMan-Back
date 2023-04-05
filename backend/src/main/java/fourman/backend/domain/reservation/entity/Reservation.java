@@ -23,13 +23,16 @@ public class Reservation {
     @JoinColumn(name = "cafe_id")
     private Cafe cafe;
 
-    @ManyToOne
-    @JoinColumn(name = "time_id")
-    private Time time;
 
     @ManyToOne
     @JoinColumn(name = "member_id")
     private Member member;
+
+//    @ManyToOne
+//    @JoinColumn(name = "time_id")
+//    private Time time;
+    @OneToMany
+    private List<Time> times;
 
     @OneToMany
     private List<Seat> seats;

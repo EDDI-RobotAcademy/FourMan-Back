@@ -13,8 +13,9 @@ import java.util.List;
 @NoArgsConstructor
 public class ReservationForm {
     private Long cafeId ;
-    private Long timeId ;
     private Long memberId;
-    private List<Long> seatIdList;
+
+    private List<String> timeStringList;
+    private List<Integer> seatNoList;
 
 }

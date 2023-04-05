@@ -11,5 +11,7 @@ import java.util.Optional;
 public interface SeatRepository extends JpaRepository<Seat, Long> {
     List<Seat> findByCafeAndTime(Cafe cafe, Time time);
 
-    Optional<Seat> findByIdAndCafeAndTime(Long seatId, Cafe cafe, Time time);
+//    Optional<Seat> findByIdAndCafeAndTime(Long seatId, Cafe cafe, Time time);
+
+    Optional<Seat> findBySeatNoAndCafeAndTime(int seatNo, Cafe cafe, Time time);
 }

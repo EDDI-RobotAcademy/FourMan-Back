@@ -42,42 +42,42 @@ public class ReservationServiceImpl implements ReservationService {
 
     @Override
     public ResponseEntity<?> makeReservation(ReservationForm reservationForm) {
-        Optional<Cafe> cafe = cafeRepository.findById(reservationForm.getCafeId());
-        Optional<Time> time = timeRepository.findById(reservationForm.getTimeId());
-        Optional<Member> member = memberRepository.findById(reservationForm.getMemberId());
-//        List<Seat> seats = seatRepository.findByCafeAndTime(cafe.get(), time.get());
+        Reservation reservationRequest = new Reservation();
 
-        List<Seat> seatList =new ArrayList<>();
-        for(Long seatId :reservationForm.getSeatIdList()){
-            Optional <Seat> optionalSeat =seatRepository.findByIdAndCafeAndTime(seatId, cafe.get(), time.get());
-            if (optionalSeat.isPresent()) {
-                Seat seat = optionalSeat.get();
-                if (!seat.isReserved()) {//예약이 안되어있으면
-                    seat.setReserved(true);//예약하라
-                    seatList.add(seat);
-                    seatRepository.save(seat);
-                }
+        Optional<Cafe> cafe = cafeRepository.findById(reservationForm.getCafeId());
+        Optional<Member> member = memberRepository.findById(reservationForm.getMemberId());
+        reservationRequest.setCafe(cafe.get());
+        reservationRequest.setMember(member.get());
+
+        List<Time> timeList =new ArrayList<>();
+        for(String timeString :reservationForm.getTimeStringList()) {//선택한 특정 시간대 마다
+            Time time=null;
+            Optional<Time> optionalTime = timeRepository.findByTime(timeString);
+            if(optionalTime.isPresent()){//특정시간이 데베에 저장이 되어있다면
+                time= optionalTime.get();
+                timeList.add(time);
+            }else{//데이터베이스에 없는 시간이면
+                time = new Time(timeString);
+                timeList.add(time);
+                timeRepository.save(time);//데베에 저장
             }
 
+
+            List<Seat> seatList =new ArrayList<>();
+            for(int seatNo :reservationForm.getSeatNoList()){ //특정시간대의 각 자리마다.
+                Optional <Seat> optionalSeat =seatRepository.findBySeatNoAndCafeAndTime(seatNo, cafe.get(), time);
+                if (optionalSeat.isPresent()) {//seat이 존재한다면(미리 seat의 배치정보는 입력해놔야한다.
+                    Seat seat = optionalSeat.get();
+                    if (!seat.isReserved()) {//예약이 안되어있으면
+                        seat.setReserved(true);//예약하라
+                        seatList.add(seat);
+                        seatRepository.save(seat);
+                    }
+                }
+            }
+            reservationRequest.setSeats(seatList);
         }
-
-//        long count = seats.stream().filter(Seat::isReserved).count();
-//        int numReservedSeats= (int)count;
-
-//        if (numReservedSeats + request.getNumSeats() > cafe.getMaxSeats()) {
-//            throw new SeatUnavailableException();
-//        }
-
-//        seats.stream().filter(Seat::isReserved).forEach(seat -> {
-//            seat.setReserved(true);
-//            seatRepository.save(seat);
-//        });
-
-        Reservation reservationRequest = new Reservation();
-        reservationRequest.setCafe(cafe.get());
-        reservationRequest.setTime(time.get());
-        reservationRequest.setMember(member.get());
-        reservationRequest.setSeats(seatList);
+        reservationRequest.setTimes(timeList);
         reservationRepository.save(reservationRequest);
 
         return ResponseEntity.ok().build();

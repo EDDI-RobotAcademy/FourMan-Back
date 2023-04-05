@@ -16,6 +16,11 @@ public class Seat {
     @Column(name = "seat_id")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+    private int seatNo;
+    private int x;
+    private int y;
+    private int width;
+    private int height;
 
     @ManyToOne
     @JoinColumn(name = "cafe_id")
@@ -26,7 +31,7 @@ public class Seat {
     private Time time;
 
     @Column
-    private boolean isReserved;
+    private boolean isReserved = false;
 
 
 }

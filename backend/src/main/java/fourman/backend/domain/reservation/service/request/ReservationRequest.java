@@ -16,7 +16,7 @@ import java.util.List;
 public class ReservationRequest {
     private Long reservationId;
     private Cafe cafe;
-    private Time time;
     private Member member;
+    private List<Time> time;
     private List<Seat> seats;
 }

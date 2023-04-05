@@ -20,4 +20,7 @@ public class Time {
     @Column
     private String time;
 
+    public Time(String time) {
+        this.time = time;
+    }
 }
