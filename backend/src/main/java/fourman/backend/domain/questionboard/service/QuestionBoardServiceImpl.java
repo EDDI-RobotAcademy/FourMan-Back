@@ -85,4 +85,10 @@ public class QuestionBoardServiceImpl implements QuestionBoardService {
         questionBoardRepository.deleteById(boardId);
     }
 
+    @Override
+    public List<QuestionBoard> searchBoardList(String searchText) {
+        return questionBoardRepository.findQuestionBoardBySearchText(searchText);
+
+    }
+
 }

@@ -16,4 +16,6 @@ public interface QuestionBoardService {
     QuestionBoard modify(Long boardId, QuestionBoardRequestForm questionBoardRequestForm);
 
     void delete(Long boardId);
+
+    List<QuestionBoard> searchBoardList(String searchText);
 }
