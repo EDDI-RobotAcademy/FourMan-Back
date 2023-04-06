@@ -8,10 +8,9 @@ import fourman.backend.domain.questionboard.controller.requestForm.QuestionBoard
 import fourman.backend.domain.questionboard.entity.QuestionBoard;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @Slf4j
 @RestController
@@ -22,7 +21,12 @@ public class NoticeBoardController {
     final private NoticeBoardService noticeBoardService;
 
     @PostMapping("/register")
-    public NoticeBoard questionBoardRegister(@RequestBody NoticeBoardRequestForm noticeBoardRequestForm) {
+    public NoticeBoard noticeBoardRegister(@RequestBody NoticeBoardRequestForm noticeBoardRequestForm) {
         return noticeBoardService.register(noticeBoardRequestForm);
+    }
+
+    @GetMapping("/list")
+    public List<NoticeBoard> noticeBoardList() {
+        return noticeBoardService.list();
     }
 }

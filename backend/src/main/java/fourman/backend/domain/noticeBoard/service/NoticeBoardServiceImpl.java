@@ -5,8 +5,10 @@ import fourman.backend.domain.noticeBoard.entity.NoticeBoard;
 import fourman.backend.domain.noticeBoard.repository.NoticeBoardRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -27,5 +29,10 @@ public class NoticeBoardServiceImpl implements NoticeBoardService{
 
         noticeBoardRepository.save(noticeBoard);
         return noticeBoard;
+    }
+
+    @Override
+    public List<NoticeBoard> list() {
+        return noticeBoardRepository.findAll(Sort.by(Sort.Direction.DESC, "boardId"));
     }
 }
