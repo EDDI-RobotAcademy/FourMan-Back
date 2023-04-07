@@ -9,4 +9,10 @@ public interface NoticeBoardService {
     NoticeBoard register(NoticeBoardRequestForm noticeBoardRequestForm);
 
     List<NoticeBoard> list();
+
+    NoticeBoard read(Long boardId);
+
+    NoticeBoard modify(Long boardId, NoticeBoardRequestForm noticeBoardRequestForm);
+
+    void delete(Long boardId);
 }

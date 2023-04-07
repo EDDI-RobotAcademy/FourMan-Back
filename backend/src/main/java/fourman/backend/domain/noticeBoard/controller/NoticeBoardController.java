@@ -29,4 +29,21 @@ public class NoticeBoardController {
     public List<NoticeBoard> noticeBoardList() {
         return noticeBoardService.list();
     }
-}
+
+    @GetMapping("/{boardId}")
+    public NoticeBoard noticeBoardRead(@PathVariable("boardId") Long boardId) {
+        return noticeBoardService.read(boardId);
+    }
+
+    @PutMapping("/{boardId}")
+    public NoticeBoard noticeBoardModify(@PathVariable("boardId") Long boardId,
+                                             @RequestBody NoticeBoardRequestForm noticeBoardRequestForm) {
+        return noticeBoardService.modify(boardId, noticeBoardRequestForm);
+    }
+
+    @DeleteMapping("/{boardId}")
+        public void noticeBoardDelete(@PathVariable("boardId") Long boardId) {
+            noticeBoardService.delete(boardId);
+        }
+    }
+

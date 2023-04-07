@@ -35,4 +35,38 @@ public class NoticeBoardServiceImpl implements NoticeBoardService{
     public List<NoticeBoard> list() {
         return noticeBoardRepository.findAll(Sort.by(Sort.Direction.DESC, "boardId"));
     }
+
+    @Override
+    public NoticeBoard read(Long boardId) {
+        Optional<NoticeBoard> maybeNoticeBoard = noticeBoardRepository.findById(boardId);
+
+        if(maybeNoticeBoard.isEmpty()) {
+            System.out.println("찾을 수 없음");
+            return null;
+        }
+        return maybeNoticeBoard.get();
+        }
+
+    @Override
+    public NoticeBoard modify(Long boardId, NoticeBoardRequestForm noticeBoardRequestForm) {
+        Optional<NoticeBoard> maybeNoticeBoard = noticeBoardRepository.findById(boardId);
+        if(maybeNoticeBoard.isEmpty()) {
+            return null;
+        }
+
+        NoticeBoard noticeBoard = maybeNoticeBoard.get();
+
+        noticeBoard.setContent(noticeBoardRequestForm.getContent());
+        noticeBoard.setTitle(noticeBoardRequestForm.getTitle());
+
+        noticeBoardRepository.save(noticeBoard);
+        return noticeBoard;
+    }
+
+    @Override
+    public void delete(Long boardId) {
+        noticeBoardRepository.deleteById(boardId);
+    }
+
 }
+
