@@ -9,4 +9,6 @@ public interface NoticeBoardService {
     NoticeBoard register(NoticeBoardRequestForm noticeBoardRequestForm);
 
     List<NoticeBoard> list();
+
+    NoticeBoard read(Long boardId);
 }

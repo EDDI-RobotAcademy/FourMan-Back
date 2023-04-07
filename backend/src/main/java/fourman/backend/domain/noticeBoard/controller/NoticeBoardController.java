@@ -29,4 +29,9 @@ public class NoticeBoardController {
     public List<NoticeBoard> noticeBoardList() {
         return noticeBoardService.list();
     }
+
+    @GetMapping("/{boardId}")
+    public NoticeBoard noticeBoardRead(@PathVariable("boardId") Long boardId) {
+        return noticeBoardService.read(boardId);
+    }
 }
