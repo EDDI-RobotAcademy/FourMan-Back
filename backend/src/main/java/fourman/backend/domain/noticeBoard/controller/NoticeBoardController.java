@@ -34,4 +34,10 @@ public class NoticeBoardController {
     public NoticeBoard noticeBoardRead(@PathVariable("boardId") Long boardId) {
         return noticeBoardService.read(boardId);
     }
+
+    @PutMapping("/{boardId}")
+    public NoticeBoard noticeBoardModify(@PathVariable("boardId") Long boardId,
+                                             @RequestBody NoticeBoardRequestForm noticeBoardRequestForm) {
+        return noticeBoardService.modify(boardId, noticeBoardRequestForm);
+    }
 }

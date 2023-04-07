@@ -11,4 +11,6 @@ public interface NoticeBoardService {
     List<NoticeBoard> list();
 
     NoticeBoard read(Long boardId);
+
+    NoticeBoard modify(Long boardId, NoticeBoardRequestForm noticeBoardRequestForm);
 }
