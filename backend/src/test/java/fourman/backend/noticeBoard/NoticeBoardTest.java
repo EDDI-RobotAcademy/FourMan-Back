@@ -35,4 +35,9 @@ public class NoticeBoardTest {
 
         System.out.println(noticeBoard);
     }
+
+    @Test
+    public void removeTest() {
+        noticeBoardService.delete(1L);
+    }
 }
