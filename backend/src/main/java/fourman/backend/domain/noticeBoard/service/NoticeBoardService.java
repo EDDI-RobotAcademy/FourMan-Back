@@ -13,4 +13,6 @@ public interface NoticeBoardService {
     NoticeBoard read(Long boardId);
 
     NoticeBoard modify(Long boardId, NoticeBoardRequestForm noticeBoardRequestForm);
+
+    void delete(Long boardId);
 }

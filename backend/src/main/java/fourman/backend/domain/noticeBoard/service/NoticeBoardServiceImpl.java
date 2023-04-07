@@ -63,5 +63,10 @@ public class NoticeBoardServiceImpl implements NoticeBoardService{
         return noticeBoard;
     }
 
+    @Override
+    public void delete(Long boardId) {
+        noticeBoardRepository.deleteById(boardId);
+    }
+
 }
 

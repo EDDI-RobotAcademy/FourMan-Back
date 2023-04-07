@@ -40,4 +40,10 @@ public class NoticeBoardController {
                                              @RequestBody NoticeBoardRequestForm noticeBoardRequestForm) {
         return noticeBoardService.modify(boardId, noticeBoardRequestForm);
     }
-}
+
+    @DeleteMapping("/{boardId}")
+        public void noticeBoardDelete(@PathVariable("boardId") Long boardId) {
+            noticeBoardService.delete(boardId);
+        }
+    }
+
