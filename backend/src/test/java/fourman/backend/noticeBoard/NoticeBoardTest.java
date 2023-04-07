@@ -2,6 +2,7 @@ package fourman.backend.noticeBoard;
 
 
 import fourman.backend.domain.noticeBoard.controller.requestForm.NoticeBoardRequestForm;
+import fourman.backend.domain.noticeBoard.entity.NoticeBoard;
 import fourman.backend.domain.noticeBoard.service.NoticeBoardService;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,5 +18,11 @@ public class NoticeBoardTest {
     public void registerTest() {
         NoticeBoardRequestForm noticeBoardRequestForm = new NoticeBoardRequestForm("공지","공지사항","관리자","관리자만작성가능",1L);
         noticeBoardService.register(noticeBoardRequestForm);
+    }
+
+    @Test
+    public void readTest() {
+        NoticeBoard noticeBoard = noticeBoardService.read(1L);
+        System.out.println(noticeBoard);
     }
 }
