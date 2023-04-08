@@ -12,13 +12,13 @@ import javax.persistence.*;
 @Setter
 @Entity
 @NoArgsConstructor
-public class Seat {
+public class CafeTable {
     @Id
-    @Column(name = "seat_id")
+    @Column(name = "table_id")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     @NotNull
-    private int seatNo;
+    private String tableName;
     @NotNull
     private int x;
     @NotNull
@@ -27,19 +27,9 @@ public class Seat {
     private int width;
     @NotNull
     private int height;
-
     @NotNull
     @ManyToOne
     @JoinColumn(name = "cafe_id")
     private Cafe cafe;
-
-    @ManyToOne
-    @JoinColumn(name = "time_id")
-    private Time time;
-
-    @NotNull
-    @Column(columnDefinition = "BIT(1) DEFAULT 0")
-    private boolean isReserved=false;
-
 
 }
