@@ -10,5 +10,6 @@ import java.util.Optional;
 
 public interface CafeTableRepository extends JpaRepository<CafeTable, Long> {
 
-    List<CafeTable> findByCafeAndTime(Cafe cafe, Time time);
+
+    List<CafeTable> findByCafe(Cafe cafe);
 }

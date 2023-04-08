@@ -49,7 +49,7 @@ public class ReservationServiceImpl implements ReservationService {
         }
 
         List<Seat> seatList =seatRepository.findByCafeAndTime(cafe.get(), time);
-        List<CafeTable> tableList =cafeTableRepository.findByCafeAndTime(cafe.get(), time);
+        List<CafeTable> tableList =cafeTableRepository.findByCafe(cafe.get());
 
         Map<String, Object> response = new HashMap<>();
         response.put("seatReponse", seatList);
@@ -94,7 +94,6 @@ public class ReservationServiceImpl implements ReservationService {
             }
             reservationRequest.setSeats(seatList);
         }
-        reservationRequest.setTimes(timeList);
         reservationRequest.setReservationTime(LocalDateTime.now());
         reservationRepository.save(reservationRequest);
 

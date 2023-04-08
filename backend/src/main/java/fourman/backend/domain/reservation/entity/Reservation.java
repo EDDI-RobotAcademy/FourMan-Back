@@ -29,9 +29,8 @@ public class Reservation {
     @JoinColumn(name = "member_id")
     private Member member;
 
-
-    @OneToMany
-    private List<Time> times;//제거예정
+//    @OneToMany
+//    private List<Time> times;//제거예정
 
     @OneToMany
     private List<Seat> seats;
