@@ -6,6 +6,7 @@ import fourman.backend.domain.reservation.entity.Seat;
 import fourman.backend.domain.reservation.entity.Time;
 import lombok.*;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Getter
@@ -19,4 +20,5 @@ public class ReservationRequest {
     private Member member;
     private List<Time> time;
     private List<Seat> seats;
+    private LocalDateTime reservationTime;
 }
