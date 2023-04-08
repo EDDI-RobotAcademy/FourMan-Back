@@ -9,6 +9,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @Slf4j
@@ -18,9 +19,9 @@ public class ReservationController {
     final private ReservationService reservationService;
 
 
-    @GetMapping("/cafe/{cafeId}/time/{timeId}/seats")
-    public List<Seat> getSeats(@PathVariable Long cafeId, @PathVariable Long timeId) {
-        return reservationService.getSeats(cafeId,timeId);
+    @GetMapping("/cafe/{cafeId}/time/{time}")
+    public  ResponseEntity<Map<String, Object>> getSeats(@PathVariable Long cafeId, @PathVariable String time) {
+        return reservationService.getSeats(cafeId,time);
 
     }
 

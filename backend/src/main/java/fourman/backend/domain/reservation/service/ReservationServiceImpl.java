@@ -5,13 +5,16 @@ import fourman.backend.domain.cafeIntroduce.repository.CafeRepository;
 import fourman.backend.domain.member.entity.Member;
 import fourman.backend.domain.member.repository.MemberRepository;
 import fourman.backend.domain.reservation.controller.form.ReservationForm;
+import fourman.backend.domain.reservation.entity.CafeTable;
 import fourman.backend.domain.reservation.entity.Reservation;
 import fourman.backend.domain.reservation.entity.Seat;
 import fourman.backend.domain.reservation.entity.Time;
+import fourman.backend.domain.reservation.repository.CafeTableRepository;
 import fourman.backend.domain.reservation.repository.ReservationRepository;
 import fourman.backend.domain.reservation.repository.SeatRepository;
 import fourman.backend.domain.reservation.repository.TimeRepository;
 import fourman.backend.domain.reservation.service.request.ReservationRequest;
+import fourman.backend.domain.reservation.service.response.SeatResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
@@ -19,9 +22,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 
 @Slf4j
 @Transactional
@@ -32,13 +33,28 @@ public class ReservationServiceImpl implements ReservationService {
     private final TimeRepository timeRepository;
     private final MemberRepository memberRepository;
     private final SeatRepository seatRepository;
+    private final CafeTableRepository cafeTableRepository;
     private final ReservationRepository reservationRepository;
 
     @Override
-    public List<Seat> getSeats(Long cafeId, Long timeId) {
+    public ResponseEntity<Map<String, Object>> getSeats(Long cafeId, String timeString) {
         Optional<Cafe> cafe = cafeRepository.findById(cafeId);
-        Optional<Time> time = timeRepository.findById(timeId);
-        return seatRepository.findByCafeAndTime(cafe.get(), time.get());
+        Optional<Time> optionalTime = timeRepository.findByTime(timeString);
+        Time time=null;
+        if(optionalTime.isPresent()){//특정시간이 데베에 저장이 되어있다면
+            time= optionalTime.get();
+        }else{//데이터베이스에 없는 시간이면
+            time = new Time(timeString);//시간을 만들어서
+            timeRepository.save(time);//데베에 저장
+        }
+
+        List<Seat> seatList =seatRepository.findByCafeAndTime(cafe.get(), time);
+        List<CafeTable> tableList =cafeTableRepository.findByCafeAndTime(cafe.get(), time);
+
+        Map<String, Object> response = new HashMap<>();
+        response.put("seatReponse", seatList);
+        response.put("tableResponse", tableList);
+        return ResponseEntity.ok(response);
     }
 
     @Override

@@ -7,6 +7,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import javax.persistence.*;
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Getter
@@ -28,13 +29,13 @@ public class Reservation {
     @JoinColumn(name = "member_id")
     private Member member;
 
-//    @ManyToOne
-//    @JoinColumn(name = "time_id")
-//    private Time time;
+
     @OneToMany
-    private List<Time> times;
+    private List<Time> times;//제거예정
 
     @OneToMany
     private List<Seat> seats;
+    @Column(nullable = false)
+    private LocalDateTime reservationTime;
 
 }

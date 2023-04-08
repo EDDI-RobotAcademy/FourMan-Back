@@ -5,9 +5,10 @@ import fourman.backend.domain.reservation.entity.Seat;
 import org.springframework.http.ResponseEntity;
 
 import java.util.List;
+import java.util.Map;
 
 public interface ReservationService {
-    List<Seat> getSeats(Long cafeId, Long timeId);
+    ResponseEntity<Map<String, Object>> getSeats(Long cafeId, String time);
 
     ResponseEntity<?> makeReservation(ReservationForm reservationForm);
 }
