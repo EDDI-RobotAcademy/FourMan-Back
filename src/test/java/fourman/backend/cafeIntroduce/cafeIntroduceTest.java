@@ -21,7 +21,7 @@ public class cafeIntroduceTest {
 //    private CafeRepository cafeRepository;
 //    @Autowired
 //    private CafeCodeRepository cafeCodeRepository;
-
+//
 //    @Test
 //    void 카페소개_카페등록(){
 //        CafeCode cafeCode1 = new CafeCode("cafe2023","starbucks");
