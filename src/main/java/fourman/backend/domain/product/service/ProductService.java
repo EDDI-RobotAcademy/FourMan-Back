@@ -17,4 +17,5 @@ public interface ProductService {
     List<AllProductResponseForm> all();
     Product editProductWithImage(List<MultipartFile> editImageFileList, EditProductRequestForm editProductRequestForm);
     Product editProductWithoutImage(EditProductRequestForm editProductRequestForm);
+    void remove(Long productId);
 }

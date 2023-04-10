@@ -68,4 +68,11 @@ public class ProductController {
         return productService.editProductWithoutImage(editProductRequestForm);
     }
 
+    @DeleteMapping("/{productId}")
+    public void productRemove(@PathVariable("productId") Long productId) {
+        log.info("productRemove()");
+
+        productService.remove(productId);
+    }
+
 }
