@@ -43,7 +43,7 @@ public class ReviewBoardServiceImpl implements ReviewBoardService {
         List<ReviewBoardImageResource> reviewBoardImageResourceList = new ArrayList<>();
 
         // 현재 경로를 기준으로 프론트 엔드의 uploadImgs로 상대경로 값을 문자열로 저장함 (파일을 저장할 경로)
-        final String fixedStringPath = "../../FourMan-Front/frontend/src/assets/reviewImage/";
+        final String fixedStringPath = "../FourMan-Front/src/assets/reviewImage/";
 
         ReviewBoard reviewBoard = new ReviewBoard();
 
