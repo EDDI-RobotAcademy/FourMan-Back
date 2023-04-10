@@ -44,6 +44,7 @@ jobs:
       run: ./gradlew clean build
       
     - name: Test with Gradle
+      #test2
       #uses: gradle/gradle-build-action@67421db6bd0bf253fb4bd25b31ebb98943c375e1
       #with:
         #arguments: build
