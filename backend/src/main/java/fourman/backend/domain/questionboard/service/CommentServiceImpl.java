@@ -41,6 +41,7 @@ public class CommentServiceImpl implements CommentService{
         comment.setCommentWriter(commentRequestForm.getComment());
         comment.setQuestionBoard(questionBoard);
         comment.setCommentWriter(commentRequestForm.getCommentWriter());
+        comment.setMemberId(commentRequestForm.getMemberId());
         commentRepository.save(comment);
 
     }
@@ -53,6 +54,18 @@ public class CommentServiceImpl implements CommentService{
     @Override
     public void commentDelete(Long commentId) {
         commentRepository.deleteById(commentId);
+    }
+
+    @Override
+    public Comment commentModify(Long commentId, CommentRequestForm commentRequestForm) {
+        Optional<Comment> maybeComment = commentRepository.findById(commentId);
+        if (maybeComment.isEmpty()) {
+            return null;
+        }
+        Comment comment = maybeComment.get();
+        comment.setComment(commentRequestForm.getComment());
+        commentRepository.save(comment);
+        return comment;
     }
 
 

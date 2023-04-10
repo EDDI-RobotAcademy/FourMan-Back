@@ -10,4 +10,5 @@ public class CommentRequestForm {
     final private String comment;
     final private Long boardId;
     final private String commentWriter;
+    final private Long memberId;
 }

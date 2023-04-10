@@ -46,5 +46,8 @@ public class QuestionBoardController {
         questionBoardService.delete(boardId);
     }
 
-
+    @GetMapping("/search/{searchText}")
+    public List<QuestionBoard> searchBoardList(@PathVariable("searchText") String searchText) {
+        return questionBoardService.searchBoardList(searchText);
+    }
 }

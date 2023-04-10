@@ -1,8 +1,5 @@
-package fourman.backend.domain.questionboard.entity;
+package fourman.backend.domain.noticeBoard.entity;
 
-
-import com.fasterxml.jackson.annotation.JsonIgnore;
-import fourman.backend.domain.member.entity.Member;
 import lombok.Data;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
@@ -13,17 +10,22 @@ import java.util.Date;
 
 @Data
 @Entity
-public class Comment {
+public class NoticeBoard {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long commentId;
-
-    @Lob
-    private String comment;
+    private Long boardId;
+    @Column(length = 256, nullable= false)
+    private String title;
 
     @Column(length = 50, nullable = false)
-    private String commentWriter;
+    private String writer;
+
+    @Column(length = 50, nullable = false)
+    private String notice;
+
+    @Lob
+    private String content;
 
     @CreationTimestamp
     @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
@@ -31,14 +33,9 @@ public class Comment {
 
     @UpdateTimestamp
     @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
-    private Date udpDate;
-
-    @ManyToOne(fetch = FetchType.EAGER)
-    @JoinColumn(name="board_id")
-    private QuestionBoard questionBoard;
+    private Date updDate;
 
     private Long memberId;
-
-
-
 }
+
+
