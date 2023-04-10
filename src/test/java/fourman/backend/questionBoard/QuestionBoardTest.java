@@ -9,8 +9,8 @@ import org.springframework.boot.test.context.SpringBootTest;
 
 @SpringBootTest
 public class QuestionBoardTest {
-    @Autowired
-    private QuestionBoardService questionBoardService;
+//    @Autowired
+//    private QuestionBoardService questionBoardService;
 
 //    @Test
 //    public void registerTest() {

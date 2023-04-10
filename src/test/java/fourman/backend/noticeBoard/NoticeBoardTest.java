@@ -13,8 +13,8 @@ import org.springframework.boot.test.context.SpringBootTest;
 @SpringBootTest
 public class NoticeBoardTest {
 
-    @Autowired
-    private NoticeBoardService noticeBoardService;
+//    @Autowired
+//    private NoticeBoardService noticeBoardService;
 //
 //    @Test
 //    public void registerTest() {

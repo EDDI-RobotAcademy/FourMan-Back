@@ -12,8 +12,8 @@ import java.util.List;
 @SpringBootTest
 public class ReviewBoardTest {
 
-    @Autowired
-    private ReviewBoardService reviewBoardService;
+//    @Autowired
+//    private ReviewBoardService reviewBoardService;
 
 //    @Test
 //    public void 게시물_저장_테스트() {

@@ -16,12 +16,12 @@ import org.springframework.transaction.annotation.Transactional;
 import static org.assertj.core.api.Assertions.assertThat;
 @SpringBootTest
 public class MemberTest {
-    @Autowired
-    private MemberService memberService;
-    @Autowired
-    private  ManagerCodeRepository managerCodeRepository;
-    @Autowired
-    private CafeCodeRepository cafeCodeRepository;
+//    @Autowired
+//    private MemberService memberService;
+//    @Autowired
+//    private  ManagerCodeRepository managerCodeRepository;
+//    @Autowired
+//    private CafeCodeRepository cafeCodeRepository;
 
 //    @Test
 //    void managerCodeTest() {

@@ -10,8 +10,8 @@ import org.springframework.boot.test.context.SpringBootTest;
 @SpringBootTest
 public class FreeBoardTest {
 
-    @Autowired
-    private FreeBoardService freeBoardService;
+//    @Autowired
+//    private FreeBoardService freeBoardService;
 
 //    @Test
 //    public void 게시물_저장_테스트() {

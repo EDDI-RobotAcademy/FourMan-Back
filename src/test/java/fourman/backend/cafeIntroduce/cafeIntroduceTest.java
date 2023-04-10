@@ -15,12 +15,12 @@ import org.springframework.boot.test.context.SpringBootTest;
 
 @SpringBootTest
 public class cafeIntroduceTest {
-    @Autowired
-    private CafeIntroduceService cafeIntroduceService;
-    @Autowired
-    private CafeRepository cafeRepository;
-    @Autowired
-    private CafeCodeRepository cafeCodeRepository;
+//    @Autowired
+//    private CafeIntroduceService cafeIntroduceService;
+//    @Autowired
+//    private CafeRepository cafeRepository;
+//    @Autowired
+//    private CafeCodeRepository cafeCodeRepository;
 
 //    @Test
 //    void 카페소개_카페등록(){
