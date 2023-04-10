@@ -1,10 +1,11 @@
 package fourman.backend.domain.product.controller;
 
+import fourman.backend.domain.product.controller.requestForm.EditProductRequestForm;
 import fourman.backend.domain.product.controller.responseForm.AllProductResponseForm;
 import fourman.backend.domain.product.controller.responseForm.ImageResourceResponseForm;
-import fourman.backend.domain.product.controller.responseForm.ProductCartResponseForm;
 import fourman.backend.domain.product.controller.responseForm.ProductListResponseForm;
 import fourman.backend.domain.product.controller.requestForm.ProductRequestForm;
+import fourman.backend.domain.product.entity.Product;
 import fourman.backend.domain.product.service.ProductService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -20,7 +21,7 @@ import java.util.List;
 @RequestMapping("/product")
 public class ProductController {
 
-    final ProductService productService;
+    private final ProductService productService;
 
     @PostMapping(value = "/register", consumes = { MediaType.MULTIPART_FORM_DATA_VALUE, MediaType.APPLICATION_JSON_VALUE })
     public void productRegister(@RequestPart(value = "imageFileList") List<MultipartFile> imageFileList,
@@ -52,10 +53,19 @@ public class ProductController {
         return productService.all();
     }
 
-    @GetMapping("/cart/{productId}")
-    public ProductCartResponseForm productCart(@PathVariable("productId") Long productId) {
-        log.info("productCard()");
+    @PostMapping(value = "/editProductWithImage", consumes = { MediaType.MULTIPART_FORM_DATA_VALUE, MediaType.APPLICATION_JSON_VALUE })
+    public Product editProductWithImage(@RequestPart(value = "editedProductImage") List<MultipartFile> editImageFileList,
+                                        @RequestPart(value = "editedProductInfo") EditProductRequestForm editProductRequestForm) {
+        log.info("productModifyWithImage()");
 
-        return productService.cart(productId);
+        return productService.editProductWithImage(editImageFileList, editProductRequestForm);
     }
+
+    @PostMapping(value = "/editProductWithoutImage", consumes = { MediaType.MULTIPART_FORM_DATA_VALUE, MediaType.APPLICATION_JSON_VALUE })
+    public Product editProductWithoutImage(@RequestPart(value = "editedProductInfo") EditProductRequestForm editProductRequestForm) {
+        log.info("productModifyWithoutImage()");
+
+        return productService.editProductWithoutImage(editProductRequestForm);
+    }
+
 }
