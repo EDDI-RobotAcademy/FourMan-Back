@@ -1,11 +1,13 @@
 package fourman.backend.domain.freeBoard.entity;
 
+import fourman.backend.domain.myPage.myFreeBoard.entity.MyFreeBoard;
 import lombok.Data;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
 import javax.persistence.*;
 import java.util.Date;
+import java.util.List;
 
 @Data
 @Entity
@@ -30,5 +32,7 @@ public class FreeBoard {
     @UpdateTimestamp
     private Date updDate;
 
+    @Column(nullable = false)
     private Long memberId;
+
 }

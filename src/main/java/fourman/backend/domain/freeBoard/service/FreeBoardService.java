@@ -15,4 +15,6 @@ public interface FreeBoardService {
     void remove(Long boardId);
 
     FreeBoard modify(Long boardId, FreeBoardRequestForm boardRequest);
+
+    List<FreeBoard> myPageList(Long memberId);
 }

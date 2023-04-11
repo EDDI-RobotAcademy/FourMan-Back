@@ -53,4 +53,8 @@ public class FreeBoardController {
         return freeBoardService.modify(boardId, boardRequest);
     }
 
+    @GetMapping("/myPage/{memberId}")
+    public List<FreeBoard> freeBoardMyPageList(@PathVariable("memberId") Long memberId) {
+        return freeBoardService.myPageList(memberId);
+    }
 }
