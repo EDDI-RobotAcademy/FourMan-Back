@@ -1,12 +1,11 @@
 package fourman.backend.domain.member.entity;
 
 
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import javax.persistence.*;
 
+@Setter
 @Entity
 @AllArgsConstructor
 @NoArgsConstructor

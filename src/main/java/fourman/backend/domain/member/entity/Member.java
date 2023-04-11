@@ -3,12 +3,14 @@ package fourman.backend.domain.member.entity;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 import javax.persistence.*;
 import java.util.HashSet;
 import java.util.Optional;
 import java.util.Set;
 
+@Setter
 @Entity
 @NoArgsConstructor
 public class Member {
