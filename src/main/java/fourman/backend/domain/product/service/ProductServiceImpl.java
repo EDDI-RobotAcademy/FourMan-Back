@@ -1,8 +1,8 @@
 package fourman.backend.domain.product.service;
 
+import fourman.backend.domain.product.controller.requestForm.EditProductRequestForm;
 import fourman.backend.domain.product.controller.responseForm.AllProductResponseForm;
 import fourman.backend.domain.product.controller.responseForm.ImageResourceResponseForm;
-import fourman.backend.domain.product.controller.responseForm.ProductCartResponseForm;
 import fourman.backend.domain.product.controller.responseForm.ProductListResponseForm;
 import fourman.backend.domain.product.controller.requestForm.ProductRequestForm;
 import fourman.backend.domain.product.entity.ImageResource;
@@ -36,7 +36,7 @@ public class ProductServiceImpl implements ProductService {
 
         List<ImageResource> imageResourceList = new ArrayList<>();
 
-        final String fixedStringPath = "../../FourMan-Front/frontend/src/assets/product/uploadImgs/";
+        final String fixedStringPath = "../FourMan-Front/src/assets/product/uploadImgs/";
 
         Product product = new Product();
 
@@ -119,24 +119,84 @@ public class ProductServiceImpl implements ProductService {
         return allProductList;
     }
 
+    @Transactional
     @Override
-    public ProductCartResponseForm cart(Long productId) {
-        Optional<Product> maybeProduct = productRepository.findById(productId);
+    public Product editProductWithImage(List<MultipartFile> editImageFileList, EditProductRequestForm editProductRequestForm) {
+
+        Long productId = editProductRequestForm.getProductId();
+        log.info("productId: " + productId);
+
+        Optional<Product> maybeProduct = productRepository.findProductById(productId);
+        List<ImageResource> imageResourceList = imageResourceRepository.findImagePathByProductId(productId);
+
+        ImageResource imageResource = imageResourceList.get(0);
 
         if(maybeProduct.isEmpty()) {
-            log.info("상품이 존재하지 않음");
+            System.out.println("Product 정보를 찾지 못했습니다: " + productId);
+            return null;
+        }
+
+        final String fixedStringPath = "../FourMan-Front/src/assets/product/uploadImgs/";
+
+        Product product = maybeProduct.get();
+
+        product.setProductName(editProductRequestForm.getProductName());
+        product.setPrice(editProductRequestForm.getPrice());
+        product.setDrinkType(editProductRequestForm.getDrinkType());
+
+        try {
+            for(MultipartFile multipartFile: editImageFileList) {
+                String fullPath = fixedStringPath + multipartFile.getOriginalFilename();
+
+                FileOutputStream writer = new FileOutputStream(fullPath);
+
+                writer.write(multipartFile.getBytes());
+                writer.close();
+
+                imageResource.setImageResourcePath(multipartFile.getOriginalFilename());
+                imageResourceList.set(0, imageResource);
+            }
+        } catch(FileNotFoundException e) {
+            e.printStackTrace();
+        } catch(IOException e) {
+            e.printStackTrace();
+        }
+        productRepository.save(product);
+
+        imageResourceRepository.saveAll(imageResourceList);
+
+        return product;
+
+    }
+
+    @Transactional
+    @Override
+    public Product editProductWithoutImage(EditProductRequestForm editProductRequestForm) {
+
+        Long productId = editProductRequestForm.getProductId();
+        log.info("productId: " + productId);
+
+        Optional<Product> maybeProduct = productRepository.findProductById(productId);
+
+        if(maybeProduct.isEmpty()) {
+            System.out.println("Product 정보를 찾지 못했습니다: " + productId);
             return null;
         }
 
         Product product = maybeProduct.get();
 
-        ProductCartResponseForm productCartResponseForm = new ProductCartResponseForm(
-                product.getProductName(), product.getPrice()
-        );
+        product.setProductName(editProductRequestForm.getProductName());
+        product.setPrice(editProductRequestForm.getPrice());
+        product.setDrinkType(editProductRequestForm.getDrinkType());
 
-        return productCartResponseForm;
+        productRepository.save(product);
+
+        return product;
     }
 
-
+    @Override
+    public void remove(Long productId) {
+        productRepository.deleteById(productId);
+    }
 
 }
