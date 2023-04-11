@@ -65,4 +65,10 @@ public class FreeBoardServiceImpl implements FreeBoardService{
         return freeBoard;
     }
 
+    @Override
+    public List<FreeBoard> myPageList(Long memberId) {
+        return freeBoardRepository.findFreeBoardByMemberId(memberId);
+    }
+
+
 }

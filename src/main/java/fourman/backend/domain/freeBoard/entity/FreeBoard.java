@@ -6,6 +6,7 @@ import org.hibernate.annotations.UpdateTimestamp;
 
 import javax.persistence.*;
 import java.util.Date;
+import java.util.List;
 
 @Data
 @Entity
@@ -30,5 +31,7 @@ public class FreeBoard {
     @UpdateTimestamp
     private Date updDate;
 
+    @Column(nullable = false)
     private Long memberId;
+
 }
