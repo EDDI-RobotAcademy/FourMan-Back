@@ -1,5 +1,7 @@
 package fourman.backend.domain.reservation.controller.form;
 
+import fourman.backend.domain.cafeIntroduce.entity.Cafe;
+import fourman.backend.domain.reservation.entity.Seat;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -12,10 +14,8 @@ import java.util.List;
 @ToString
 @NoArgsConstructor
 public class ReservationForm {
-    private Long cafeId ;
+    private Cafe cafe ;
     private Long memberId;
-
-    private List<String> timeStringList;
-    private List<Integer> seatNoList;
+    private List<Seat> seatList;
 
 }

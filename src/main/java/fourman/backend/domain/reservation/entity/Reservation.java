@@ -4,6 +4,7 @@ import fourman.backend.domain.cafeIntroduce.entity.Cafe;
 import fourman.backend.domain.member.entity.Member;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.NonNull;
 import lombok.Setter;
 
 import javax.persistence.*;
@@ -21,18 +22,17 @@ public class Reservation {
     private Long reservationId;
 
     @ManyToOne
+    @NonNull
     @JoinColumn(name = "cafe_id")
     private Cafe cafe;
 
-
     @ManyToOne
+    @NonNull
     @JoinColumn(name = "member_id")
     private Member member;
 
-//    @OneToMany
-//    private List<Time> times;//제거예정
-
     @OneToMany
+    @NonNull
     private List<Seat> seats;
     @Column(nullable = false)
     private LocalDateTime reservationTime;
