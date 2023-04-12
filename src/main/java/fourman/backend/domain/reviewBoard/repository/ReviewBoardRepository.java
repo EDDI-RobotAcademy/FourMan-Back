@@ -15,5 +15,7 @@ public interface ReviewBoardRepository extends JpaRepository<ReviewBoard, Long> 
     @Query("select r.rating from ReviewBoard r where r.cafeName = :cafeName")
     List<Long> findRatingByCafeName(String cafeName);
 
+    @Query("select r from ReviewBoard r where r.memberId = :memberId")
+    List<ReviewBoard> findReviewBoardByMemberId(Long memberId);
 
 }
