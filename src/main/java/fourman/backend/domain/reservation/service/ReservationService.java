@@ -11,4 +11,6 @@ public interface ReservationService {
     ResponseEntity<Map<String, Object>> getSeats(Long cafeId, String time);
 
     ResponseEntity<?> makeReservation(ReservationForm reservationForm);
+
+    void resetAllSeats();
 }
