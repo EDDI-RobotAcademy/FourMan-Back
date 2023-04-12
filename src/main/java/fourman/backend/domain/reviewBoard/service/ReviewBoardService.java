@@ -25,4 +25,6 @@ public interface ReviewBoardService {
     ReviewBoard modify(Long reivewBoardId, ReviewBoardRequestForm reviewBoardRequest);
 
     List<Long> Rating(String cafeName);
+
+    List<ReviewBoard> myPageList(Long memberId);
 }
