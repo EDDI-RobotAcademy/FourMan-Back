@@ -12,4 +12,6 @@ public interface QuestionBoardRepository extends JpaRepository<QuestionBoard, Lo
     @Query("SELECT q FROM QuestionBoard q WHERE q.title LIKE %:searchText%")
     List<QuestionBoard> findQuestionBoardBySearchText(@Param("searchText") String searchText);
 
+    @Query("SELECT q FROM QuestionBoard q where q.memberId = :memberId")
+    List<QuestionBoard> findMyQuestionBoardByMemberId(Long memberId);
 }

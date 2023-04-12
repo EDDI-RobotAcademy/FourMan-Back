@@ -91,4 +91,9 @@ public class QuestionBoardServiceImpl implements QuestionBoardService {
 
     }
 
+    @Override
+    public List<QuestionBoard> myQuestionBoardList(Long memberId) {
+        return questionBoardRepository.findMyQuestionBoardByMemberId(memberId);
+    }
+
 }
