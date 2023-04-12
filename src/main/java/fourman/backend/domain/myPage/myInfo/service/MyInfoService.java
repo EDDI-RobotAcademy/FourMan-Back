@@ -1,6 +1,7 @@
 package fourman.backend.domain.myPage.myInfo.service;
 
 import fourman.backend.domain.member.entity.Member;
+import fourman.backend.domain.member.service.response.MemberLoginResponse;
 import fourman.backend.domain.myPage.myInfo.controller.requestForm.MemberInfoModifyRequestForm;
 import fourman.backend.domain.myPage.myInfo.service.responseForm.MyInfoResponseForm;
 
@@ -10,5 +11,5 @@ public interface MyInfoService {
 
     MyInfoResponseForm myInfo(Long memberId);
 
-    Boolean memberInfoModify(Long memberId, MemberInfoModifyRequestForm modifyRequest);
+    MemberLoginResponse memberInfoModify(Long memberId, MemberInfoModifyRequestForm modifyRequest);
 }

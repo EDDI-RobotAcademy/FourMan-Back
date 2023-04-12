@@ -1,5 +1,6 @@
 package fourman.backend.domain.myPage.myInfo.controller;
 
+import fourman.backend.domain.member.service.response.MemberLoginResponse;
 import fourman.backend.domain.myPage.myInfo.controller.requestForm.MemberInfoModifyRequestForm;
 import fourman.backend.domain.myPage.myInfo.service.MyInfoService;
 import fourman.backend.domain.myPage.myInfo.service.responseForm.MyInfoResponseForm;
@@ -25,10 +26,9 @@ public class MyInfoController {
     }
 
     @PutMapping("/member-info-modify/{memberId}")
-    public Boolean memberInfoModify(@PathVariable("memberId") Long memberId,
-                                    @RequestBody MemberInfoModifyRequestForm modifyRequest) {
+    public MemberLoginResponse memberInfoModify(@PathVariable("memberId") Long memberId,
+                                                @RequestBody MemberInfoModifyRequestForm modifyRequest) {
 
         return myInfoService.memberInfoModify(memberId, modifyRequest);
     }
-
 }
