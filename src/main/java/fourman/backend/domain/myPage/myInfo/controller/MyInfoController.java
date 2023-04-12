@@ -1,16 +1,12 @@
 package fourman.backend.domain.myPage.myInfo.controller;
 
-import fourman.backend.domain.member.entity.Member;
+import fourman.backend.domain.member.service.response.MemberLoginResponse;
+import fourman.backend.domain.myPage.myInfo.controller.requestForm.MemberInfoModifyRequestForm;
 import fourman.backend.domain.myPage.myInfo.service.MyInfoService;
 import fourman.backend.domain.myPage.myInfo.service.responseForm.MyInfoResponseForm;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
-
-import java.util.List;
+import org.springframework.web.bind.annotation.*;
 
 @Slf4j
 @RestController
@@ -29,4 +25,10 @@ public class MyInfoController {
         return myInfoService.myInfo(memberId);
     }
 
+    @PutMapping("/member-info-modify/{memberId}")
+    public MemberLoginResponse memberInfoModify(@PathVariable("memberId") Long memberId,
+                                                @RequestBody MemberInfoModifyRequestForm modifyRequest) {
+
+        return myInfoService.memberInfoModify(memberId, modifyRequest);
+    }
 }

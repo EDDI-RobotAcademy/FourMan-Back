@@ -15,4 +15,6 @@ public class MemberLoginResponse {
     private final AuthorityType authorityName;
     private final String code;
     private final String cafeName;
+    private final String email;
+
 }

@@ -199,4 +199,9 @@ public class ReviewBoardServiceImpl implements ReviewBoardService {
         return reviewBoardRepository.findRatingByCafeName(cafeName);
     }
 
+    @Override
+    public List<ReviewBoard> myPageList(Long memberId) {
+        return reviewBoardRepository.findReviewBoardByMemberId(memberId);
+    }
+
 }

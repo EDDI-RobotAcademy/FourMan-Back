@@ -50,4 +50,9 @@ public class QuestionBoardController {
     public List<QuestionBoard> searchBoardList(@PathVariable("searchText") String searchText) {
         return questionBoardService.searchBoardList(searchText);
     }
+
+    @GetMapping("/myPage/{memberId}")
+        public List<QuestionBoard> myQuestionBoardList(@PathVariable("memberId") Long memberId) {
+            return questionBoardService.myQuestionBoardList(memberId);
+    }
 }

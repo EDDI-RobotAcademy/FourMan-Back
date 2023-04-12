@@ -1,12 +1,11 @@
 package fourman.backend.domain.member.entity;
 
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import javax.persistence.Column;
 import javax.persistence.Embeddable;
 
+@Setter
 @Getter
 @Embeddable//주소라는 의미의 객체로 표현하여 MemberProfile 엔티티에 삽입 가능.
 @NoArgsConstructor

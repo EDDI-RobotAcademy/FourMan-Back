@@ -3,12 +3,14 @@ package fourman.backend.domain.member.entity;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 import javax.persistence.*;
 import java.util.HashSet;
 import java.util.Optional;
 import java.util.Set;
 
+@Setter
 @Entity
 @NoArgsConstructor
 public class Member {
@@ -37,7 +39,7 @@ public class Member {
     @Getter
     @JsonIgnore
     @JoinColumn(name ="authority_id")
-    @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.PERSIST)
+    @ManyToOne(fetch = FetchType.EAGER, cascade = CascadeType.PERSIST)
     private Authority authority;
 
     //    // orphanRemoval = true :부모 엔티티에서 자식 엔티티 제거
