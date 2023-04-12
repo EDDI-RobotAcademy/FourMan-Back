@@ -18,4 +18,6 @@ public interface QuestionBoardService {
     void delete(Long boardId);
 
     List<QuestionBoard> searchBoardList(String searchText);
+
+    List<QuestionBoard> myQuestionBoardList(Long memberId);
 }
