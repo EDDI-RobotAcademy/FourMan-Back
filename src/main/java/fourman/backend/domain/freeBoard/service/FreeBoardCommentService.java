@@ -11,7 +11,7 @@ public interface FreeBoardCommentService {
 
     List<FreeBoardComment> commentList(Long boardId);
 
-//    void commentDelete(Long commentId);
-//
+    void commentDelete(Long commentId);
+
 //    FreeBoardComment commentModify(Long commentId, FreeBoardCommentRequestForm freeBoardCommentRequestForm);
 }

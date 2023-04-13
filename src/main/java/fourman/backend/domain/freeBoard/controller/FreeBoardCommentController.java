@@ -29,13 +29,13 @@ public class FreeBoardCommentController {
         log.info("commentList");
         return freeBoardCommentService.commentList(boardId);
     }
-//
-//    @DeleteMapping("/delete/{commentId}")
-//    public void commentDelete(@PathVariable("commentId") Long commentId) {
-//        log.info("commentDelete()");
-//        freeBoardCommentService.commentDelete(commentId);
-//    }
-//
+
+    @DeleteMapping("/delete/{commentId}")
+    public void commentDelete(@PathVariable("commentId") Long commentId) {
+        log.info("commentDelete()");
+        freeBoardCommentService.commentDelete(commentId);
+    }
+
 //    @PutMapping("/modify/{commentId}")
 //    public FreeBoardComment commentModify(@PathVariable("commentId") Long commentId,
 //                                 @RequestBody FreeBoardCommentRequestForm freeBoardCommentRequestForm) {
