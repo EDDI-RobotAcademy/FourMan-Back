@@ -12,4 +12,5 @@ public class CartItemRequestForm {
 
     private final Long productId;
     private final int count;
+    private final String imageResource;
 }

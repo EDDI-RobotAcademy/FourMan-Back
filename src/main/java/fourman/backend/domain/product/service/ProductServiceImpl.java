@@ -109,7 +109,7 @@ public class ProductServiceImpl implements ProductService {
         List<AllProductResponseForm> allProductList = new ArrayList<>();
 
         for (Product product: productList) {
-            List<ImageResource> imageResourceList = imageResourceRepository.findImagePathByProductId(product.getProductId());
+            List<ImageResource> imageResourceList = imageResourceRepository.findImagePathListByProductId(product.getProductId());
 
             allProductList.add(new AllProductResponseForm(
                     product.getProductId(), product.getProductName(), product.getDrinkType(), product.getPrice(),
@@ -127,7 +127,7 @@ public class ProductServiceImpl implements ProductService {
         log.info("productId: " + productId);
 
         Optional<Product> maybeProduct = productRepository.findProductById(productId);
-        List<ImageResource> imageResourceList = imageResourceRepository.findImagePathByProductId(productId);
+        List<ImageResource> imageResourceList = imageResourceRepository.findImagePathListByProductId(productId);
 
         ImageResource imageResource = imageResourceList.get(0);
 
