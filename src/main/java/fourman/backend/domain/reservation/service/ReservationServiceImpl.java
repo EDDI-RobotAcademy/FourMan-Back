@@ -123,4 +123,16 @@ public class ReservationServiceImpl implements ReservationService {
 
         return ResponseEntity.ok().build();
     }
+
+    @Override
+    public void resetAllSeats() {
+
+        List<Seat> allSeats = seatRepository.findAll();
+        for (Seat seat : allSeats) {
+            seat.setReserved(false);
+        }
+        seatRepository.saveAll(allSeats);
+
+
+    }
 }

@@ -80,4 +80,8 @@ public class ReviewBoardController {
         return reviewBoardService.Rating(cafeName);
     }
 
+    @GetMapping("/myPage/{memberId}")
+    public List<ReviewBoard> myReviewBoardList(@PathVariable("memberId") Long memberId) {
+        return reviewBoardService.myPageList(memberId);
+    }
 }

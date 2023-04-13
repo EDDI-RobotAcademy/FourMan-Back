@@ -113,10 +113,10 @@ public class MemberServiceImpl implements MemberService {
             if(member.getAuthority().getAuthorityName().equals(AuthorityType.CAFE)){ //카페사업자의 경우카페명 UI로 보내줌
                 log.info("카페사업자 입니다!");
                 Optional<CafeCode> op= cafeCodeRepository.findByCode(member.getCode());
-                memberLoginResponse = new MemberLoginResponse(userToken.toString(),member.getId(),member.getNickName(), member.getAuthority().getAuthorityName(), member.getCode(),op.get().getCafeName());
+                memberLoginResponse = new MemberLoginResponse(userToken.toString(),member.getId(),member.getNickName(), member.getAuthority().getAuthorityName(), member.getCode(),op.get().getCafeName(), member.getEmail());
             }else {
                 log.info("카페사업자가 아닙니다.");
-                memberLoginResponse = new MemberLoginResponse(userToken.toString(), member.getId(), member.getNickName(), member.getAuthority().getAuthorityName(), member.getCode(), null);
+                memberLoginResponse = new MemberLoginResponse(userToken.toString(), member.getId(), member.getNickName(), member.getAuthority().getAuthorityName(), member.getCode(), null, member.getEmail());
             }
             return memberLoginResponse;
         }

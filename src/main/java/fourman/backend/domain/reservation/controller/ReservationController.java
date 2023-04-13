@@ -30,5 +30,11 @@ public class ReservationController {
         return reservationService.makeReservation(reservationForm);
     }
 
+    @DeleteMapping("/seats/delete")
+    public ResponseEntity<?> resetAllSeats() {
+        reservationService.resetAllSeats();
+        return ResponseEntity.ok("좌석 초기화 성공");
+    }
+
 
 }
