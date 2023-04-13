@@ -1,5 +1,6 @@
 package fourman.backend.domain.order.entity;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.CreationTimestamp;
@@ -20,13 +21,15 @@ public class OrderInfo {
     @Column(nullable = false)
     private String orderNo;
     @Column(nullable = false)
-    private String customer;
+    private Long memberId;
     @CreationTimestamp
     private Date orderDate;
     @Column(nullable = false)
     private int totalQuantity;
     @Column(nullable = false)
     private int totalPrice;
+
+    @JsonManagedReference
     @OneToMany(mappedBy = "orderInfo",fetch = FetchType.LAZY, cascade = CascadeType.REMOVE)
     private List<OrderProduct> orderProductList = new ArrayList<>();
 
