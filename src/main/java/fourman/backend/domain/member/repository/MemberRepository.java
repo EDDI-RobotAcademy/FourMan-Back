@@ -18,4 +18,7 @@ public interface MemberRepository extends JpaRepository<Member, Long> {
 
     @Query("select m from Member m join fetch m.authentications where m.nickName = :nickName")
     Optional<Member> findByNickName(String nickName);
+
+    @Query("select m from Member m join fetch m.authentications where m.id = :memberId")
+    Optional<Member> findByMemberId(Long memberId);
 }

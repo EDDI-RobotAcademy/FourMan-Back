@@ -1,16 +1,12 @@
 package fourman.backend.domain.order.controller;
 
-import fourman.backend.domain.order.controller.form.CartItemRequestForm;
-import fourman.backend.domain.order.controller.form.OrderInfoRequestForm;
+import fourman.backend.domain.order.controller.form.requestForm.OrderInfoRequestForm;
+import fourman.backend.domain.order.controller.form.responseForm.OrderInfoResponseForm;
 import fourman.backend.domain.order.service.OrderService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Required;
 import org.springframework.http.MediaType;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestPart;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -27,5 +23,12 @@ public class OrderController {
         log.info("orderRegister()");
 
         orderService.register(orderInfoRequestForm);
+    }
+
+    @GetMapping("/list/{memberId}")
+    public List<OrderInfoResponseForm> orderList(@PathVariable("memberId") Long memberId) {
+        log.info("orderList()");
+
+        return orderService.list(memberId);
     }
 }

@@ -1,5 +1,6 @@
 package fourman.backend.domain.order.entity;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
@@ -21,6 +22,7 @@ public class OrderProduct {
     @Column(nullable = false)
     private int count;
 
+    @JsonBackReference
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "order_id")
     private OrderInfo orderInfo;

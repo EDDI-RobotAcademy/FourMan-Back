@@ -1,7 +1,10 @@
 package fourman.backend.domain.order.service;
 
-import fourman.backend.domain.order.controller.form.CartItemRequestForm;
-import fourman.backend.domain.order.controller.form.OrderInfoRequestForm;
+import fourman.backend.domain.member.entity.Member;
+import fourman.backend.domain.member.repository.MemberRepository;
+import fourman.backend.domain.order.controller.form.requestForm.CartItemRequestForm;
+import fourman.backend.domain.order.controller.form.requestForm.OrderInfoRequestForm;
+import fourman.backend.domain.order.controller.form.responseForm.OrderInfoResponseForm;
 import fourman.backend.domain.order.entity.OrderInfo;
 import fourman.backend.domain.order.entity.OrderProduct;
 import fourman.backend.domain.order.repository.OrderProductRepository;
@@ -10,12 +13,9 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
-import java.io.FileNotFoundException;
-import java.io.IOException;
+import java.text.SimpleDateFormat;
 import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Random;
+import java.util.*;
 
 @Slf4j
 @Service
@@ -24,6 +24,7 @@ public class OrderServiceImpl implements OrderService {
 
     final private OrderRepository orderRepository;
     final private OrderProductRepository orderProductRepository;
+    final private MemberRepository memberRepository;
 
     @Override
     public void register(OrderInfoRequestForm orderInfoRequestForm) {
@@ -50,7 +51,7 @@ public class OrderServiceImpl implements OrderService {
             }
         }
 
-        orderInfo.setCustomer(orderInfoRequestForm.getCustomer());
+        orderInfo.setMemberId(orderInfoRequestForm.getMemberId());
         orderInfo.setTotalQuantity(orderInfoRequestForm.getTotalQuantity());
         orderInfo.setTotalPrice(orderInfoRequestForm.getTotalPrice());
 
@@ -67,5 +68,29 @@ public class OrderServiceImpl implements OrderService {
         orderRepository.save(orderInfo);
         orderProductRepository.saveAll(orderProductList);
 
+    }
+
+    @Override
+    public List<OrderInfoResponseForm> list(Long memberId) {
+
+        List<OrderInfo> orderInfoList = orderRepository.findOrderInfoByMemberId(memberId);
+        List<OrderInfoResponseForm> orderInfoResponseList = new ArrayList<>();
+
+        Optional<Member> maybeMember = memberRepository.findByMemberId(memberId);
+        Member member = maybeMember.get();
+        String customer = member.getNickName();
+
+        for(OrderInfo orderInfo: orderInfoList) {
+
+            SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy년 MM월 dd일 HH시 mm분");
+            String orderDate = simpleDateFormat.format(orderInfo.getOrderDate());
+
+            List<OrderProduct> orderProductList = orderProductRepository.findOrderProductByOrderId(orderInfo.getOrderId());
+
+            orderInfoResponseList.add(new OrderInfoResponseForm(orderInfo.getOrderId(), orderInfo.getOrderNo(), customer, orderDate,
+                                      orderInfo.getTotalQuantity(), orderInfo.getTotalPrice(), orderProductList));
+        }
+
+        return orderInfoResponseList;
     }
 }
