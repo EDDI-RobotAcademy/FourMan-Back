@@ -36,10 +36,10 @@ public class FreeBoardCommentController {
         freeBoardCommentService.commentDelete(commentId);
     }
 
-//    @PutMapping("/modify/{commentId}")
-//    public FreeBoardComment commentModify(@PathVariable("commentId") Long commentId,
-//                                 @RequestBody FreeBoardCommentRequestForm freeBoardCommentRequestForm) {
-//        return freeBoardCommentService.commentModify(commentId, freeBoardCommentRequestForm);
-//    }
+    @PutMapping("/modify/{commentId}")
+    public FreeBoardComment commentModify(@PathVariable("commentId") Long commentId,
+                                 @RequestBody FreeBoardCommentRequestForm freeBoardCommentRequestForm) {
+        return freeBoardCommentService.commentModify(commentId, freeBoardCommentRequestForm);
+    }
 
 }

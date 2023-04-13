@@ -54,17 +54,17 @@ public class FreeBoardCommentServiceImpl implements FreeBoardCommentService{
         freeBoardCommentRepository.deleteById(commentId);
     }
 
-//    @Override
-//    public FreeBoardComment commentModify(Long commentId, FreeBoardCommentRequestForm freeBoardCommentRequestForm) {
-//        Optional<FreeBoardComment> maybeComment = freeBoardCommentRepository.findById(commentId);
-//        if (maybeComment.isEmpty()) {
-//            return null;
-//        }
-//        FreeBoardComment freeBoardComment = maybeComment.get();
-//        freeBoardComment.setComment(freeBoardCommentRequestForm.getComment());
-//        freeBoardCommentRepository.save(freeBoardComment);
-//        return freeBoardComment;
-//    }
+    @Override
+    public FreeBoardComment commentModify(Long commentId, FreeBoardCommentRequestForm freeBoardCommentRequestForm) {
+        Optional<FreeBoardComment> maybeComment = freeBoardCommentRepository.findById(commentId);
+        if (maybeComment.isEmpty()) {
+            return null;
+        }
+        FreeBoardComment freeBoardComment = maybeComment.get();
+        freeBoardComment.setComment(freeBoardCommentRequestForm.getComment());
+        freeBoardCommentRepository.save(freeBoardComment);
+        return freeBoardComment;
+    }
 }
 
 
