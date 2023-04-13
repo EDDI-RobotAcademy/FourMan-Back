@@ -200,8 +200,29 @@ public class ReviewBoardServiceImpl implements ReviewBoardService {
     }
 
     @Override
-    public List<ReviewBoard> myPageList(Long memberId) {
-        return reviewBoardRepository.findReviewBoardByMemberId(memberId);
+    public List<ReviewBoardResponseForm> myPageList(Long memberId) {
+        List<ReviewBoard> reviewBoardList = reviewBoardRepository.findReviewBoardByMemberId(memberId);
+
+        // 응답 파일 리스트를 응답할 리스트 생성
+        List<ReviewBoardResponseForm> reviewBoardResponseList = new ArrayList<>();
+
+        // 불러온 상품 리스트를 반복문을 통해 productResponseList에 추가
+        for (ReviewBoard reviewBoard: reviewBoardList) {
+            String firstPhoto = null;
+            List<ReviewBoardImageResource> images = reviewBoardImageResourceRepository.findAllImagesByReviewBoardId(reviewBoard.getReviewBoardId());
+            if (!images.isEmpty()) {
+                firstPhoto = images.get(0).getReviewBoardImageResourcePath();
+            }
+
+            reviewBoardResponseList.add(new ReviewBoardResponseForm(
+                    reviewBoard.getReviewBoardId(), reviewBoard.getCafeName(), reviewBoard.getTitle(),
+                    reviewBoard.getWriter(), reviewBoard.getContent(), reviewBoard.getRating(),
+                    reviewBoard.getMemberId(), reviewBoard.getRegDate(), reviewBoard.getUpdDate(), firstPhoto
+            ));
+        }
+
+        // 추가한 reviewBoardResponseList를 반환
+        return reviewBoardResponseList;
     }
 
 }

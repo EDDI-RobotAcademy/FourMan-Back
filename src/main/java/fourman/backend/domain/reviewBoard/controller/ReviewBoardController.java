@@ -81,7 +81,7 @@ public class ReviewBoardController {
     }
 
     @GetMapping("/myPage/{memberId}")
-    public List<ReviewBoard> myReviewBoardList(@PathVariable("memberId") Long memberId) {
+    public List<ReviewBoardResponseForm> myReviewBoardList(@PathVariable("memberId") Long memberId) {
         return reviewBoardService.myPageList(memberId);
     }
 }
