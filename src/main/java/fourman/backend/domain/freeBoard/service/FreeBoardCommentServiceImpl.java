@@ -44,11 +44,11 @@ public class FreeBoardCommentServiceImpl implements FreeBoardCommentService{
         freeBoardCommentRepository.save(freeBoardComment);
     }
 
-//    @Override
-//    public List<FreeBoardComment> commentList(Long boardId) {
-//        return freeBoardCommentRepository.findFreeBoardCommentByBoardId(boardId);
-//    }
-//
+    @Override
+    public List<FreeBoardComment> commentList(Long boardId) {
+        return freeBoardCommentRepository.findFreeBoardCommentByBoardId(boardId);
+    }
+
 //    @Override
 //    public void commentDelete(Long commentId) {
 //        freeBoardCommentRepository.deleteById(commentId);

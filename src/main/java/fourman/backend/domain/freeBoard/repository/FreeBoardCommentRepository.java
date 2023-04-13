@@ -9,6 +9,6 @@ import java.util.List;
 
 public interface FreeBoardCommentRepository extends JpaRepository<FreeBoardComment, Long> {
 
-//    @Query("select c from FreeBoardComment c join fetch c.freeBoard f where f.boardId = :boardId")
-//    List<FreeBoardComment> findFreeBoardCommentByBoardId(Long boardId);
+    @Query("select c from FreeBoardComment c join fetch c.freeBoard f where f.boardId = :boardId")
+    List<FreeBoardComment> findFreeBoardCommentByBoardId(Long boardId);
 }

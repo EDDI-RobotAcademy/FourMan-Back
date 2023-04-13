@@ -9,8 +9,8 @@ import java.util.List;
 public interface FreeBoardCommentService {
     void register(FreeBoardCommentRequestForm freeBoardCommentRequestForm);
 
-//    List<FreeBoardComment> commentList(Long boardId);
-//
+    List<FreeBoardComment> commentList(Long boardId);
+
 //    void commentDelete(Long commentId);
 //
 //    FreeBoardComment commentModify(Long commentId, FreeBoardCommentRequestForm freeBoardCommentRequestForm);

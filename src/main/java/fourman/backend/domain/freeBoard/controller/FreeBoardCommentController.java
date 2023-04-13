@@ -23,12 +23,12 @@ public class FreeBoardCommentController {
         log.info("freeBoardCommentRegister()");
         freeBoardCommentService.register(freeBoardCommentRequestForm);
     }
-//
-//    @GetMapping("/list/{boardId}")
-//    public List<FreeBoardComment> freeBoardCommentList (@PathVariable("boardId") Long boardId) {
-//        log.info("commentList");
-//        return freeBoardCommentService.commentList(boardId);
-//    }
+
+    @GetMapping("/list/{boardId}")
+    public List<FreeBoardComment> freeBoardCommentList (@PathVariable("boardId") Long boardId) {
+        log.info("commentList");
+        return freeBoardCommentService.commentList(boardId);
+    }
 //
 //    @DeleteMapping("/delete/{commentId}")
 //    public void commentDelete(@PathVariable("commentId") Long commentId) {
