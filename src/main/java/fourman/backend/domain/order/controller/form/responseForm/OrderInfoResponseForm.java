@@ -2,9 +2,7 @@ package fourman.backend.domain.order.controller.form.responseForm;
 
 import fourman.backend.domain.order.entity.OrderProduct;
 import lombok.Getter;
-import lombok.RequiredArgsConstructor;
 
-import java.util.Date;
 import java.util.List;
 
 @Getter
