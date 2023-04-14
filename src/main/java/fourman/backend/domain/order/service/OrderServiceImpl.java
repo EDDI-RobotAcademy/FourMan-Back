@@ -56,7 +56,12 @@ public class OrderServiceImpl implements OrderService {
         orderInfo.setTotalPrice(orderInfoRequestForm.getTotalPrice());
         try {
             for (CartItemRequestForm cartItemRequestForm : cartItemList) {
-                OrderProduct orderProduct = new OrderProduct(cartItemRequestForm.getProductId(), cartItemRequestForm.getCount(), cartItemRequestForm.getImageResource());
+                OrderProduct orderProduct = new OrderProduct(
+                        cartItemRequestForm.getProductName(),
+                        cartItemRequestForm.getPrice(),
+                        cartItemRequestForm.getDrinkType(),
+                        cartItemRequestForm.getCount(),
+                        cartItemRequestForm.getImageResource());
                 orderProductList.add(orderProduct);
                 orderInfo.setOrderProduct(orderProduct);
             }
