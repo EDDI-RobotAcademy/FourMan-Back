@@ -29,18 +29,18 @@ public class Seat {
     private int height;
 
     @NotNull
-    @ManyToOne( cascade = CascadeType.ALL)
+    @ManyToOne
     @JoinColumn(name = "cafe_id")
     private Cafe cafe;
 
-    @ManyToOne( cascade = CascadeType.ALL)
+    @ManyToOne
     @JoinColumn(name = "time_id" )
     private Time time;
 
     @NotNull
     @Column(columnDefinition = "BIT(1) DEFAULT 0")
     private boolean isReserved=false;
-    @ManyToOne( cascade = CascadeType.ALL)
+    @ManyToOne( cascade = CascadeType.ALL) //영속성오류방지 reservation객체가 저장이 안되어있는데 seat을 먼저 저장해서.
     @JoinColumn(name = "reservation_id")
     private Reservation reservation;
 

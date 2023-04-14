@@ -37,7 +37,7 @@ public class Reservation {
     @NonNull
     private List<Seat> seats;
 
-    @JsonIgnore
+    @JsonIgnore//OnetoOne에서는 순환참조 일어나기떄문에 방지.
     @OneToOne
     @JoinColumn(name = "time_id")
     private Time time;  //예약타임
