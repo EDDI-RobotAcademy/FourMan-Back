@@ -12,4 +12,6 @@ public interface MyInfoService {
     MyInfoResponseForm myInfo(Long memberId);
 
     MemberLoginResponse memberInfoModify(Long memberId, MemberInfoModifyRequestForm modifyRequest);
+
+    void withdrawal(Long memberId);
 }

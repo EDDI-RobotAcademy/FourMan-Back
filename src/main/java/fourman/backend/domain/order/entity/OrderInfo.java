@@ -28,7 +28,6 @@ public class OrderInfo {
     private int totalQuantity;
     @Column(nullable = false)
     private int totalPrice;
-
     @JsonManagedReference
     @OneToMany(mappedBy = "orderInfo",fetch = FetchType.LAZY, cascade = CascadeType.REMOVE)
     private List<OrderProduct> orderProductList = new ArrayList<>();
