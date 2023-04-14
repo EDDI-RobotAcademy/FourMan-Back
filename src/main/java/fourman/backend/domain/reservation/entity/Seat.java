@@ -29,18 +29,18 @@ public class Seat {
     private int height;
 
     @NotNull
-    @ManyToOne
+    @ManyToOne( cascade = CascadeType.ALL)
     @JoinColumn(name = "cafe_id")
     private Cafe cafe;
 
-    @ManyToOne
-    @JoinColumn(name = "time_id")
+    @ManyToOne( cascade = CascadeType.ALL)
+    @JoinColumn(name = "time_id" )
     private Time time;
 
     @NotNull
     @Column(columnDefinition = "BIT(1) DEFAULT 0")
     private boolean isReserved=false;
-    @ManyToOne
+    @ManyToOne( cascade = CascadeType.ALL)
     @JoinColumn(name = "reservation_id")
     private Reservation reservation;
 

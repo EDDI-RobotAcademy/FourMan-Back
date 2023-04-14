@@ -86,26 +86,35 @@ public class ReservationServiceImpl implements ReservationService {
 
     @Override
     public ResponseEntity<?> makeReservation(ReservationForm reservationForm) {
-        System.out.println("memberId:"+ reservationForm.getMemberId());
+
         Reservation reservationRequest = new Reservation();
+
+        System.out.println("memberId:"+ reservationForm.getMemberId());
         Optional<Member> member = memberRepository.findById(reservationForm.getMemberId());
         System.out.println("member:"+ member.get());
+        reservationRequest.setMember(member.get());
+
         reservationRequest.setCafe(reservationForm.getCafe());
         System.out.println("cafe:"+ reservationForm.getCafe());
-        reservationRequest.setMember(member.get());
+
+        System.out.println("시간:"+LocalDateTime.now());
+        reservationRequest.setReservationTime(LocalDateTime.now());
+
+        Optional<Time> optionalTime = timeRepository.findByTime(reservationForm.getTimeString());
+        reservationRequest.setTime(optionalTime.get());
 
             List<Seat> seatList =new ArrayList<>();
             for(Seat seat :reservationForm.getSeatList()){ // 각 자리마다
                     if (!seat.isReserved()) {//예약이 안되어있으면
                         seat.setReserved(true);//예약하라
+                        seat.setReservation(reservationRequest);
                         System.out.println("예약완료");
                         seatList.add(seat);
                         seatRepository.save(seat);
                     }
             }
             reservationRequest.setSeats(seatList);
-        System.out.println("시간:"+LocalDateTime.now());
-        reservationRequest.setReservationTime(LocalDateTime.now());
+
         reservationRepository.save(reservationRequest);
         System.out.println("예약저장완료");
 

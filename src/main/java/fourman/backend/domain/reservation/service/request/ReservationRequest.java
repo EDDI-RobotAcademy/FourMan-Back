@@ -19,5 +19,6 @@ public class ReservationRequest {
     private Cafe cafe;
     private Member member;
     private List<Seat> seats;
+    private Time time;
     private LocalDateTime reservationTime;
 }
