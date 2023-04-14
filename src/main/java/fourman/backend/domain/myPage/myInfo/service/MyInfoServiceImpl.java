@@ -1,6 +1,8 @@
 package fourman.backend.domain.myPage.myInfo.service;
 
 import fourman.backend.domain.freeBoard.entity.FreeBoard;
+import fourman.backend.domain.freeBoard.entity.FreeBoardComment;
+import fourman.backend.domain.freeBoard.repository.FreeBoardCommentRepository;
 import fourman.backend.domain.freeBoard.repository.FreeBoardRepository;
 import fourman.backend.domain.member.entity.Address;
 import fourman.backend.domain.member.entity.Member;
@@ -40,6 +42,7 @@ public class MyInfoServiceImpl implements MyInfoService{
     final private QuestionBoardRepository questionBoardRepository;
     final private CommentRepository commentRepository;
     final private ReservationRepository reservationRepository;
+    final private FreeBoardCommentRepository freeBoardCommentRepository;
     final private RedisService redisService;
 
     @Override
@@ -114,9 +117,20 @@ public class MyInfoServiceImpl implements MyInfoService{
             reviewBoardRepository.delete(reviewBoard);
         }
 
+        // 본인이 작성한 자유게시물 댓글 삭제
+        List<FreeBoardComment> freeBoardCommentList = freeBoardCommentRepository.findFreeBoardCommentByMemberId(memberId);
+        for(FreeBoardComment freeBoardComment: freeBoardCommentList) {
+            freeBoardCommentRepository.delete(freeBoardComment);
+        }
+
         // 등록한 자유게시물 삭제
         List<FreeBoard> freeBoardList = freeBoardRepository.findFreeBoardByMemberId(memberId);
+
         for(FreeBoard freeBoard: freeBoardList) {
+            List<FreeBoardComment> freeBoardCommentList2 = freeBoardCommentRepository.findFreeBoardCommentByBoardId(freeBoard.getBoardId());
+            for (FreeBoardComment freeBoardComment: freeBoardCommentList2) {
+                freeBoardCommentRepository.delete(freeBoardComment);
+            }
             freeBoardRepository.delete(freeBoard);
         }
 

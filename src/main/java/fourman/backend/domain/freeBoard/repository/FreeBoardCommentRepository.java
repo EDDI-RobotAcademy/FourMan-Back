@@ -11,4 +11,7 @@ public interface FreeBoardCommentRepository extends JpaRepository<FreeBoardComme
 
     @Query("select c from FreeBoardComment c join fetch c.freeBoard f where f.boardId = :boardId")
     List<FreeBoardComment> findFreeBoardCommentByBoardId(Long boardId);
+
+    @Query("SELECT c FROM FreeBoardComment c where c.memberId = :memberId")
+    List<FreeBoardComment> findFreeBoardCommentByMemberId(Long memberId);
 }
