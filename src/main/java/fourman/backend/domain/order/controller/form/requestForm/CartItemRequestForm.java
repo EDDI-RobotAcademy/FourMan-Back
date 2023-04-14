@@ -10,7 +10,9 @@ import lombok.ToString;
 @RequiredArgsConstructor
 public class CartItemRequestForm {
 
-    private final Long productId;
+    private final String productName;
+    private final int price;
+    private final String drinkType;
     private final int count;
     private final String imageResource;
 }
