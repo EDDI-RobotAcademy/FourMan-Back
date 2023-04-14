@@ -31,10 +31,10 @@ public class Reservation {
     @JoinColumn(name = "member_id")
     private Member member;
 
-    @OneToMany
+    @OneToMany(mappedBy = "reservation",cascade = CascadeType.REMOVE)
     @NonNull
     private List<Seat> seats;
-    @Column(nullable = false)
+    @Column(nullable = false  , columnDefinition = "TIMESTAMP")
     private LocalDateTime reservationTime;
 
 }

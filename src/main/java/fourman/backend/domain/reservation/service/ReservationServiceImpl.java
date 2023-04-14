@@ -13,8 +13,6 @@ import fourman.backend.domain.reservation.repository.CafeTableRepository;
 import fourman.backend.domain.reservation.repository.ReservationRepository;
 import fourman.backend.domain.reservation.repository.SeatRepository;
 import fourman.backend.domain.reservation.repository.TimeRepository;
-import fourman.backend.domain.reservation.service.request.ReservationRequest;
-import fourman.backend.domain.reservation.service.response.SeatResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
