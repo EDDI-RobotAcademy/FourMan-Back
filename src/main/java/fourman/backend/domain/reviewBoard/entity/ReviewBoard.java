@@ -30,7 +30,7 @@ public class ReviewBoard {
     @Lob
     private String content;
 
-    @OneToMany(mappedBy = "reviewBoard", fetch = FetchType.EAGER)
+    @OneToMany(mappedBy = "reviewBoard", fetch = FetchType.EAGER, cascade = CascadeType.ALL, orphanRemoval = true)
     private List<ReviewBoardImageResource> reviewBoardImageResourceList = new ArrayList<>();
 
     private Long rating;

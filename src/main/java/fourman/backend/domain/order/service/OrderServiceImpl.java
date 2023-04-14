@@ -54,10 +54,9 @@ public class OrderServiceImpl implements OrderService {
         orderInfo.setMemberId(orderInfoRequestForm.getMemberId());
         orderInfo.setTotalQuantity(orderInfoRequestForm.getTotalQuantity());
         orderInfo.setTotalPrice(orderInfoRequestForm.getTotalPrice());
-
         try {
             for (CartItemRequestForm cartItemRequestForm : cartItemList) {
-                OrderProduct orderProduct = new OrderProduct(cartItemRequestForm.getProductId(), cartItemRequestForm.getCount());
+                OrderProduct orderProduct = new OrderProduct(cartItemRequestForm.getProductId(), cartItemRequestForm.getCount(), cartItemRequestForm.getImageResource());
                 orderProductList.add(orderProduct);
                 orderInfo.setOrderProduct(orderProduct);
             }
@@ -79,14 +78,11 @@ public class OrderServiceImpl implements OrderService {
         Optional<Member> maybeMember = memberRepository.findByMemberId(memberId);
         Member member = maybeMember.get();
         String customer = member.getNickName();
-
         for(OrderInfo orderInfo: orderInfoList) {
 
             SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy년 MM월 dd일 HH시 mm분");
             String orderDate = simpleDateFormat.format(orderInfo.getOrderDate());
-
             List<OrderProduct> orderProductList = orderProductRepository.findOrderProductByOrderId(orderInfo.getOrderId());
-
             orderInfoResponseList.add(new OrderInfoResponseForm(orderInfo.getOrderId(), orderInfo.getOrderNo(), customer, orderDate,
                                       orderInfo.getTotalQuantity(), orderInfo.getTotalPrice(), orderProductList));
         }

@@ -22,13 +22,17 @@ public class OrderProduct {
     @Column(nullable = false)
     private int count;
 
+    @Column
+    private String imageResource;
+
     @JsonBackReference
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "order_id")
     private OrderInfo orderInfo;
 
-    public OrderProduct(Long productId, int count) {
+    public OrderProduct(Long productId, int count, String imageResource) {
         this.productId = productId;
         this.count = count;
+        this.imageResource = imageResource;
     }
 }
