@@ -17,7 +17,13 @@ public class OrderProduct {
     private Long id;
 
     @Column(nullable = false)
-    private Long productId;
+    private String productName;
+
+    @Column(nullable = false)
+    private int price;
+
+    @Column(nullable = false)
+    private String drinkType;
 
     @Column(nullable = false)
     private int count;
@@ -30,8 +36,10 @@ public class OrderProduct {
     @JoinColumn(name = "order_id")
     private OrderInfo orderInfo;
 
-    public OrderProduct(Long productId, int count, String imageResource) {
-        this.productId = productId;
+    public OrderProduct(String productName, int price, String drinkType, int count, String imageResource) {
+        this.productName = productName;
+        this.price = price;
+        this.drinkType = drinkType;
         this.count = count;
         this.imageResource = imageResource;
     }
