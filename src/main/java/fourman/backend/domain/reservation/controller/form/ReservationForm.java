@@ -17,5 +17,6 @@ public class ReservationForm {
     private Cafe cafe ;
     private Long memberId;
     private List<Seat> seatList;
+    private String timeString;
 
 }

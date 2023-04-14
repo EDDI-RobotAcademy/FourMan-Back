@@ -1,5 +1,6 @@
 package fourman.backend.domain.reservation.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import fourman.backend.domain.cafeIntroduce.entity.Cafe;
 import fourman.backend.domain.member.entity.Member;
 import lombok.Getter;
@@ -31,10 +32,16 @@ public class Reservation {
     @JoinColumn(name = "member_id")
     private Member member;
 
+    @JsonIgnore
     @OneToMany(mappedBy = "reservation",cascade = CascadeType.REMOVE)
     @NonNull
     private List<Seat> seats;
+
+    @JsonIgnore
+    @OneToOne
+    @JoinColumn(name = "time_id")
+    private Time time;  //예약타임
     @Column(nullable = false  , columnDefinition = "TIMESTAMP")
-    private LocalDateTime reservationTime;
+    private LocalDateTime reservationTime;//예약결제시행 시간
 
 }
