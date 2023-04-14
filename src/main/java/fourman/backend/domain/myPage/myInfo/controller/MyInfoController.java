@@ -31,4 +31,11 @@ public class MyInfoController {
 
         return myInfoService.memberInfoModify(memberId, modifyRequest);
     }
+
+    @DeleteMapping("/withdrawal/{memberId}")
+    public void withdrawal(@PathVariable("memberId") Long memberId) {
+        log.info("withdrawal()");
+
+        myInfoService.withdrawal(memberId);
+    }
 }

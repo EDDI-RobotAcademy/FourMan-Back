@@ -40,6 +40,9 @@ public class Seat {
     @NotNull
     @Column(columnDefinition = "BIT(1) DEFAULT 0")
     private boolean isReserved=false;
+    @ManyToOne
+    @JoinColumn(name = "reservation_id")
+    private Reservation reservation;
 
 
 }

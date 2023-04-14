@@ -11,7 +11,6 @@ import javax.persistence.*;
 @Entity
 @NoArgsConstructor
 @AllArgsConstructor
-@Builder
 public class CafeCode {
 
     @Id
