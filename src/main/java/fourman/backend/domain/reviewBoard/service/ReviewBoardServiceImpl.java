@@ -55,6 +55,13 @@ public class ReviewBoardServiceImpl implements ReviewBoardService {
         reviewBoard.setRating(reviewBoardRequest.getRating());
         reviewBoard.setMemberId(reviewBoardRequest.getMemberId());
 
+        String content = reviewBoard.getContent();
+
+        content = content.replaceAll("!\\[[^\\]]*\\]\\([^)]*\\)", ""); // <img> 태그 제거
+
+        // base64로 디코딩 하지 않고 단순히 <img> <p> 태그 replace 후 저장
+        reviewBoard.setContent(content);
+
         LocalDateTime now = LocalDateTime.now(ZoneId.of("Asia/Seoul"));
         DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyyMMddHHmmss");
 
