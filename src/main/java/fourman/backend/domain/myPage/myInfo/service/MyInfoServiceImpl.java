@@ -151,12 +151,13 @@ public class MyInfoServiceImpl implements MyInfoService{
             questionBoardRepository.delete(questionBoard);
         }
 
-        // 회원 정보 삭제
+        // 예약정보 삭제
         List<Reservation> reservationList = reservationRepository.findReservationByMemberId(memberId);
         for(Reservation reservation: reservationList) {
             reservationRepository.delete(reservation);
         }
 
+        // 회원 정보 삭제
         memberRepository.deleteById(memberId);
 
     }
