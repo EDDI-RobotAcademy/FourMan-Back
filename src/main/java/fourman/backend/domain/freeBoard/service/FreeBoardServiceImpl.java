@@ -70,5 +70,10 @@ public class FreeBoardServiceImpl implements FreeBoardService{
         return freeBoardRepository.findFreeBoardByMemberId(memberId);
     }
 
+    @Override
+    public List<FreeBoard> searchFreeBoardList(String searchText) {
+        return freeBoardRepository.findSearchFreeBoardBySearchText(searchText);
+    }
+
 
 }

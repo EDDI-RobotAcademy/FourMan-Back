@@ -17,4 +17,6 @@ public interface FreeBoardService {
     FreeBoard modify(Long boardId, FreeBoardRequestForm boardRequest);
 
     List<FreeBoard> myPageList(Long memberId);
+
+    List<FreeBoard> searchFreeBoardList(String searchText);
 }
