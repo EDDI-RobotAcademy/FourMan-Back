@@ -57,4 +57,9 @@ public class FreeBoardController {
     public List<FreeBoard> freeBoardMyPageList(@PathVariable("memberId") Long memberId) {
         return freeBoardService.myPageList(memberId);
     }
+
+    @GetMapping("/search/{searchText}")
+    public List<FreeBoard> freeBoardSearchList(@PathVariable("searchText") String searchText) {
+        return freeBoardService.searchFreeBoardList(searchText);
+    }
 }

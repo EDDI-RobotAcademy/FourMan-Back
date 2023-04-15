@@ -11,4 +11,7 @@ public interface FreeBoardRepository extends JpaRepository<FreeBoard, Long> {
 
     @Query("select f from FreeBoard f where f.memberId = :memberId")
     List<FreeBoard> findFreeBoardByMemberId(Long memberId);
+
+    @Query("select f from FreeBoard f WHERE f.title LIKE %:searchText%")
+    List<FreeBoard> findSearchFreeBoardBySearchText(String searchText);
 }
