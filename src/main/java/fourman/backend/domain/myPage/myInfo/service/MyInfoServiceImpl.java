@@ -104,7 +104,7 @@ public class MyInfoServiceImpl implements MyInfoService{
         redisService.deleteByKey(userToken.toString());
         redisService.setKeyAndValue(userToken.toString(), member.getId());
 
-        MemberLoginResponse memberLoginResponse = new MemberLoginResponse(userToken.toString(), member.getId(), member.getNickName(), member.getAuthority().getAuthorityName(), member.getCode(), null, member.getEmail());
+        MemberLoginResponse memberLoginResponse = new MemberLoginResponse(userToken.toString(), member.getId(), member.getNickName(), member.getAuthority().getAuthorityName(), null, member.getCode(), null, member.getEmail());
 
         return memberLoginResponse;
     }
