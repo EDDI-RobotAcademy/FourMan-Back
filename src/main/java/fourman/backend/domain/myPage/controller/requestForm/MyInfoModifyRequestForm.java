@@ -1,4 +1,4 @@
-package fourman.backend.domain.myPage.myInfo.controller.requestForm;
+package fourman.backend.domain.myPage.controller.requestForm;
 
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -9,7 +9,7 @@ import lombok.ToString;
 @Setter
 @ToString
 @NoArgsConstructor
-public class MemberInfoModifyRequestForm {
+public class MyInfoModifyRequestForm {
 
     private String nickName;
     private int birthdate;

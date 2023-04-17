@@ -1,4 +1,4 @@
-package fourman.backend.domain.myPage.myInfo.service;
+package fourman.backend.domain.myPage.service;
 
 import fourman.backend.domain.freeBoard.entity.FreeBoard;
 import fourman.backend.domain.freeBoard.entity.FreeBoardComment;
@@ -9,16 +9,15 @@ import fourman.backend.domain.member.entity.Member;
 import fourman.backend.domain.member.entity.MemberProfile;
 import fourman.backend.domain.member.repository.MemberProfileRepository;
 import fourman.backend.domain.member.repository.MemberRepository;
-import fourman.backend.domain.member.service.response.MemberLoginResponse;
-import fourman.backend.domain.myPage.myInfo.controller.requestForm.MemberInfoModifyRequestForm;
-import fourman.backend.domain.myPage.myInfo.service.responseForm.MyInfoResponseForm;
+import fourman.backend.domain.myPage.controller.requestForm.MyInfoModifyRequestForm;
+import fourman.backend.domain.myPage.service.responseForm.MemberInfoResponseForm;
+import fourman.backend.domain.myPage.service.responseForm.MyInfoModifyResponseForm;
+import fourman.backend.domain.myPage.service.responseForm.MyInfoResponseForm;
 import fourman.backend.domain.questionboard.entity.Comment;
 import fourman.backend.domain.questionboard.entity.QuestionBoard;
 import fourman.backend.domain.questionboard.repository.CommentRepository;
 import fourman.backend.domain.questionboard.repository.QuestionBoardRepository;
-import fourman.backend.domain.reservation.entity.Reservation;
 import fourman.backend.domain.reservation.repository.ReservationRepository;
-import fourman.backend.domain.reviewBoard.controller.responseForm.ReviewBoardReadResponseForm;
 import fourman.backend.domain.reviewBoard.entity.ReviewBoard;
 import fourman.backend.domain.reviewBoard.repository.ReviewBoardRepository;
 import fourman.backend.domain.security.service.RedisService;
@@ -26,6 +25,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
@@ -33,7 +33,7 @@ import java.util.UUID;
 @Slf4j
 @Service
 @RequiredArgsConstructor
-public class MyInfoServiceImpl implements MyInfoService{
+public class MyPageServiceImpl implements MyPageService {
 
     final private MemberRepository memberRepository;
     final private MemberProfileRepository memberProfileRepository;
@@ -67,7 +67,7 @@ public class MyInfoServiceImpl implements MyInfoService{
     }
 
     @Override
-    public MemberLoginResponse memberInfoModify(Long memberId, MemberInfoModifyRequestForm modifyRequest) {
+    public MyInfoModifyResponseForm myInfoModify(Long memberId, MyInfoModifyRequestForm modifyRequest) {
         // 기존 사용자 정보 조회
         Optional<Member> maybeMember = memberRepository.findById(memberId);
         Optional<MemberProfile> maybeMemberProfile = memberProfileRepository.findById(memberId);
@@ -104,9 +104,9 @@ public class MyInfoServiceImpl implements MyInfoService{
         redisService.deleteByKey(userToken.toString());
         redisService.setKeyAndValue(userToken.toString(), member.getId());
 
-        MemberLoginResponse memberLoginResponse = new MemberLoginResponse(userToken.toString(), member.getId(), member.getNickName(), member.getAuthority().getAuthorityName(), null, member.getCode(), null, member.getEmail());
+        MyInfoModifyResponseForm myInfoModifyResponseForm = new MyInfoModifyResponseForm(userToken.toString(), member.getId(), member.getNickName(), member.getAuthority().getAuthorityName(), null, member.getCode(), null, member.getEmail());
 
-        return memberLoginResponse;
+        return myInfoModifyResponseForm;
     }
 
     @Override
@@ -151,14 +151,34 @@ public class MyInfoServiceImpl implements MyInfoService{
             questionBoardRepository.delete(questionBoard);
         }
 
-        // 예약정보 삭제
-        List<Reservation> reservationList = reservationRepository.findReservationByMemberId(memberId);
-        for(Reservation reservation: reservationList) {
-            reservationRepository.delete(reservation);
-        }
+        //예약정보 삭제시 자리도 같이 삭제되는 오류
+//        // 예약정보 삭제
+//        List<Reservation> reservationList = reservationRepository.findReservationByMemberId(memberId);
+//        for(Reservation reservation: reservationList) {
+//            reservationRepository.delete(reservation);
+//        }
 
         // 회원 정보 삭제
         memberRepository.deleteById(memberId);
 
+    }
+
+    @Override
+    public List<MemberInfoResponseForm> memberList() {
+        List<Member> memberList = memberRepository.findAll();
+        List<MemberProfile> memberProfileList = memberProfileRepository.findAll();
+
+        List<MemberInfoResponseForm> memberInfoResponseFormList = new ArrayList<>();
+
+        for(Member member: memberList) {
+
+
+            MemberInfoResponseForm memberInfoResponseForm = new MemberInfoResponseForm(member.getId(), member.getNickName(), member.getAuthority().getAuthorityName().getAUTHORITY_TYPE(),
+                    member.getEmail(), member.getMemberProfile().getPhoneNumber());
+
+            memberInfoResponseFormList.add(memberInfoResponseForm);
+        }
+
+        return memberInfoResponseFormList;
     }
 }
