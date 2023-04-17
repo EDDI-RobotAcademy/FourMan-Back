@@ -1,4 +1,4 @@
-package fourman.backend.domain.myPage.myInfo.controller.requestForm;
+package fourman.backend.domain.myPage.controller.requestForm;
 
 import lombok.Getter;
 import lombok.NoArgsConstructor;
