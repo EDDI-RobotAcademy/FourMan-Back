@@ -1,4 +1,4 @@
-package fourman.backend.domain.myPage.myInfo.service.responseForm;
+package fourman.backend.domain.myPage.service.responseForm;
 
 import fourman.backend.domain.member.entity.Address;
 import lombok.AllArgsConstructor;
