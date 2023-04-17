@@ -2,7 +2,10 @@ package fourman.backend.domain.freeBoard.service;
 
 import fourman.backend.domain.freeBoard.controller.requestForm.FreeBoardRequestForm;
 import fourman.backend.domain.freeBoard.entity.FreeBoard;
+import fourman.backend.domain.freeBoard.entity.FreeBoardComment;
+import fourman.backend.domain.freeBoard.repository.FreeBoardCommentRepository;
 import fourman.backend.domain.freeBoard.repository.FreeBoardRepository;
+import fourman.backend.domain.questionboard.entity.Comment;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Sort;
@@ -17,6 +20,8 @@ import java.util.Optional;
 public class FreeBoardServiceImpl implements FreeBoardService{
 
     final private FreeBoardRepository freeBoardRepository;
+
+    final private FreeBoardCommentRepository freeBoardCommentRepository;
 
     @Override
     public FreeBoard register(FreeBoardRequestForm freeBoardRequest) {
@@ -48,6 +53,13 @@ public class FreeBoardServiceImpl implements FreeBoardService{
 
     @Override
     public void remove(Long boardId) {
+        List<FreeBoardComment> commentList = freeBoardCommentRepository.findFreeBoardCommentByBoardId(boardId);
+
+        //댓글 먼저 삭제
+        for(FreeBoardComment freeBoardComment : commentList) {
+            freeBoardCommentRepository.delete(freeBoardComment);
+        }
+
         freeBoardRepository.deleteById(boardId);
     }
 
