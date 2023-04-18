@@ -57,7 +57,11 @@ public class QuestionBoardServiceImpl implements QuestionBoardService {
             System.out.println("읽을 수 없음");
             return null;
         }
-            return maybeQuestionBoard.get();
+        //viewCnt를 증가시켜서 저장후 QuestionBoard를 반환함
+        QuestionBoard questionBoard = maybeQuestionBoard.get();
+        questionBoard.increaseViewCnt();
+        questionBoardRepository.save(questionBoard);
+        return questionBoard;
         //처리 로직
 
 
@@ -99,19 +103,19 @@ public class QuestionBoardServiceImpl implements QuestionBoardService {
         return questionBoardRepository.findMyQuestionBoardByMemberId(memberId);
     }
 
-    @Override
-    public Long showViewCnt(Long boardId) {
-        Optional<QuestionBoard> maybeQuestionBoard = questionBoardRepository.findById(boardId);
-        if(maybeQuestionBoard.isEmpty()) {
-            return null;
-        }
-        QuestionBoard questionBoard = maybeQuestionBoard.get();
-        questionBoard.increaseViewCnt();
-        questionBoardRepository.save(questionBoard);
-        return questionBoard.getViewCnt();
+//    @Override
+//    public Long showViewCnt(Long boardId) {
+//        Optional<QuestionBoard> maybeQuestionBoard = questionBoardRepository.findById(boardId);
+//        if(maybeQuestionBoard.isEmpty()) {
+//            return null;
+//        }
+//        QuestionBoard questionBoard = maybeQuestionBoard.get();
+//        questionBoard.increaseViewCnt();
+//        questionBoardRepository.save(questionBoard);
+//        return questionBoard.getViewCnt();
 
 
 
-}
+
 
 }
