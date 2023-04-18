@@ -25,8 +25,6 @@ public class Cafe {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long cafeId;
     @Column(nullable = false)
-    private String cafeName;
-    @Column(nullable = false)
     private String cafeAddress;
     @Column(nullable = false)
     private String cafeTel;
@@ -43,8 +41,7 @@ public class Cafe {
 
 
 
-    public Cafe(String cafeName, String cafeAddress, String cafeTel, String startTime, String endTime, CafeInfo cafeInfo, CafeCode cafeCode) {
-        this.cafeName = cafeName;
+    public Cafe( String cafeAddress, String cafeTel, String startTime, String endTime, CafeInfo cafeInfo, CafeCode cafeCode) {
         this.cafeAddress = cafeAddress;
         this.cafeTel = cafeTel;
         this.startTime = startTime;

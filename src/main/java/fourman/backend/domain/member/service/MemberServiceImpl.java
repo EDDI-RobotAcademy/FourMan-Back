@@ -120,7 +120,7 @@ public class MemberServiceImpl implements MemberService {
                 System.out.println("op.get().getCafe():"+op.get().getCafe());
                 if(op.isPresent()){
                     if(op.get().getCafe()==null){
-                        memberLoginResponse = new MemberLoginResponse(userToken.toString(), member.getId(), member.getNickName(), member.getAuthority().getAuthorityName(), null ,member.getCode(), null, member.getEmail());
+                        memberLoginResponse = new MemberLoginResponse(userToken.toString(), member.getId(), member.getNickName(), member.getAuthority().getAuthorityName(), null ,member.getCode(),op.get().getCafeName(), member.getEmail());
                         log.info("카페를 아직 등록하지않음.");
                         return memberLoginResponse;
                     }
