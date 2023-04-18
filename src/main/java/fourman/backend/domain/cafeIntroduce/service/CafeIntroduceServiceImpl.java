@@ -33,7 +33,7 @@ public class CafeIntroduceServiceImpl implements CafeIntroduceService {
     private final CafeCodeRepository cafeCodeRepository;
     //
     @Override
-    public void registerCafe(List<MultipartFile> thumbnail, List<MultipartFile> fileList, CafeIntroRequestForm cafeIntroRequestForm) {
+    public Long registerCafe(List<MultipartFile> thumbnail, List<MultipartFile> fileList, CafeIntroRequestForm cafeIntroRequestForm) {
         // 1. cafe 저장
         Cafe cafe = new Cafe();
         cafe.setCafeName(cafeIntroRequestForm.getCafeName());
@@ -92,6 +92,7 @@ public class CafeIntroduceServiceImpl implements CafeIntroduceService {
             cafeInfo.setCafeImagesName(imageList);
             cafe.setCafeInfo(cafeInfo);
             cafeRepository.save(cafe);
+            return cafe.getCafeId();
 
         } catch (FileNotFoundException e) {
             throw new RuntimeException(e);

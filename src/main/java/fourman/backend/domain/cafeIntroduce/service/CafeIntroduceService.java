@@ -8,7 +8,7 @@ import org.springframework.web.multipart.MultipartFile;
 import java.util.List;
 
 public interface CafeIntroduceService {
-    public void registerCafe(List<MultipartFile> thumbnail, List<MultipartFile> fileList, CafeIntroRequestForm cafeIntroRequestForm);
+    Long registerCafe(List<MultipartFile> thumbnail, List<MultipartFile> fileList, CafeIntroRequestForm cafeIntroRequestForm);
 
     List<CafeIntroListResponse> list();
 

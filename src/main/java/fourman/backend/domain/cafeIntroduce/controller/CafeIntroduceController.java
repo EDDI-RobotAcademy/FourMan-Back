@@ -21,7 +21,7 @@ public class CafeIntroduceController {
 
     @PostMapping(value = "/register",
             consumes = {  MediaType.MULTIPART_FORM_DATA_VALUE, MediaType.MULTIPART_FORM_DATA_VALUE, MediaType.APPLICATION_JSON_VALUE }) // 이미지+텍스트 업로드하는 경우 value , consumes 정보(이미지타입, json타입) 추가
-    public String registerCafe(
+    public Long registerCafe(
             @RequestPart(value = "thumbnail") List<MultipartFile> thumbnail,
             @RequestPart(value = "fileList") List<MultipartFile> fileList,
             @RequestPart(value = "info") CafeIntroRequestForm cafeIntroRequestForm) {
@@ -29,9 +29,9 @@ public class CafeIntroduceController {
         log.info("카페등록 컨트롤러-파일리스트: " + fileList.toString());
         log.info("카페등록 컨트롤러-리퀘스트내용: " + cafeIntroRequestForm);
 
-        cafeIntroduceService.registerCafe(thumbnail, fileList, cafeIntroRequestForm);
+        return cafeIntroduceService.registerCafe(thumbnail, fileList, cafeIntroRequestForm);
 
-        return "카페가 등록되었습니다.";
+
     }
 
     @GetMapping(path = "/list")
