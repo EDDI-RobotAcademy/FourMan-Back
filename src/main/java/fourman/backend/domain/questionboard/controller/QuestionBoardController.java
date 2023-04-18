@@ -56,8 +56,9 @@ public class QuestionBoardController {
         return questionBoardService.myQuestionBoardList(memberId);
     }
 
-    @GetMapping("/view/{boardId}")
-    public Long showViewCnt(@PathVariable("boardId") Long boardId) {
-       return questionBoardService.showViewCnt(boardId);
-    }
+    //read메서드와 합쳐서 따로 viewCnt를 따로 보내는게아닌 read에서 한번에 보냄
+//    @GetMapping("/view/{boardId}")
+//    public Long showViewCnt(@PathVariable("boardId") Long boardId) {
+//       return questionBoardService.showViewCnt(boardId);
+//    }
 }

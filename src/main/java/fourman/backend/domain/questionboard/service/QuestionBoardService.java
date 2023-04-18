@@ -22,5 +22,5 @@ public interface QuestionBoardService {
     List<QuestionBoard> myQuestionBoardList(Long memberId);
 
 
-    Long showViewCnt(Long boardId);
+//    Long showViewCnt(Long boardId);
 }
