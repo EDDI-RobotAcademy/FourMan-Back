@@ -10,6 +10,7 @@ import java.util.HashSet;
 import java.util.Optional;
 import java.util.Set;
 
+@Getter
 @Setter
 @Entity
 @NoArgsConstructor
@@ -39,7 +40,7 @@ public class Member {
     @Getter
     @JsonIgnore
     @JoinColumn(name ="authority_id")
-    @ManyToOne(fetch = FetchType.EAGER, cascade = CascadeType.PERSIST)
+    @ManyToOne(fetch = FetchType.EAGER, cascade = {CascadeType.PERSIST, CascadeType.REMOVE})
     private Authority authority;
 
     //    // orphanRemoval = true :부모 엔티티에서 자식 엔티티 제거
