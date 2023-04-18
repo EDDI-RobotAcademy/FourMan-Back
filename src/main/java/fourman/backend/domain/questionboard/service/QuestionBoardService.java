@@ -20,4 +20,7 @@ public interface QuestionBoardService {
     List<QuestionBoard> searchBoardList(String searchText);
 
     List<QuestionBoard> myQuestionBoardList(Long memberId);
+
+
+    Long showViewCnt(Long boardId);
 }

@@ -21,5 +21,5 @@ public class QuestionBoardRequestForm {
     final private String content;
     final private Long memberId;
     final private boolean secret;
-
+    final private Long viewCnt;
 }
