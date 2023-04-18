@@ -1,5 +1,7 @@
 package fourman.backend.domain.myPage.service;
 
+import fourman.backend.domain.cafeIntroduce.entity.Cafe;
+import fourman.backend.domain.cafeIntroduce.repository.CafeRepository;
 import fourman.backend.domain.freeBoard.entity.FreeBoard;
 import fourman.backend.domain.freeBoard.entity.FreeBoardComment;
 import fourman.backend.domain.freeBoard.repository.FreeBoardCommentRepository;
@@ -10,6 +12,7 @@ import fourman.backend.domain.member.entity.MemberProfile;
 import fourman.backend.domain.member.repository.MemberProfileRepository;
 import fourman.backend.domain.member.repository.MemberRepository;
 import fourman.backend.domain.myPage.controller.requestForm.MyInfoModifyRequestForm;
+import fourman.backend.domain.myPage.service.responseForm.CafeInfoResponseForm;
 import fourman.backend.domain.myPage.service.responseForm.MemberInfoResponseForm;
 import fourman.backend.domain.myPage.service.responseForm.MyInfoModifyResponseForm;
 import fourman.backend.domain.myPage.service.responseForm.MyInfoResponseForm;
@@ -23,6 +26,7 @@ import fourman.backend.domain.reviewBoard.repository.ReviewBoardRepository;
 import fourman.backend.domain.security.service.RedisService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -44,6 +48,7 @@ public class MyPageServiceImpl implements MyPageService {
     final private ReservationRepository reservationRepository;
     final private FreeBoardCommentRepository freeBoardCommentRepository;
     final private RedisService redisService;
+    final private CafeRepository cafeRepository;
 
     @Override
     public MyInfoResponseForm myInfo(Long memberId) {
@@ -164,9 +169,9 @@ public class MyPageServiceImpl implements MyPageService {
     }
 
     @Override
-    public List<MemberInfoResponseForm> memberList() {
+    public List<MemberInfoResponseForm> memberInfoList() {
         List<Member> memberList = memberRepository.findAll();
-        List<MemberProfile> memberProfileList = memberProfileRepository.findAll();
+
 
         List<MemberInfoResponseForm> memberInfoResponseFormList = new ArrayList<>();
 
@@ -180,5 +185,22 @@ public class MyPageServiceImpl implements MyPageService {
         }
 
         return memberInfoResponseFormList;
+    }
+
+    @Override
+    public List<CafeInfoResponseForm> cafeInfoList() {
+        List<Cafe> cafeList = cafeRepository.findAll();
+
+        List<CafeInfoResponseForm> cafeInfoResponseFormList = new ArrayList<>();
+
+        for (Cafe cafe: cafeList) {
+            CafeInfoResponseForm cafeInfoResponseForm = new CafeInfoResponseForm(
+                    cafe.getCafeId(), cafe.getCafeName(), cafe.getCafeAddress(), cafe.getCafeTel(),
+                    cafe.getStartTime(), cafe.getEndTime()
+            );
+
+            cafeInfoResponseFormList.add(cafeInfoResponseForm);
+        }
+        return cafeInfoResponseFormList;
     }
 }

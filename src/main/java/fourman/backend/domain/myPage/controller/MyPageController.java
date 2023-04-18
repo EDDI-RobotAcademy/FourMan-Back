@@ -2,6 +2,7 @@ package fourman.backend.domain.myPage.controller;
 
 import fourman.backend.domain.myPage.controller.requestForm.MyInfoModifyRequestForm;
 import fourman.backend.domain.myPage.service.MyPageService;
+import fourman.backend.domain.myPage.service.responseForm.CafeInfoResponseForm;
 import fourman.backend.domain.myPage.service.responseForm.MemberInfoResponseForm;
 import fourman.backend.domain.myPage.service.responseForm.MyInfoModifyResponseForm;
 import fourman.backend.domain.myPage.service.responseForm.MyInfoResponseForm;
@@ -41,9 +42,15 @@ public class MyPageController {
 
         myPageService.withdrawal(memberId);
     }
-    @GetMapping("/list")
-    public List<MemberInfoResponseForm> memberList() {
-        return myPageService.memberList();
+    @GetMapping("/member-list")
+    public List<MemberInfoResponseForm> memberInfoList() {
+        return myPageService.memberInfoList();
     }
+
+    @GetMapping("/cafe-list")
+    public List<CafeInfoResponseForm> cafeInfoList() {
+        return myPageService.cafeInfoList();
+    }
+
 
 }
