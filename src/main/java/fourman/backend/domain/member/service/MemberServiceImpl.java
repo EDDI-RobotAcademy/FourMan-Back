@@ -84,6 +84,7 @@ public class MemberServiceImpl implements MemberService {
 
     @Override
     public MemberLoginResponse signIn(MemberLoginRequest memberLoginRequest) {
+        try {
         Optional<Member> maybeMember =
                 memberRepository.findByEmail(memberLoginRequest.getEmail());
 
@@ -108,12 +109,27 @@ public class MemberServiceImpl implements MemberService {
             redisService.setKeyAndValue(userToken.toString(), member.getId());
             //레디스에 토큰:유저ID 입력
 
-            MemberLoginResponse memberLoginResponse;
+            MemberLoginResponse memberLoginResponse=null;
             System.out.println("member.getAuthority().getAuthorityName(): "+member.getAuthority().getAuthorityName());
+
             if(member.getAuthority().getAuthorityName().equals(AuthorityType.CAFE)){ //카페사업자의 경우카페명 UI로 보내줌
                 log.info("카페사업자 입니다!");
                 Optional<CafeCode> op= cafeCodeRepository.findByCode(member.getCode());
-                memberLoginResponse = new MemberLoginResponse(userToken.toString(),member.getId(),member.getNickName(), member.getAuthority().getAuthorityName(),op.get().getCafe().getCafeId(), member.getCode(),op.get().getCafeName(), member.getEmail());
+                System.out.println("op"+op);
+                System.out.println("op.get()"+op.get());
+                System.out.println("op.get().getCafe():"+op.get().getCafe());
+                if(op.isPresent()){
+                    if(op.get().getCafe()==null){
+                        memberLoginResponse = new MemberLoginResponse(userToken.toString(), member.getId(), member.getNickName(), member.getAuthority().getAuthorityName(), null ,member.getCode(), null, member.getEmail());
+                        log.info("카페를 아직 등록하지않음.");
+                        return memberLoginResponse;
+                    }
+                    System.out.println("op.get().getCafe().getCafeId():"+op.get().getCafe().getCafeId());
+                    memberLoginResponse = new MemberLoginResponse(userToken.toString(),member.getId(),member.getNickName(), member.getAuthority().getAuthorityName(),op.get().getCafe().getCafeId(), member.getCode(),op.get().getCafeName(), member.getEmail());
+                }
+                else{
+                    log.info("카페코드를 못찾았습니다");
+                }
             }else {
                 log.info("카페사업자가 아닙니다.");
                 memberLoginResponse = new MemberLoginResponse(userToken.toString(), member.getId(), member.getNickName(), member.getAuthority().getAuthorityName(), null ,member.getCode(), null, member.getEmail());
@@ -121,7 +137,12 @@ public class MemberServiceImpl implements MemberService {
             return memberLoginResponse;
         }
 
-        throw new RuntimeException("가입된 사용자가 아닙니다!");
+            throw new RuntimeException("가입된 사용자가 아닙니다!");
+        } catch (NullPointerException e) {
+            System.out.println("NullPointerException 발생!");
+            e.printStackTrace();
+            throw new RuntimeException("NullPointerException이 발생했습니다. 로그를 확인하세요.");
+        }
     }
     @Override
     public Boolean applyNewPassword(EmailPasswordRequest emailPasswordRequest) {
