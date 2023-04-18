@@ -52,7 +52,12 @@ public class QuestionBoardController {
     }
 
     @GetMapping("/myPage/{memberId}")
-        public List<QuestionBoard> myQuestionBoardList(@PathVariable("memberId") Long memberId) {
-            return questionBoardService.myQuestionBoardList(memberId);
+    public List<QuestionBoard> myQuestionBoardList(@PathVariable("memberId") Long memberId) {
+        return questionBoardService.myQuestionBoardList(memberId);
+    }
+
+    @GetMapping("/view/{boardId}")
+    public Long showViewCnt(@PathVariable("boardId") Long boardId) {
+       return questionBoardService.showViewCnt(boardId);
     }
 }

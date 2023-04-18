@@ -1,17 +1,13 @@
 package fourman.backend.domain.questionboard.entity;
 
-import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.Data;
-import lombok.Getter;
+import org.hibernate.annotations.ColumnDefault;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 import org.springframework.format.annotation.DateTimeFormat;
 
 import javax.persistence.*;
-import java.util.ArrayList;
 import java.util.Date;
-import java.util.List;
-import java.util.regex.Pattern;
 
 @Data
 @Entity
@@ -46,4 +42,11 @@ public class QuestionBoard {
     private Long memberId;
 
     private boolean secret;
+    @ColumnDefault("0")
+    private Long viewCnt;
+
+    public void increaseViewCnt() {
+        this.viewCnt++;
+    }
+
 }

@@ -41,6 +41,8 @@ public class QuestionBoardServiceImpl implements QuestionBoardService {
         questionBoard.setWriter(questionBoardRequestForm.getWriter());
         questionBoard.setMemberId(questionBoardRequestForm.getMemberId());
         questionBoard.setSecret(questionBoardRequestForm.isSecret());
+        //게시글 생성 시 viewCnt 0으로 설정
+        questionBoard.setViewCnt(0L);
 
         questionBoardRepository.save(questionBoard);
         return questionBoard;
@@ -96,5 +98,20 @@ public class QuestionBoardServiceImpl implements QuestionBoardService {
     public List<QuestionBoard> myQuestionBoardList(Long memberId) {
         return questionBoardRepository.findMyQuestionBoardByMemberId(memberId);
     }
+
+    @Override
+    public Long showViewCnt(Long boardId) {
+        Optional<QuestionBoard> maybeQuestionBoard = questionBoardRepository.findById(boardId);
+        if(maybeQuestionBoard.isEmpty()) {
+            return null;
+        }
+        QuestionBoard questionBoard = maybeQuestionBoard.get();
+        questionBoard.increaseViewCnt();
+        questionBoardRepository.save(questionBoard);
+        return questionBoard.getViewCnt();
+
+
+
+}
 
 }
