@@ -44,4 +44,6 @@ public class QuestionBoard {
     private Date updDate;
 
     private Long memberId;
+
+    private boolean secret;
 }
