@@ -36,7 +36,6 @@ public class CafeIntroduceServiceImpl implements CafeIntroduceService {
     public Long registerCafe(List<MultipartFile> thumbnail, List<MultipartFile> fileList, CafeIntroRequestForm cafeIntroRequestForm) {
         // 1. cafe 저장
         Cafe cafe = new Cafe();
-        cafe.setCafeName(cafeIntroRequestForm.getCafeName());
         cafe.setCafeAddress(cafeIntroRequestForm.getCafeAddress());
         cafe.setCafeTel(cafeIntroRequestForm.getCafeTel());
         cafe.setStartTime(cafeIntroRequestForm.getStartTime());
@@ -107,7 +106,7 @@ public class CafeIntroduceServiceImpl implements CafeIntroduceService {
         List<CafeIntroListResponse> cafeReponseList= new ArrayList<>();
         for(Cafe cafe: cafeList){
             cafeReponseList.add(new CafeIntroListResponse(
-                    cafe.getCafeId(),cafe.getCafeName(),cafe.getCafeAddress(),cafe.getCafeTel(),
+                    cafe.getCafeId(),cafe.getCafeCode().getCafeName(),cafe.getCafeAddress(),cafe.getCafeTel(),
                     cafe.getStartTime(),cafe.getEndTime(), cafe.getCafeInfo() ));
         }
         return cafeReponseList;
@@ -134,7 +133,7 @@ public class CafeIntroduceServiceImpl implements CafeIntroduceService {
         }
         Cafe cafe = maybeCafe.get();
         CafeIntroDetailResponse cafeIntroDetailResponse = new CafeIntroDetailResponse(
-                cafe.getCafeId(),cafe.getCafeName(),cafe.getCafeAddress(),cafe.getCafeTel(),
+                cafe.getCafeId(),cafe.getCafeCode().getCafeName(),cafe.getCafeAddress(),cafe.getCafeTel(),
                 cafe.getStartTime(),cafe.getEndTime(),cafe.getCafeInfo());
         //글내용만 보내기
         log.info("카페read 서비스 완료");

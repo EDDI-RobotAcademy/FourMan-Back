@@ -195,7 +195,7 @@ public class MyPageServiceImpl implements MyPageService {
 
         for (Cafe cafe: cafeList) {
             CafeInfoResponseForm cafeInfoResponseForm = new CafeInfoResponseForm(
-                    cafe.getCafeId(), cafe.getCafeName(), cafe.getCafeAddress(), cafe.getCafeTel(),
+                    cafe.getCafeId(), cafe.getCafeCode().getCafeName(), cafe.getCafeAddress(), cafe.getCafeTel(),
                     cafe.getStartTime(), cafe.getEndTime()
             );
 
