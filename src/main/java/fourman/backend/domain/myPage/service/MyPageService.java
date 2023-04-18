@@ -1,6 +1,7 @@
 package fourman.backend.domain.myPage.service;
 
 import fourman.backend.domain.myPage.controller.requestForm.MyInfoModifyRequestForm;
+import fourman.backend.domain.myPage.service.responseForm.CafeInfoResponseForm;
 import fourman.backend.domain.myPage.service.responseForm.MemberInfoResponseForm;
 import fourman.backend.domain.myPage.service.responseForm.MyInfoModifyResponseForm;
 import fourman.backend.domain.myPage.service.responseForm.MyInfoResponseForm;
@@ -15,5 +16,7 @@ public interface MyPageService {
 
     void withdrawal(Long memberId);
 
-    List<MemberInfoResponseForm> memberList();
+    List<MemberInfoResponseForm> memberInfoList();
+
+    List<CafeInfoResponseForm> cafeInfoList();
 }
