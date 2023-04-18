@@ -44,6 +44,7 @@ public class Member {
     private Authority authority;
 
     //    // orphanRemoval = true :부모 엔티티에서 자식 엔티티 제거
+    @JsonIgnore
     @OneToMany(mappedBy = "member", fetch = FetchType.LAZY, orphanRemoval = true)
     private Set<Authentication> authentications = new HashSet<>();
 
