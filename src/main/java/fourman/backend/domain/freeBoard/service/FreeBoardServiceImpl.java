@@ -30,6 +30,7 @@ public class FreeBoardServiceImpl implements FreeBoardService{
         freeBoard.setWriter(freeBoardRequest.getWriter());
         freeBoard.setContent(freeBoardRequest.getContent());
         freeBoard.setMemberId(freeBoardRequest.getMemberId());
+        freeBoard.setViewCnt(0L);
         freeBoardRepository.save(freeBoard);
 
         return freeBoard;
@@ -48,7 +49,10 @@ public class FreeBoardServiceImpl implements FreeBoardService{
             log.info("읽을 수가 없드아!");
             return null;
         }
-        return maybeBoard.get();
+        FreeBoard freeBoard = maybeBoard.get();
+        freeBoard.increaseViewCnt();
+        freeBoardRepository.save(freeBoard);
+        return freeBoard;
     }
 
     @Override
