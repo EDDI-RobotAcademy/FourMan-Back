@@ -19,4 +19,8 @@ public interface FreeBoardService {
     List<FreeBoard> myPageList(Long memberId);
 
     List<FreeBoard> searchFreeBoardList(String searchText);
+
+    Long incRecommendation(Long boardId);
+
+    Long decRecommendation(Long boardId);
 }

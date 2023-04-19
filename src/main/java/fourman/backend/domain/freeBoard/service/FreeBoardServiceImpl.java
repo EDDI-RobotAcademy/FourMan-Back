@@ -31,6 +31,7 @@ public class FreeBoardServiceImpl implements FreeBoardService{
         freeBoard.setContent(freeBoardRequest.getContent());
         freeBoard.setMemberId(freeBoardRequest.getMemberId());
         freeBoard.setViewCnt(0L);
+        freeBoard.setRecommendation(0L);
         freeBoardRepository.save(freeBoard);
 
         return freeBoard;
@@ -91,5 +92,27 @@ public class FreeBoardServiceImpl implements FreeBoardService{
         return freeBoardRepository.findSearchFreeBoardBySearchText(searchText);
     }
 
+    @Override
+    public Long incRecommendation(Long boardId) {
+        Optional<FreeBoard> maybeFreeBoard = freeBoardRepository.findById(boardId);
+        if(maybeFreeBoard.isEmpty()) {
+            return null;
+        }
+        FreeBoard freeBoard = maybeFreeBoard.get();
+        freeBoard.increaseRecommendation();
+        freeBoardRepository.save(freeBoard);
+        return freeBoard.getRecommendation();
+    }
 
+    @Override
+    public Long decRecommendation(Long boardId) {
+        Optional<FreeBoard> maybeFreeboard = freeBoardRepository.findById(boardId);
+        if(maybeFreeboard.isEmpty()) {
+            return null;
+        }
+        FreeBoard freeBoard = maybeFreeboard.get();
+        freeBoard.decreaseRecommendation();
+        freeBoardRepository.save(freeBoard);
+        return freeBoard.getRecommendation();
+    }
 }
