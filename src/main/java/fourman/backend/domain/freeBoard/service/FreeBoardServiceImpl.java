@@ -30,6 +30,8 @@ public class FreeBoardServiceImpl implements FreeBoardService{
         freeBoard.setWriter(freeBoardRequest.getWriter());
         freeBoard.setContent(freeBoardRequest.getContent());
         freeBoard.setMemberId(freeBoardRequest.getMemberId());
+        freeBoard.setViewCnt(0L);
+        freeBoard.setRecommendation(0L);
         freeBoardRepository.save(freeBoard);
 
         return freeBoard;
@@ -48,7 +50,10 @@ public class FreeBoardServiceImpl implements FreeBoardService{
             log.info("읽을 수가 없드아!");
             return null;
         }
-        return maybeBoard.get();
+        FreeBoard freeBoard = maybeBoard.get();
+        freeBoard.increaseViewCnt();
+        freeBoardRepository.save(freeBoard);
+        return freeBoard;
     }
 
     @Override
@@ -87,5 +92,27 @@ public class FreeBoardServiceImpl implements FreeBoardService{
         return freeBoardRepository.findSearchFreeBoardBySearchText(searchText);
     }
 
+    @Override
+    public Long incRecommendation(Long boardId) {
+        Optional<FreeBoard> maybeFreeBoard = freeBoardRepository.findById(boardId);
+        if(maybeFreeBoard.isEmpty()) {
+            return null;
+        }
+        FreeBoard freeBoard = maybeFreeBoard.get();
+        freeBoard.increaseRecommendation();
+        freeBoardRepository.save(freeBoard);
+        return freeBoard.getRecommendation();
+    }
 
+    @Override
+    public Long decRecommendation(Long boardId) {
+        Optional<FreeBoard> maybeFreeboard = freeBoardRepository.findById(boardId);
+        if(maybeFreeboard.isEmpty()) {
+            return null;
+        }
+        FreeBoard freeBoard = maybeFreeboard.get();
+        freeBoard.decreaseRecommendation();
+        freeBoardRepository.save(freeBoard);
+        return freeBoard.getRecommendation();
+    }
 }

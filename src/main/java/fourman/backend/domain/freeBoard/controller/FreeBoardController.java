@@ -62,4 +62,14 @@ public class FreeBoardController {
     public List<FreeBoard> freeBoardSearchList(@PathVariable("searchText") String searchText) {
         return freeBoardService.searchFreeBoardList(searchText);
     }
+
+    @PostMapping("/up-recommend/{boardId}")
+    public Long increaseRecommendation (@PathVariable("boardId") Long boardId) {
+        return freeBoardService.incRecommendation(boardId);
+    }
+
+    @PostMapping("/down-recommend/{boardId}")
+    public Long decreaseRecommendation(@PathVariable("boardId") Long boardId) {
+        return freeBoardService.decRecommendation(boardId);
+    }
 }
