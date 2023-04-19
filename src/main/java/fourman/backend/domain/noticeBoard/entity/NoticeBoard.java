@@ -1,6 +1,7 @@
 package fourman.backend.domain.noticeBoard.entity;
 
 import lombok.Data;
+import org.hibernate.annotations.ColumnDefault;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 import org.springframework.format.annotation.DateTimeFormat;
@@ -36,6 +37,12 @@ public class NoticeBoard {
     private Date updDate;
 
     private Long memberId;
+    @ColumnDefault("0")
+    private Long viewCnt;
+
+    public void increaseViewCnt() {
+        this.viewCnt++;
+    }
 }
 
 

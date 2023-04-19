@@ -1,6 +1,7 @@
 package fourman.backend.domain.freeBoard.entity;
 
 import lombok.Data;
+import org.hibernate.annotations.ColumnDefault;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
@@ -34,4 +35,10 @@ public class FreeBoard {
     @Column(nullable = false)
     private Long memberId;
 
+    @ColumnDefault("0")
+    private Long viewCnt;
+
+    public void increaseViewCnt() {
+        this.viewCnt++;
+    }
 }
