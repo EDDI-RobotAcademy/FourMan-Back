@@ -71,6 +71,12 @@ public class MemberServiceImpl implements MemberService {
     @Override
     public Boolean signUp(MemberRegisterRequest memberRegisterRequest) {
         final Member member = memberRegisterRequest.toMember();
+
+        if(member.getAuthority().getAuthorityName().equals(AuthorityType.MEMBER)) {
+            Point point = new Point(1000l, member);
+            member.setPoint(point);
+        }
+
         memberRepository.save(member);
         final BasicAuthentication authentication = new BasicAuthentication(
                 member,
