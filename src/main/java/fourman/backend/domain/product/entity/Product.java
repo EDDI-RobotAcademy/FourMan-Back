@@ -34,6 +34,7 @@ public class Product {
     @OneToMany(mappedBy = "product", fetch = FetchType.LAZY, cascade = CascadeType.REMOVE)
     private List<ImageResource> imageResourceList = new ArrayList<>();
 
+    @JsonBackReference
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name="cafe_id")
     private Cafe cafe;

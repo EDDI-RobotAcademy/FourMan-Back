@@ -15,10 +15,12 @@ public class AllProductResponseForm {
     final private Integer price;
     final private Integer count;
     final private Integer totalPrice;
+    final private Long cafeId;
     final private List<ImageResource> imageResourceList;
 
     public AllProductResponseForm(Long productId, String productName,
-                                  String drinkType, Integer price, Integer count, Integer totalPrice, List<ImageResource> imageResourceList) {
+                                  String drinkType, Integer price, Integer count, Integer totalPrice,
+                                  List<ImageResource> imageResourceList, Long cafeId) {
         this.productId = productId;
         this.productName = productName;
         this.drinkType = drinkType;
@@ -26,6 +28,7 @@ public class AllProductResponseForm {
         this.count = count;
         this.totalPrice = totalPrice;
         this.imageResourceList = imageResourceList;
+        this.cafeId = cafeId;
     }
 
 }
