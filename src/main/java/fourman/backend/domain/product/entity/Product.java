@@ -1,6 +1,7 @@
 package fourman.backend.domain.product.entity;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
+import fourman.backend.domain.cafeIntroduce.entity.Cafe;
 import fourman.backend.domain.order.entity.OrderInfo;
 import lombok.Data;
 import lombok.Getter;
@@ -32,6 +33,10 @@ public class Product {
     @JsonBackReference
     @OneToMany(mappedBy = "product", fetch = FetchType.LAZY, cascade = CascadeType.REMOVE)
     private List<ImageResource> imageResourceList = new ArrayList<>();
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name="cafe_id")
+    private Cafe cafe;
 
     public void setImageResource(ImageResource imageResource) {
         imageResourceList.add(imageResource);
