@@ -38,7 +38,13 @@ public class FreeBoard {
     @ColumnDefault("0")
     private Long viewCnt;
 
+    @ColumnDefault("0")
+    private Long recommendation;
+
     public void increaseViewCnt() {
         this.viewCnt++;
     }
+    public void increaseRecommendation() {this.recommendation++;}
+
+    public void decreaseRecommendation() {this.recommendation--;}
 }
