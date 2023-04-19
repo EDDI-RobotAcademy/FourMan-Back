@@ -52,7 +52,10 @@ public class Member {
     @OneToOne(mappedBy = "member", fetch = FetchType.LAZY, cascade = CascadeType.PERSIST, orphanRemoval = true)
     private MemberProfile memberProfile;
 
-    public Member(String email, String nickName, int birthdate, Authority authority,String code,  MemberProfile memberProfile) {
+    @OneToOne(mappedBy = "member", fetch = FetchType.LAZY, cascade = CascadeType.PERSIST, orphanRemoval = true)
+    private Point point;
+
+    public Member(String email, String nickName, int birthdate, Authority authority,String code, MemberProfile memberProfile) {
         this.email = email;
         this.nickName = nickName;
         this.birthdate = birthdate;

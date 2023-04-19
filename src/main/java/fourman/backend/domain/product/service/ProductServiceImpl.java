@@ -1,5 +1,7 @@
 package fourman.backend.domain.product.service;
 
+import fourman.backend.domain.cafeIntroduce.entity.Cafe;
+import fourman.backend.domain.cafeIntroduce.repository.CafeRepository;
 import fourman.backend.domain.product.controller.requestForm.EditProductRequestForm;
 import fourman.backend.domain.product.controller.responseForm.AllProductResponseForm;
 import fourman.backend.domain.product.controller.responseForm.ImageResourceResponseForm;
@@ -29,6 +31,7 @@ public class ProductServiceImpl implements ProductService {
 
     final private ProductRepository productRepository;
     final private ImageResourceRepository imageResourceRepository;
+    final private CafeRepository cafeRepository;
 
     @Transactional
     @Override
@@ -39,10 +42,13 @@ public class ProductServiceImpl implements ProductService {
         final String fixedStringPath = "../FourMan-Front/src/assets/product/uploadImgs/";
 
         Product product = new Product();
+        Optional<Cafe> maybeCafe = cafeRepository.findById(productRequestForm.getCafeId());
+        Cafe cafe = maybeCafe.get();
 
         product.setProductName(productRequestForm.getProductName());
         product.setPrice(productRequestForm.getPrice());
         product.setDrinkType(productRequestForm.getDrinkType());
+        product.setCafe(cafe);
 
         try{
             for(MultipartFile multipartFile: imageFileList) {
@@ -104,8 +110,10 @@ public class ProductServiceImpl implements ProductService {
     }
 
     @Override
-    public List<AllProductResponseForm> all() {
-        List<Product> productList = productRepository.findAll();
+    public List<AllProductResponseForm> all(Long cafeId) {
+        Optional<Cafe> maybeCafe = cafeRepository.findById(cafeId);
+        Cafe cafe = maybeCafe.get();
+        List<Product> productList = productRepository.findAllByCafe(cafe);
         List<AllProductResponseForm> allProductList = new ArrayList<>();
 
         for (Product product: productList) {
@@ -113,7 +121,7 @@ public class ProductServiceImpl implements ProductService {
 
             allProductList.add(new AllProductResponseForm(
                     product.getProductId(), product.getProductName(), product.getDrinkType(), product.getPrice(),
-                    1, product.getPrice(), imageResourceList));
+                    1, product.getPrice(), imageResourceList, cafeId));
         }
 
         return allProductList;

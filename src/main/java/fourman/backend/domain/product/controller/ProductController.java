@@ -46,11 +46,11 @@ public class ProductController {
         return productService.loadProductImage();
     }
 
-    @GetMapping("/all")
-    public List<AllProductResponseForm> allProductList () {
+    @GetMapping("/all/{cafeId}")
+    public List<AllProductResponseForm> allProductList (@PathVariable("cafeId") Long cafeId) {
         log.info("allProductList()");
 
-        return productService.all();
+        return productService.all(cafeId);
     }
 
     @PostMapping(value = "/editProductWithImage", consumes = { MediaType.MULTIPART_FORM_DATA_VALUE, MediaType.APPLICATION_JSON_VALUE })
