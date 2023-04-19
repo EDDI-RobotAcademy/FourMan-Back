@@ -26,6 +26,7 @@ public class NoticeBoardServiceImpl implements NoticeBoardService{
         noticeBoard.setContent(noticeBoardRequestForm.getContent());
         noticeBoard.setMemberId(noticeBoardRequestForm.getMemberId());
         noticeBoard.setNotice(noticeBoardRequestForm.getNotice());
+        noticeBoard.setViewCnt(0L);
 
         noticeBoardRepository.save(noticeBoard);
         return noticeBoard;
@@ -44,7 +45,10 @@ public class NoticeBoardServiceImpl implements NoticeBoardService{
             System.out.println("찾을 수 없음");
             return null;
         }
-        return maybeNoticeBoard.get();
+        NoticeBoard noticeBoard = maybeNoticeBoard.get();
+        noticeBoard.increaseViewCnt();
+        noticeBoardRepository.save(noticeBoard);
+        return noticeBoard;
         }
 
     @Override
