@@ -19,4 +19,7 @@ public interface MyPageService {
     List<MemberInfoResponseForm> memberInfoList();
 
     List<CafeInfoResponseForm> cafeInfoList();
+
+    CafeInfoResponseForm myCafeInfo(Long cafeId);
+
 }

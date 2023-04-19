@@ -52,5 +52,14 @@ public class MyPageController {
         return myPageService.cafeInfoList();
     }
 
+    @GetMapping("/my-cafe-info/{cafeId}")
+    public CafeInfoResponseForm myCafeInfo(
+            @PathVariable("cafeId") Long cafeId) {
+
+        log.info("myCafeInfo(): " + cafeId);
+
+        return myPageService.myCafeInfo(cafeId);
+    }
+
 
 }

@@ -196,11 +196,28 @@ public class MyPageServiceImpl implements MyPageService {
         for (Cafe cafe: cafeList) {
             CafeInfoResponseForm cafeInfoResponseForm = new CafeInfoResponseForm(
                     cafe.getCafeId(), cafe.getCafeCode().getCafeName(), cafe.getCafeAddress(), cafe.getCafeTel(),
-                    cafe.getStartTime(), cafe.getEndTime()
+                    cafe.getStartTime(), cafe.getEndTime(), cafe.getCafeInfo().getSubTitle(), cafe.getCafeInfo().getDescription()
             );
 
             cafeInfoResponseFormList.add(cafeInfoResponseForm);
         }
         return cafeInfoResponseFormList;
     }
+
+    @Override
+    public CafeInfoResponseForm myCafeInfo(Long cafeId) {
+        Optional<Cafe> maybeCafe = cafeRepository.findById(cafeId);
+
+        if (maybeCafe.isEmpty()) {
+            return null;
+        }
+
+        Cafe cafe = maybeCafe.get();
+        CafeInfoResponseForm cafeInfoResponseForm = new CafeInfoResponseForm(cafe.getCafeId(), cafe.getCafeCode().getCafeName(), cafe.getCafeAddress(),
+                cafe.getCafeTel(), cafe.getStartTime(), cafe.getEndTime(), cafe.getCafeInfo().getSubTitle(), cafe.getCafeInfo().getDescription());
+
+
+        return cafeInfoResponseForm;
+    }
+
 }
