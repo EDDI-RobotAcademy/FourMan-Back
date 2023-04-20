@@ -1,5 +1,6 @@
 package fourman.backend.domain.noticeBoard.entity;
 
+import fourman.backend.domain.member.entity.Member;
 import lombok.Data;
 import org.hibernate.annotations.ColumnDefault;
 import org.hibernate.annotations.CreationTimestamp;
@@ -36,7 +37,10 @@ public class NoticeBoard {
     @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     private Date updDate;
 
-    private Long memberId;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "member_id")
+    private Member member;
+
     @ColumnDefault("0")
     private Long viewCnt;
 
