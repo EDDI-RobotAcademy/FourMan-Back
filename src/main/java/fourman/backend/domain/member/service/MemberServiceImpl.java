@@ -1,9 +1,6 @@
 package fourman.backend.domain.member.service;
 import fourman.backend.domain.member.entity.*;
-import fourman.backend.domain.member.repository.AuthenticationRepository;
-import fourman.backend.domain.member.repository.CafeCodeRepository;
-import fourman.backend.domain.member.repository.ManagerCodeRepository;
-import fourman.backend.domain.member.repository.MemberRepository;
+import fourman.backend.domain.member.repository.*;
 import fourman.backend.domain.member.service.request.EmailMatchRequest;
 import fourman.backend.domain.member.service.request.EmailPasswordRequest;
 import fourman.backend.domain.member.service.request.MemberLoginRequest;
@@ -30,6 +27,7 @@ public class MemberServiceImpl implements MemberService {
     final private CafeCodeRepository cafeCodeRepository;
     final private AuthenticationRepository authenticationRepository;
     final private RedisService redisService;
+    final private PointRepository pointRepository;
 
     @Override
     public Boolean emailValidation(String email) {
