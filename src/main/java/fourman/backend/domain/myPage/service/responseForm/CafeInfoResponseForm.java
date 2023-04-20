@@ -18,4 +18,6 @@ public class CafeInfoResponseForm {
     final private String cafeTel;
     final private String startTime;
     final private String endTime;
+    final private String subTitle;
+    final private String description;
 }

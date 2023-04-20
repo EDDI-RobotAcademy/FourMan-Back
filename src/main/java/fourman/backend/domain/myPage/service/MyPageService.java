@@ -1,5 +1,6 @@
 package fourman.backend.domain.myPage.service;
 
+import fourman.backend.domain.myPage.controller.requestForm.CafeInfoModifyRequestForm;
 import fourman.backend.domain.myPage.controller.requestForm.MyInfoModifyRequestForm;
 import fourman.backend.domain.myPage.service.responseForm.*;
 
@@ -19,4 +20,7 @@ public interface MyPageService {
 
     List<CafeInfoResponseForm> cafeInfoList();
 
+    CafeInfoResponseForm myCafeInfo(Long cafeId);
+
+    void cafeInfoModify(Long cafeId, CafeInfoModifyRequestForm modifyRequest);
 }

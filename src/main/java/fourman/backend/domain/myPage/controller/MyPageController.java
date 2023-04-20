@@ -1,5 +1,6 @@
 package fourman.backend.domain.myPage.controller;
 
+import fourman.backend.domain.myPage.controller.requestForm.CafeInfoModifyRequestForm;
 import fourman.backend.domain.myPage.controller.requestForm.MyInfoModifyRequestForm;
 import fourman.backend.domain.myPage.service.MyPageService;
 import fourman.backend.domain.myPage.service.responseForm.*;
@@ -56,5 +57,20 @@ public class MyPageController {
         return myPageService.cafeInfoList();
     }
 
+    @GetMapping("/my-cafe-info/{cafeId}")
+    public CafeInfoResponseForm myCafeInfo(
+            @PathVariable("cafeId") Long cafeId) {
+
+        log.info("myCafeInfo(): " + cafeId);
+
+        return myPageService.myCafeInfo(cafeId);
+    }
+
+    @PutMapping("/cafe-info-modify/{cafeId}")
+    public void cafeInfoModify(@PathVariable("cafeId") Long cafeId,
+                                                     @RequestBody CafeInfoModifyRequestForm modifyRequest) {
+
+        myPageService.cafeInfoModify(cafeId, modifyRequest);
+    }
 
 }
