@@ -9,7 +9,7 @@ import java.util.List;
 
 public interface FreeBoardRepository extends JpaRepository<FreeBoard, Long> {
 
-    @Query("select f from FreeBoard f where f.memberId = :memberId")
+    @Query("select f from FreeBoard f join fetch f.member m where m.id = :memberId")
     List<FreeBoard> findFreeBoardByMemberId(Long memberId);
 
     @Query("select f from FreeBoard f WHERE f.title LIKE %:searchText%")
