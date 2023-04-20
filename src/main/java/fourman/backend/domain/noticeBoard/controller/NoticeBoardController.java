@@ -4,6 +4,7 @@ package fourman.backend.domain.noticeBoard.controller;
 import fourman.backend.domain.noticeBoard.controller.requestForm.NoticeBoardRequestForm;
 import fourman.backend.domain.noticeBoard.entity.NoticeBoard;
 import fourman.backend.domain.noticeBoard.service.NoticeBoardService;
+import fourman.backend.domain.noticeBoard.service.response.NoticeBoardResponse;
 import fourman.backend.domain.questionboard.controller.requestForm.QuestionBoardRequestForm;
 import fourman.backend.domain.questionboard.entity.QuestionBoard;
 import lombok.RequiredArgsConstructor;
@@ -26,12 +27,12 @@ public class NoticeBoardController {
     }
 
     @GetMapping("/list")
-    public List<NoticeBoard> noticeBoardList() {
+    public List<NoticeBoardResponse> noticeBoardList() {
         return noticeBoardService.list();
     }
 
     @GetMapping("/{boardId}")
-    public NoticeBoard noticeBoardRead(@PathVariable("boardId") Long boardId) {
+    public NoticeBoardResponse noticeBoardRead(@PathVariable("boardId") Long boardId) {
         return noticeBoardService.read(boardId);
     }
 
