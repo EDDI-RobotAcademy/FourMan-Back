@@ -11,6 +11,7 @@ import fourman.backend.domain.member.entity.Member;
 import fourman.backend.domain.member.entity.MemberProfile;
 import fourman.backend.domain.member.repository.MemberProfileRepository;
 import fourman.backend.domain.member.repository.MemberRepository;
+import fourman.backend.domain.myPage.controller.requestForm.CafeInfoModifyRequestForm;
 import fourman.backend.domain.myPage.controller.requestForm.MyInfoModifyRequestForm;
 import fourman.backend.domain.myPage.service.responseForm.CafeInfoResponseForm;
 import fourman.backend.domain.myPage.service.responseForm.MemberInfoResponseForm;
@@ -196,11 +197,42 @@ public class MyPageServiceImpl implements MyPageService {
         for (Cafe cafe: cafeList) {
             CafeInfoResponseForm cafeInfoResponseForm = new CafeInfoResponseForm(
                     cafe.getCafeId(), cafe.getCafeCode().getCafeName(), cafe.getCafeAddress(), cafe.getCafeTel(),
-                    cafe.getStartTime(), cafe.getEndTime()
+                    cafe.getStartTime(), cafe.getEndTime(), cafe.getCafeInfo().getSubTitle(), cafe.getCafeInfo().getDescription()
             );
 
             cafeInfoResponseFormList.add(cafeInfoResponseForm);
         }
         return cafeInfoResponseFormList;
+    }
+
+    @Override
+    public CafeInfoResponseForm myCafeInfo(Long cafeId) {
+        Optional<Cafe> maybeCafe = cafeRepository.findById(cafeId);
+
+        if (maybeCafe.isEmpty()) {
+            return null;
+        }
+
+        Cafe cafe = maybeCafe.get();
+        CafeInfoResponseForm cafeInfoResponseForm = new CafeInfoResponseForm(cafe.getCafeId(), cafe.getCafeCode().getCafeName(), cafe.getCafeAddress(),
+                cafe.getCafeTel(), cafe.getStartTime(), cafe.getEndTime(), cafe.getCafeInfo().getSubTitle(), cafe.getCafeInfo().getDescription());
+
+
+        return cafeInfoResponseForm;
+    }
+
+    @Override
+    public void cafeInfoModify(Long cafeId, CafeInfoModifyRequestForm modifyRequest) {
+        Optional<Cafe> maybeCafe = cafeRepository.findById(cafeId);
+
+        Cafe cafe = maybeCafe.get();
+        cafe.setCafeAddress(modifyRequest.getCafeAddress());
+        cafe.setCafeTel(modifyRequest.getCafeTel());
+        cafe.setStartTime(modifyRequest.getStartTime());
+        cafe.setEndTime(modifyRequest.getEndTime());
+        cafe.getCafeInfo().setSubTitle(modifyRequest.getSubTitle());
+        cafe.getCafeInfo().setDescription(modifyRequest.getDescription());
+
+        cafeRepository.save(cafe);
     }
 }
