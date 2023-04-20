@@ -1,5 +1,7 @@
 package fourman.backend.domain.questionboard.entity;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import fourman.backend.domain.member.entity.Member;
 import lombok.Data;
 import org.hibernate.annotations.ColumnDefault;
 import org.hibernate.annotations.CreationTimestamp;
@@ -7,7 +9,9 @@ import org.hibernate.annotations.UpdateTimestamp;
 import org.springframework.format.annotation.DateTimeFormat;
 
 import javax.persistence.*;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 @Data
 @Entity
@@ -39,7 +43,13 @@ public class QuestionBoard {
     @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     private Date updDate;
 
-    private Long memberId;
+    @JsonBackReference
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "member_id")
+    private Member member;
+
+    @OneToMany(mappedBy = "questionBoard", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    private List<Comment> freeBoardCommentList = new ArrayList<>();
 
     private boolean secret;
     @ColumnDefault("0")

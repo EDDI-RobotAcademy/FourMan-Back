@@ -1,13 +1,17 @@
 package fourman.backend.domain.noticeBoard.service;
 
+import fourman.backend.domain.member.entity.Member;
+import fourman.backend.domain.member.repository.MemberRepository;
 import fourman.backend.domain.noticeBoard.controller.requestForm.NoticeBoardRequestForm;
 import fourman.backend.domain.noticeBoard.entity.NoticeBoard;
 import fourman.backend.domain.noticeBoard.repository.NoticeBoardRepository;
+import fourman.backend.domain.noticeBoard.service.response.NoticeBoardResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -17,6 +21,7 @@ import java.util.Optional;
 public class NoticeBoardServiceImpl implements NoticeBoardService{
 
     final private NoticeBoardRepository noticeBoardRepository;
+    final private MemberRepository memberRepository;
 
     @Override
     public NoticeBoard register(NoticeBoardRequestForm noticeBoardRequestForm) {
@@ -24,21 +29,37 @@ public class NoticeBoardServiceImpl implements NoticeBoardService{
         noticeBoard.setTitle(noticeBoardRequestForm.getTitle());
         noticeBoard.setWriter(noticeBoardRequestForm.getWriter());
         noticeBoard.setContent(noticeBoardRequestForm.getContent());
-        noticeBoard.setMemberId(noticeBoardRequestForm.getMemberId());
         noticeBoard.setNotice(noticeBoardRequestForm.getNotice());
         noticeBoard.setViewCnt(0L);
+
+        Optional<Member> maybeMember = memberRepository.findById(noticeBoardRequestForm.getMemberId());
+        if(maybeMember.isEmpty()) {
+            return null;
+        }
+        noticeBoard.setMember(maybeMember.get());
 
         noticeBoardRepository.save(noticeBoard);
         return noticeBoard;
     }
 
     @Override
-    public List<NoticeBoard> list() {
-        return noticeBoardRepository.findAll(Sort.by(Sort.Direction.DESC, "boardId"));
+    public List<NoticeBoardResponse> list() {
+        List<NoticeBoard> noticeBoardList = noticeBoardRepository.findAll(Sort.by(Sort.Direction.DESC, "boardId"));
+        List<NoticeBoardResponse> noticeBoardResponseList = new ArrayList<>();
+
+        for(NoticeBoard noticeBoard: noticeBoardList) {
+            NoticeBoardResponse noticeBoardResponse = new NoticeBoardResponse(
+                    noticeBoard.getBoardId(), noticeBoard.getTitle(), noticeBoard.getWriter(), noticeBoard.getNotice(),
+                    noticeBoard.getContent(), noticeBoard.getRegDate(), noticeBoard.getUpdDate(), noticeBoard.getMember().getId(),
+                    noticeBoard.getViewCnt()
+            );
+            noticeBoardResponseList.add(noticeBoardResponse);
+        }
+        return noticeBoardResponseList;
     }
 
     @Override
-    public NoticeBoard read(Long boardId) {
+    public NoticeBoardResponse read(Long boardId) {
         Optional<NoticeBoard> maybeNoticeBoard = noticeBoardRepository.findById(boardId);
 
         if(maybeNoticeBoard.isEmpty()) {
@@ -48,7 +69,13 @@ public class NoticeBoardServiceImpl implements NoticeBoardService{
         NoticeBoard noticeBoard = maybeNoticeBoard.get();
         noticeBoard.increaseViewCnt();
         noticeBoardRepository.save(noticeBoard);
-        return noticeBoard;
+
+        NoticeBoardResponse noticeBoardResponse = new NoticeBoardResponse(
+                noticeBoard.getBoardId(), noticeBoard.getTitle(), noticeBoard.getWriter(), noticeBoard.getNotice(),
+                noticeBoard.getContent(), noticeBoard.getRegDate(), noticeBoard.getUpdDate(), noticeBoard.getMember().getId(),
+                noticeBoard.getViewCnt());
+
+        return noticeBoardResponse;
         }
 
     @Override

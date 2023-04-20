@@ -1,5 +1,7 @@
 package fourman.backend.domain.questionboard.service;
 
+import fourman.backend.domain.member.entity.Member;
+import fourman.backend.domain.member.repository.MemberRepository;
 import fourman.backend.domain.questionboard.controller.requestForm.CommentRequestForm;
 import fourman.backend.domain.questionboard.entity.Comment;
 import fourman.backend.domain.questionboard.entity.QuestionBoard;
@@ -26,6 +28,9 @@ public class CommentServiceImpl implements CommentService{
     @Autowired
     QuestionBoardRepository questionBoardRepository;
 
+    @Autowired
+    MemberRepository memberRepository;
+
     @Override
     public void register(CommentRequestForm commentRequestForm) {
         QuestionBoard questionBoard = new QuestionBoard();
@@ -41,14 +46,32 @@ public class CommentServiceImpl implements CommentService{
         comment.setCommentWriter(commentRequestForm.getComment());
         comment.setQuestionBoard(questionBoard);
         comment.setCommentWriter(commentRequestForm.getCommentWriter());
-        comment.setMemberId(commentRequestForm.getMemberId());
+
+        Optional<Member> maybeMember = memberRepository.findById(commentRequestForm.getMemberId());
+
+        if(maybeMember.isEmpty()) {
+            log.info("없당");
+        }
+
+        comment.setMember(maybeMember.get());
         commentRepository.save(comment);
 
     }
 
     @Override
-    public List<Comment> commentList(Long boardId) {
-        return commentRepository.findCommentByBoardId(boardId);
+    public List<CommentResponse> commentList(Long boardId) {
+        List<Comment> commentList = commentRepository.findCommentByBoardId(boardId);
+        List<CommentResponse> commentResponseList = new ArrayList<>();
+
+        for(Comment comment: commentList) {
+            CommentResponse commentResponse = new CommentResponse(
+                    comment.getCommentId(), comment.getComment(), comment.getCommentWriter(), comment.getRegDate(),
+                    comment.getUdpDate(), comment.getQuestionBoard().getBoardId(), comment.getMember().getId()
+            );
+            commentResponseList.add(commentResponse);
+        }
+            return commentResponseList;
+
     }
 
     @Override

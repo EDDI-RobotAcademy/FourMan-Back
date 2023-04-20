@@ -2,9 +2,7 @@ package fourman.backend.domain.questionboard.controller;
 
 
 import fourman.backend.domain.questionboard.controller.requestForm.CommentRequestForm;
-import fourman.backend.domain.questionboard.controller.requestForm.QuestionBoardRequestForm;
 import fourman.backend.domain.questionboard.entity.Comment;
-import fourman.backend.domain.questionboard.entity.QuestionBoard;
 import fourman.backend.domain.questionboard.service.CommentService;
 import fourman.backend.domain.questionboard.service.response.CommentResponse;
 import lombok.extern.slf4j.Slf4j;
@@ -28,7 +26,7 @@ public class CommentController {
     }
 
     @GetMapping("/{boardId}")
-    public List<Comment> commentList (@PathVariable("boardId") Long boardId) {
+    public List<CommentResponse> commentList (@PathVariable("boardId") Long boardId) {
         log.info("commentList");
         return commentService.commentList(boardId);
     }

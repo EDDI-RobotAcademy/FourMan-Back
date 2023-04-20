@@ -4,6 +4,7 @@ package fourman.backend.domain.questionboard.controller;
 import fourman.backend.domain.questionboard.controller.requestForm.QuestionBoardRequestForm;
 import fourman.backend.domain.questionboard.entity.QuestionBoard;
 import fourman.backend.domain.questionboard.service.QuestionBoardService;
+import fourman.backend.domain.questionboard.service.response.QuestionBoardResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.*;
@@ -21,7 +22,7 @@ public class QuestionBoardController {
 
 
     @GetMapping("/list")
-    public List<QuestionBoard> questionBoardList() {
+    public List<QuestionBoardResponse> questionBoardList() {
         return questionBoardService.list();
     }
 
@@ -31,7 +32,7 @@ public class QuestionBoardController {
     }
 
     @GetMapping("/{boardId}") //boardId 받기
-    public QuestionBoard questionBoardRead(@PathVariable("boardId") Long boardId) {
+    public QuestionBoardResponse questionBoardRead(@PathVariable("boardId") Long boardId) {
         return questionBoardService.read(boardId);
     }
 
