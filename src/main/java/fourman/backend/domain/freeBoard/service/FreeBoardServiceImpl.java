@@ -5,12 +5,16 @@ import fourman.backend.domain.freeBoard.entity.FreeBoard;
 import fourman.backend.domain.freeBoard.entity.FreeBoardComment;
 import fourman.backend.domain.freeBoard.repository.FreeBoardCommentRepository;
 import fourman.backend.domain.freeBoard.repository.FreeBoardRepository;
+import fourman.backend.domain.freeBoard.service.responseForm.FreeBoardResponseForm;
+import fourman.backend.domain.member.entity.Member;
+import fourman.backend.domain.member.repository.MemberRepository;
 import fourman.backend.domain.questionboard.entity.Comment;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -21,7 +25,7 @@ public class FreeBoardServiceImpl implements FreeBoardService{
 
     final private FreeBoardRepository freeBoardRepository;
 
-    final private FreeBoardCommentRepository freeBoardCommentRepository;
+    final private MemberRepository memberRepository;
 
     @Override
     public FreeBoard register(FreeBoardRequestForm freeBoardRequest) {
@@ -29,7 +33,14 @@ public class FreeBoardServiceImpl implements FreeBoardService{
         freeBoard.setTitle(freeBoardRequest.getTitle());
         freeBoard.setWriter(freeBoardRequest.getWriter());
         freeBoard.setContent(freeBoardRequest.getContent());
-        freeBoard.setMemberId(freeBoardRequest.getMemberId());
+
+        Optional<Member> maybeMember = memberRepository.findById(freeBoardRequest.getMemberId());
+
+        if(maybeMember.isEmpty()) {
+            return null;
+        }
+        freeBoard.setMember(maybeMember.get());
+
         freeBoard.setViewCnt(0L);
         freeBoard.setRecommendation(0L);
         freeBoardRepository.save(freeBoard);
@@ -38,12 +49,24 @@ public class FreeBoardServiceImpl implements FreeBoardService{
     }
 
     @Override
-    public List<FreeBoard> list() {
-        return freeBoardRepository.findAll(Sort.by(Sort.Direction.DESC, "boardId"));
+    public List<FreeBoardResponseForm> list() {
+
+        List<FreeBoard> freeBoardList = freeBoardRepository.findAll(Sort.by(Sort.Direction.DESC, "boardId"));
+        List<FreeBoardResponseForm> freeBoardResponseFormList = new ArrayList<>();
+
+        for (FreeBoard freeBoard: freeBoardList) {
+            FreeBoardResponseForm freeBoardResponseForm = new FreeBoardResponseForm(
+                    freeBoard.getBoardId(), freeBoard.getTitle(), freeBoard.getWriter(), freeBoard.getContent(),
+                    freeBoard.getRegDate(), freeBoard.getUpdDate(), freeBoard.getMember().getId(), freeBoard.getViewCnt(), freeBoard.getRecommendation()
+            );
+
+            freeBoardResponseFormList.add(freeBoardResponseForm);
+        }
+        return freeBoardResponseFormList;
     }
 
     @Override
-    public FreeBoard read(Long boardId) {
+    public FreeBoardResponseForm read(Long boardId) {
         // 일 수도 있고 아닐 수도 있고
         Optional<FreeBoard> maybeBoard = freeBoardRepository.findById(boardId);
         if (maybeBoard.isEmpty()) {
@@ -53,17 +76,16 @@ public class FreeBoardServiceImpl implements FreeBoardService{
         FreeBoard freeBoard = maybeBoard.get();
         freeBoard.increaseViewCnt();
         freeBoardRepository.save(freeBoard);
-        return freeBoard;
+
+        FreeBoardResponseForm freeBoardResponseForm = new FreeBoardResponseForm(
+                freeBoard.getBoardId(), freeBoard.getTitle(), freeBoard.getWriter(), freeBoard.getContent(),
+                freeBoard.getRegDate(), freeBoard.getUpdDate(), freeBoard.getMember().getId(), freeBoard.getViewCnt(), freeBoard.getRecommendation()
+        );
+        return freeBoardResponseForm;
     }
 
     @Override
     public void remove(Long boardId) {
-        List<FreeBoardComment> commentList = freeBoardCommentRepository.findFreeBoardCommentByBoardId(boardId);
-
-        //댓글 먼저 삭제
-        for(FreeBoardComment freeBoardComment : commentList) {
-            freeBoardCommentRepository.delete(freeBoardComment);
-        }
 
         freeBoardRepository.deleteById(boardId);
     }

@@ -2,15 +2,16 @@ package fourman.backend.domain.freeBoard.service;
 
 import fourman.backend.domain.freeBoard.controller.requestForm.FreeBoardRequestForm;
 import fourman.backend.domain.freeBoard.entity.FreeBoard;
+import fourman.backend.domain.freeBoard.service.responseForm.FreeBoardResponseForm;
 
 import java.util.List;
 
 public interface FreeBoardService {
     public FreeBoard register(FreeBoardRequestForm freeBoardRequest);
 
-    List<FreeBoard> list();
+    List<FreeBoardResponseForm> list();
 
-    FreeBoard read(Long boardId);
+    FreeBoardResponseForm read(Long boardId);
 
     void remove(Long boardId);
 

@@ -6,12 +6,18 @@ import fourman.backend.domain.freeBoard.entity.FreeBoard;
 import fourman.backend.domain.freeBoard.entity.FreeBoardComment;
 import fourman.backend.domain.freeBoard.repository.FreeBoardCommentRepository;
 import fourman.backend.domain.freeBoard.repository.FreeBoardRepository;
+import fourman.backend.domain.freeBoard.service.responseForm.FreeBoardCommentResponseForm;
+import fourman.backend.domain.freeBoard.service.responseForm.FreeBoardResponseForm;
+import fourman.backend.domain.member.entity.Member;
+import fourman.backend.domain.member.repository.MemberRepository;
 import fourman.backend.domain.questionboard.entity.Comment;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -24,6 +30,8 @@ public class FreeBoardCommentServiceImpl implements FreeBoardCommentService{
     private FreeBoardCommentRepository freeBoardCommentRepository;
     @Autowired
     private FreeBoardRepository freeBoardRepository;
+
+    final private MemberRepository memberRepository;
 
     @Override
     public void register(FreeBoardCommentRequestForm freeBoardCommentRequestForm) {
@@ -39,14 +47,33 @@ public class FreeBoardCommentServiceImpl implements FreeBoardCommentService{
         freeBoardComment.setComment(freeBoardCommentRequestForm.getComment());
         freeBoardComment.setCommentWriter(freeBoardCommentRequestForm.getCommentWriter());
         freeBoardComment.setFreeBoard(freeBoard);
-        freeBoardComment.setMemberId((freeBoardCommentRequestForm.getMemberId()));
+
+        Optional<Member> maybeMember = memberRepository.findById(freeBoardCommentRequestForm.getMemberId());
+
+        if(maybeMember.isEmpty()) {
+
+        }
+        freeBoardComment.setMember(maybeMember.get());
 
         freeBoardCommentRepository.save(freeBoardComment);
     }
 
     @Override
-    public List<FreeBoardComment> commentList(Long boardId) {
-        return freeBoardCommentRepository.findFreeBoardCommentByBoardId(boardId);
+    public List<FreeBoardCommentResponseForm> commentList(Long boardId) {
+
+        List<FreeBoardComment> freeBoardCommentList = freeBoardCommentRepository.findFreeBoardCommentByBoardId(boardId);
+        List<FreeBoardCommentResponseForm> freeBoardCommentResponseFormList = new ArrayList<>();
+
+        for (FreeBoardComment freeBoardComment: freeBoardCommentList) {
+            FreeBoardCommentResponseForm freeBoardCommentResponseForm = new FreeBoardCommentResponseForm(
+                    freeBoardComment.getCommentId(), freeBoardComment.getComment(), freeBoardComment.getCommentWriter(), freeBoardComment.getRegDate(),
+                    freeBoardComment.getUdpDate(), freeBoardComment.getMember().getId(), freeBoardComment.getFreeBoard().getBoardId()
+            );
+
+            freeBoardCommentResponseFormList.add(freeBoardCommentResponseForm);
+        }
+
+        return freeBoardCommentResponseFormList;
     }
 
     @Override

@@ -1,5 +1,7 @@
 package fourman.backend.domain.reviewBoard.service;
 
+import fourman.backend.domain.member.entity.Member;
+import fourman.backend.domain.member.repository.MemberRepository;
 import fourman.backend.domain.reviewBoard.controller.requestForm.ReviewBoardRequestForm;
 import fourman.backend.domain.reviewBoard.controller.responseForm.ReviewBoardImageResourceResponseForm;
 import fourman.backend.domain.reviewBoard.controller.responseForm.ReviewBoardReadResponseForm;
@@ -34,6 +36,7 @@ public class ReviewBoardServiceImpl implements ReviewBoardService {
     final private ReviewBoardRepository reviewBoardRepository;
 
     final private ReviewBoardImageResourceRepository reviewBoardImageResourceRepository;
+    final private MemberRepository memberRepository;
 
     @Transactional
     @Override
@@ -53,14 +56,19 @@ public class ReviewBoardServiceImpl implements ReviewBoardService {
         reviewBoard.setWriter(reviewBoardRequest.getWriter());
         reviewBoard.setContent(reviewBoardRequest.getContent());
         reviewBoard.setRating(reviewBoardRequest.getRating());
-        reviewBoard.setMemberId(reviewBoardRequest.getMemberId());
 
-        String content = reviewBoard.getContent();
+        Optional<Member> maybeMember = memberRepository.findById(reviewBoardRequest.getMemberId());
 
-        content = content.replaceAll("!\\[[^\\]]*\\]\\([^)]*\\)", ""); // <img> 태그 제거
+        if(maybeMember.isEmpty()) {
 
-        // base64로 디코딩 하지 않고 단순히 <img> <p> 태그 replace 후 저장
-        reviewBoard.setContent(content);
+        }
+        reviewBoard.setMember(maybeMember.get());
+//        String content = reviewBoard.getContent();
+//
+//        content = content.replaceAll("!\\[[^\\]]*\\]\\([^)]*\\)", ""); // <img> 태그 제거
+//
+//        // base64로 디코딩 하지 않고 단순히 <img> <p> 태그 replace 후 저장
+//        reviewBoard.setContent(content);
 
         LocalDateTime now = LocalDateTime.now(ZoneId.of("Asia/Seoul"));
         DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyyMMddHHmmss");
@@ -117,7 +125,7 @@ public class ReviewBoardServiceImpl implements ReviewBoardService {
             reviewBoardResponseList.add(new ReviewBoardResponseForm(
                     reviewBoard.getReviewBoardId(), reviewBoard.getCafeName(), reviewBoard.getTitle(),
                     reviewBoard.getWriter(), reviewBoard.getContent(), reviewBoard.getRating(),
-                    reviewBoard.getMemberId(), reviewBoard.getRegDate(), reviewBoard.getUpdDate(), firstPhoto
+                    reviewBoard.getMember().getId(), reviewBoard.getRegDate(), reviewBoard.getUpdDate(), firstPhoto
             ));
         }
 
@@ -142,7 +150,7 @@ public class ReviewBoardServiceImpl implements ReviewBoardService {
         // 상품 상세 정보를 Response 해줄 객체에 정보를 담음
         ReviewBoardReadResponseForm reviewBoardReadResponseForm = new ReviewBoardReadResponseForm(
                 reviewBoard.getReviewBoardId(), reviewBoard.getCafeName(), reviewBoard.getTitle(), reviewBoard.getWriter(),
-                reviewBoard.getContent(), reviewBoard.getRegDate(), reviewBoard.getMemberId(), reviewBoard.getRating()
+                reviewBoard.getContent(), reviewBoard.getRegDate(), reviewBoard.getMember().getId(), reviewBoard.getRating()
         );
 
         // productReadResponse 응답
@@ -224,7 +232,7 @@ public class ReviewBoardServiceImpl implements ReviewBoardService {
             reviewBoardResponseList.add(new ReviewBoardResponseForm(
                     reviewBoard.getReviewBoardId(), reviewBoard.getCafeName(), reviewBoard.getTitle(),
                     reviewBoard.getWriter(), reviewBoard.getContent(), reviewBoard.getRating(),
-                    reviewBoard.getMemberId(), reviewBoard.getRegDate(), reviewBoard.getUpdDate(), firstPhoto
+                    reviewBoard.getMember().getId(), reviewBoard.getRegDate(), reviewBoard.getUpdDate(), firstPhoto
             ));
         }
 
