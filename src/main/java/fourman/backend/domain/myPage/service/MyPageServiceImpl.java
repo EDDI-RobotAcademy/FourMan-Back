@@ -9,13 +9,12 @@ import fourman.backend.domain.freeBoard.repository.FreeBoardRepository;
 import fourman.backend.domain.member.entity.Address;
 import fourman.backend.domain.member.entity.Member;
 import fourman.backend.domain.member.entity.MemberProfile;
+import fourman.backend.domain.member.entity.Point;
 import fourman.backend.domain.member.repository.MemberProfileRepository;
 import fourman.backend.domain.member.repository.MemberRepository;
+import fourman.backend.domain.member.repository.PointRepository;
 import fourman.backend.domain.myPage.controller.requestForm.MyInfoModifyRequestForm;
-import fourman.backend.domain.myPage.service.responseForm.CafeInfoResponseForm;
-import fourman.backend.domain.myPage.service.responseForm.MemberInfoResponseForm;
-import fourman.backend.domain.myPage.service.responseForm.MyInfoModifyResponseForm;
-import fourman.backend.domain.myPage.service.responseForm.MyInfoResponseForm;
+import fourman.backend.domain.myPage.service.responseForm.*;
 import fourman.backend.domain.questionboard.entity.Comment;
 import fourman.backend.domain.questionboard.entity.QuestionBoard;
 import fourman.backend.domain.questionboard.repository.CommentRepository;
@@ -49,6 +48,7 @@ public class MyPageServiceImpl implements MyPageService {
     final private FreeBoardCommentRepository freeBoardCommentRepository;
     final private RedisService redisService;
     final private CafeRepository cafeRepository;
+    final private PointRepository pointRepository;
 
     @Override
     public MyInfoResponseForm myInfo(Long memberId) {
@@ -69,6 +69,33 @@ public class MyPageServiceImpl implements MyPageService {
         );
 
         return myInfoResponseForm;
+    }
+
+    @Override
+    public MyInfoSideBarResponseForm myInfoSideBar(Long memberId) {
+        Optional<Member> maybeMember  = memberRepository.findById(memberId);
+        Member member = maybeMember.get();
+
+        if (maybeMember.isEmpty()) {
+            log.info("읽을 수가 없드아!");
+            return null;
+        }
+
+        Optional<Point> maybePoint = pointRepository.findByMemberId(member);
+        Long point;
+
+        if(maybePoint.isEmpty()) {
+            point = null;
+        } else {
+            point = maybePoint.get().getPoint();
+        }
+
+
+        MyInfoSideBarResponseForm myInfoSideBarResponseForm = new MyInfoSideBarResponseForm(
+                member.getNickName(), member.getAuthority().getAuthorityName().getAUTHORITY_TYPE(), point
+        );
+
+        return myInfoSideBarResponseForm;
     }
 
     @Override
@@ -203,4 +230,5 @@ public class MyPageServiceImpl implements MyPageService {
         }
         return cafeInfoResponseFormList;
     }
+
 }

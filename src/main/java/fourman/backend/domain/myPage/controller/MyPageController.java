@@ -2,10 +2,7 @@ package fourman.backend.domain.myPage.controller;
 
 import fourman.backend.domain.myPage.controller.requestForm.MyInfoModifyRequestForm;
 import fourman.backend.domain.myPage.service.MyPageService;
-import fourman.backend.domain.myPage.service.responseForm.CafeInfoResponseForm;
-import fourman.backend.domain.myPage.service.responseForm.MemberInfoResponseForm;
-import fourman.backend.domain.myPage.service.responseForm.MyInfoModifyResponseForm;
-import fourman.backend.domain.myPage.service.responseForm.MyInfoResponseForm;
+import fourman.backend.domain.myPage.service.responseForm.*;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.*;
@@ -27,6 +24,13 @@ public class MyPageController {
         log.info("memberInfo(): " + memberId);
 
         return myPageService.myInfo(memberId);
+    }
+
+    @GetMapping("/side-bar/{memberId}")
+    public MyInfoSideBarResponseForm myInfoSideBar(@PathVariable("memberId") Long memberId) {
+        log.info("myInfoSideBar()");
+
+        return myPageService.myInfoSideBar(memberId);
     }
 
     @PutMapping("/member-info-modify/{memberId}")
