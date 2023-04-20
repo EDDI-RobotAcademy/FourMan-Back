@@ -16,7 +16,7 @@ public class ReviewBoardImageResource {
 
     private String reviewBoardImageResourcePath;
 
-    @ManyToOne(fetch = FetchType.EAGER)
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "reviewBoard_id")
     private ReviewBoard reviewBoard;
 

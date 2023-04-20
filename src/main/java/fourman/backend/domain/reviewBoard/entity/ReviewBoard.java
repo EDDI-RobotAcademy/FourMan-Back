@@ -1,5 +1,7 @@
 package fourman.backend.domain.reviewBoard.entity;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import fourman.backend.domain.member.entity.Member;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.CreationTimestamp;
@@ -30,12 +32,14 @@ public class ReviewBoard {
     @Lob
     private String content;
 
-    @OneToMany(mappedBy = "reviewBoard", fetch = FetchType.EAGER, cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(mappedBy = "reviewBoard", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     private List<ReviewBoardImageResource> reviewBoardImageResourceList = new ArrayList<>();
 
     private Long rating;
 
-    private Long memberId;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "member_id")
+    private Member member;
 
     @CreationTimestamp
     private Date regDate;
