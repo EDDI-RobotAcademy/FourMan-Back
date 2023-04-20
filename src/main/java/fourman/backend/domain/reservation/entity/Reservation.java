@@ -33,7 +33,7 @@ public class Reservation {
     private Member member;
 
     @JsonIgnore
-    @OneToMany(mappedBy = "reservation",cascade = CascadeType.REMOVE)
+    @OneToMany(mappedBy = "reservation")
     @NonNull
     private List<Seat> seats;
 
