@@ -1,5 +1,8 @@
 package fourman.backend.domain.freeBoard.entity;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import fourman.backend.domain.member.entity.Member;
 import lombok.Data;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
@@ -30,9 +33,12 @@ public class FreeBoardComment {
     @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     private Date udpDate;
 
-    @ManyToOne(fetch = FetchType.EAGER)
+    @JsonBackReference
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name="board_id")
     private FreeBoard freeBoard;
-
-    private Long memberId;
+    @JsonIgnore
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "member_id")
+    private Member member;
 }
