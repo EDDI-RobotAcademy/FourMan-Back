@@ -1,15 +1,23 @@
 package fourman.backend.domain.questionboard.service.response;
 
+import lombok.AllArgsConstructor;
 import lombok.Getter;
-import lombok.RequiredArgsConstructor;
+import lombok.Setter;
+import lombok.ToString;
+
+import java.util.Date;
 
 @Getter
-@RequiredArgsConstructor
+@Setter
+@ToString
+@AllArgsConstructor
 public class CommentResponse {
 
-    final private String comment;
-    final private String commentWriter;
-
-
-
+    private Long commentId;
+    private String comment;
+    private String commentWriter;
+    private Date regDate;
+    private Date udpDate;
+    private Long boardId;
+    private Long memberId;
 }
