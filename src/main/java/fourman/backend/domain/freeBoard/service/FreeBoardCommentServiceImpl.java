@@ -17,6 +17,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
+import javax.transaction.Transactional;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -45,7 +46,6 @@ public class FreeBoardCommentServiceImpl implements FreeBoardCommentService{
         FreeBoardComment freeBoardComment = new FreeBoardComment();
 
         freeBoardComment.setComment(freeBoardCommentRequestForm.getComment());
-        freeBoardComment.setCommentWriter(freeBoardCommentRequestForm.getCommentWriter());
         freeBoardComment.setFreeBoard(freeBoard);
 
         Optional<Member> maybeMember = memberRepository.findById(freeBoardCommentRequestForm.getMemberId());
@@ -58,6 +58,7 @@ public class FreeBoardCommentServiceImpl implements FreeBoardCommentService{
         freeBoardCommentRepository.save(freeBoardComment);
     }
 
+    @Transactional
     @Override
     public List<FreeBoardCommentResponseForm> commentList(Long boardId) {
 
@@ -66,7 +67,7 @@ public class FreeBoardCommentServiceImpl implements FreeBoardCommentService{
 
         for (FreeBoardComment freeBoardComment: freeBoardCommentList) {
             FreeBoardCommentResponseForm freeBoardCommentResponseForm = new FreeBoardCommentResponseForm(
-                    freeBoardComment.getCommentId(), freeBoardComment.getComment(), freeBoardComment.getCommentWriter(), freeBoardComment.getRegDate(),
+                    freeBoardComment.getCommentId(), freeBoardComment.getComment(), freeBoardComment.getMember().getNickName(), freeBoardComment.getRegDate(),
                     freeBoardComment.getUdpDate(), freeBoardComment.getMember().getId(), freeBoardComment.getFreeBoard().getBoardId()
             );
 

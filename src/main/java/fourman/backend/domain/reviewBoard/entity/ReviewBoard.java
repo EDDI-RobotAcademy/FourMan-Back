@@ -26,9 +26,6 @@ public class ReviewBoard {
     @Column(length = 128, nullable = false)
     private String title;
 
-    @Column(length = 32, nullable = false)
-    private String writer;
-
     @Lob
     private String content;
 

@@ -22,9 +22,6 @@ public class FreeBoardComment {
     @Lob
     private String comment;
 
-    @Column(length = 50, nullable = false)
-    private String commentWriter;
-
     @CreationTimestamp
     @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     private Date regDate;

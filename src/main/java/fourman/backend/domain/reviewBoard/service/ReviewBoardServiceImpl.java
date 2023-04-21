@@ -53,7 +53,6 @@ public class ReviewBoardServiceImpl implements ReviewBoardService {
         // 받아온 상품정보 값 setting
         reviewBoard.setCafeName(reviewBoardRequest.getCafeName());
         reviewBoard.setTitle(reviewBoardRequest.getTitle());
-        reviewBoard.setWriter(reviewBoardRequest.getWriter());
         reviewBoard.setContent(reviewBoardRequest.getContent());
         reviewBoard.setRating(reviewBoardRequest.getRating());
 
@@ -107,6 +106,7 @@ public class ReviewBoardServiceImpl implements ReviewBoardService {
         reviewBoardRepository.save(reviewBoard);
     }
 
+    @Transactional
     @Override
     public List<ReviewBoardResponseForm> list() {
         // DB에서 모든 상품을 불러와 리스트에 저장
@@ -124,7 +124,7 @@ public class ReviewBoardServiceImpl implements ReviewBoardService {
 
             reviewBoardResponseList.add(new ReviewBoardResponseForm(
                     reviewBoard.getReviewBoardId(), reviewBoard.getCafeName(), reviewBoard.getTitle(),
-                    reviewBoard.getWriter(), reviewBoard.getContent(), reviewBoard.getRating(),
+                    reviewBoard.getMember().getNickName(), reviewBoard.getContent(), reviewBoard.getRating(),
                     reviewBoard.getMember().getId(), reviewBoard.getRegDate(), reviewBoard.getUpdDate(), firstPhoto
             ));
         }
@@ -133,6 +133,7 @@ public class ReviewBoardServiceImpl implements ReviewBoardService {
         return reviewBoardResponseList;
     }
 
+    @Transactional
     @Override
     public ReviewBoardReadResponseForm read(Long reviewBoardId) {
         // 매개변수로 받아온 상품 아이디를 조건으로 DB에서 상품 정보를 불러와 maybeProduct에 저장
@@ -149,7 +150,7 @@ public class ReviewBoardServiceImpl implements ReviewBoardService {
 
         // 상품 상세 정보를 Response 해줄 객체에 정보를 담음
         ReviewBoardReadResponseForm reviewBoardReadResponseForm = new ReviewBoardReadResponseForm(
-                reviewBoard.getReviewBoardId(), reviewBoard.getCafeName(), reviewBoard.getTitle(), reviewBoard.getWriter(),
+                reviewBoard.getReviewBoardId(), reviewBoard.getCafeName(), reviewBoard.getTitle(), reviewBoard.getMember().getNickName(),
                 reviewBoard.getContent(), reviewBoard.getRegDate(), reviewBoard.getMember().getId(), reviewBoard.getRating()
         );
 
@@ -190,12 +191,12 @@ public class ReviewBoardServiceImpl implements ReviewBoardService {
     }
 
     @Override
-    public ReviewBoard modify(Long reviewBoardId, ReviewBoardRequestForm reviewBoardRequest) {
+    public Boolean modify(Long reviewBoardId, ReviewBoardRequestForm reviewBoardRequest) {
         Optional<ReviewBoard> maybeReviewBoard = reviewBoardRepository.findById(reviewBoardId);
 
         if (maybeReviewBoard.isEmpty()) {
             System.out.println("ReviewBoard 정보를 찾지 못했습니다: " + reviewBoardId);
-            return null;
+            return false;
         }
 
         ReviewBoard reviewBoard = maybeReviewBoard.get();
@@ -205,7 +206,7 @@ public class ReviewBoardServiceImpl implements ReviewBoardService {
 
         reviewBoardRepository.save(reviewBoard);
 
-        return reviewBoard;
+        return true;
     }
 
     @Override
@@ -214,6 +215,7 @@ public class ReviewBoardServiceImpl implements ReviewBoardService {
         return reviewBoardRepository.findRatingByCafeName(cafeName);
     }
 
+    @Transactional
     @Override
     public List<ReviewBoardResponseForm> myPageList(Long memberId) {
         List<ReviewBoard> reviewBoardList = reviewBoardRepository.findReviewBoardByMemberId(memberId);
@@ -231,7 +233,7 @@ public class ReviewBoardServiceImpl implements ReviewBoardService {
 
             reviewBoardResponseList.add(new ReviewBoardResponseForm(
                     reviewBoard.getReviewBoardId(), reviewBoard.getCafeName(), reviewBoard.getTitle(),
-                    reviewBoard.getWriter(), reviewBoard.getContent(), reviewBoard.getRating(),
+                    reviewBoard.getMember().getNickName(), reviewBoard.getContent(), reviewBoard.getRating(),
                     reviewBoard.getMember().getId(), reviewBoard.getRegDate(), reviewBoard.getUpdDate(), firstPhoto
             ));
         }
