@@ -46,7 +46,7 @@ public class FreeBoardController {
     }
 
     @PutMapping("/{boardId}")
-    public FreeBoard boardModify(@PathVariable("boardId") Long boardId,
+    public Boolean boardModify(@PathVariable("boardId") Long boardId,
                              @RequestBody FreeBoardRequestForm boardRequest) {
 
         log.info("boardModify(): " + boardRequest + "id: " + boardId);

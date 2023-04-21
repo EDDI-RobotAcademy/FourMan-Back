@@ -65,7 +65,7 @@ public class ReviewBoardController {
     }
 
     @PutMapping("/{reviewBoardId}")
-    public ReviewBoard reviewBoardModify(@PathVariable("reviewBoardId") Long reviewBoardId,
+    public Boolean reviewBoardModify(@PathVariable("reviewBoardId") Long reviewBoardId,
                                      @RequestBody ReviewBoardRequestForm reviewBoardRequest) {
 
         log.info("productModify(): " + reviewBoardRequest + "id: " + reviewBoardId);

@@ -14,6 +14,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
+import javax.transaction.Transactional;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -31,7 +32,6 @@ public class FreeBoardServiceImpl implements FreeBoardService{
     public FreeBoard register(FreeBoardRequestForm freeBoardRequest) {
         FreeBoard freeBoard = new FreeBoard();
         freeBoard.setTitle(freeBoardRequest.getTitle());
-        freeBoard.setWriter(freeBoardRequest.getWriter());
         freeBoard.setContent(freeBoardRequest.getContent());
 
         Optional<Member> maybeMember = memberRepository.findById(freeBoardRequest.getMemberId());
@@ -47,7 +47,7 @@ public class FreeBoardServiceImpl implements FreeBoardService{
 
         return freeBoard;
     }
-
+    @Transactional
     @Override
     public List<FreeBoardResponseForm> list() {
 
@@ -56,7 +56,7 @@ public class FreeBoardServiceImpl implements FreeBoardService{
 
         for (FreeBoard freeBoard: freeBoardList) {
             FreeBoardResponseForm freeBoardResponseForm = new FreeBoardResponseForm(
-                    freeBoard.getBoardId(), freeBoard.getTitle(), freeBoard.getWriter(), freeBoard.getContent(),
+                    freeBoard.getBoardId(), freeBoard.getTitle(), freeBoard.getMember().getNickName(), freeBoard.getContent(),
                     freeBoard.getRegDate(), freeBoard.getUpdDate(), freeBoard.getMember().getId(), freeBoard.getViewCnt(), freeBoard.getRecommendation()
             );
 
@@ -65,6 +65,7 @@ public class FreeBoardServiceImpl implements FreeBoardService{
         return freeBoardResponseFormList;
     }
 
+    @Transactional
     @Override
     public FreeBoardResponseForm read(Long boardId) {
         // 일 수도 있고 아닐 수도 있고
@@ -78,7 +79,7 @@ public class FreeBoardServiceImpl implements FreeBoardService{
         freeBoardRepository.save(freeBoard);
 
         FreeBoardResponseForm freeBoardResponseForm = new FreeBoardResponseForm(
-                freeBoard.getBoardId(), freeBoard.getTitle(), freeBoard.getWriter(), freeBoard.getContent(),
+                freeBoard.getBoardId(), freeBoard.getTitle(), freeBoard.getMember().getNickName(), freeBoard.getContent(),
                 freeBoard.getRegDate(), freeBoard.getUpdDate(), freeBoard.getMember().getId(), freeBoard.getViewCnt(), freeBoard.getRecommendation()
         );
         return freeBoardResponseForm;
@@ -91,17 +92,17 @@ public class FreeBoardServiceImpl implements FreeBoardService{
     }
 
     @Override
-    public FreeBoard modify(Long boardId, FreeBoardRequestForm boardRequest) {
+    public Boolean modify(Long boardId, FreeBoardRequestForm boardRequest) {
         Optional<FreeBoard> maybeBoard = freeBoardRepository.findById(boardId);
         if (maybeBoard.isEmpty()) {
             System.out.println("Board 정보를 찾지 못했습니다: " + boardId);
-            return null;
+            return false;
         }
         FreeBoard freeBoard = maybeBoard.get();
         freeBoard.setTitle(boardRequest.getTitle());
         freeBoard.setContent(boardRequest.getContent());
         freeBoardRepository.save(freeBoard);
-        return freeBoard;
+        return true;
     }
 
     @Override
