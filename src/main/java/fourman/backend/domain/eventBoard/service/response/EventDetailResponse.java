@@ -1,6 +1,5 @@
 package fourman.backend.domain.eventBoard.service.response;
 
-import fourman.backend.domain.eventBoard.entity.EventBoardImageResource;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.ToString;
@@ -17,6 +16,5 @@ public class EventDetailResponse {
     private String content;
     private String cafeName;
     private String thumbnailFileName;
-    private List<EventBoardImageResource> eventBoardImageResourceList;
 
 }

@@ -11,6 +11,5 @@ import java.util.Optional;
 
 public interface EventRepository extends JpaRepository<Event, Long> {
     Optional<Cafe> findByCafeCode(CafeCode cafeCode);
-    @Query("SELECT DISTINCT e FROM Event e JOIN FETCH e.eventBoardImageResourceList ORDER BY e.eventId DESC")
-    List<Event> findAllWithEventBoardImageResourceList();
+
 }

@@ -33,18 +33,10 @@ public class Event {
 
     private String thumbnailFileName;
 
-
     @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(name="cafe_code_id")
     private CafeCode cafeCode;
-    @JsonManagedReference
-    @OneToMany(mappedBy = "event", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
-    private List<EventBoardImageResource> eventBoardImageResourceList = new ArrayList<>();
 
-    public void setEventBoardImageResource (EventBoardImageResource eventBoardImageResource) {
-        eventBoardImageResourceList.add(eventBoardImageResource);
-        eventBoardImageResource.setEvent(this);
-    }
 
 
 

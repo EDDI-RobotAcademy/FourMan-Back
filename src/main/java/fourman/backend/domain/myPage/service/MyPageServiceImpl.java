@@ -11,6 +11,7 @@ import fourman.backend.domain.member.repository.CafeCodeRepository;
 import fourman.backend.domain.member.repository.MemberProfileRepository;
 import fourman.backend.domain.member.repository.MemberRepository;
 import fourman.backend.domain.member.repository.PointRepository;
+import fourman.backend.domain.myPage.controller.requestForm.AddPointRequestForm;
 import fourman.backend.domain.myPage.controller.requestForm.CafeInfoModifyRequestForm;
 import fourman.backend.domain.myPage.controller.requestForm.MyInfoModifyRequestForm;
 import fourman.backend.domain.myPage.service.responseForm.*;
@@ -211,11 +212,11 @@ public class MyPageServiceImpl implements MyPageService {
 
         for(Member member: memberList) {
 
+//
+//            MemberInfoResponseForm memberInfoResponseForm = new MemberInfoResponseForm(member.getId(), member.getNickName(), member.getAuthority().getAuthorityName().getAUTHORITY_TYPE(),
+//                    member.getEmail(), member.getMemberProfile().getPhoneNumber());
 
-            MemberInfoResponseForm memberInfoResponseForm = new MemberInfoResponseForm(member.getId(), member.getNickName(), member.getAuthority().getAuthorityName().getAUTHORITY_TYPE(),
-                    member.getEmail(), member.getMemberProfile().getPhoneNumber());
-
-            memberInfoResponseFormList.add(memberInfoResponseForm);
+//            memberInfoResponseFormList.add(memberInfoResponseForm);
         }
 
         return memberInfoResponseFormList;
@@ -267,5 +268,10 @@ public class MyPageServiceImpl implements MyPageService {
         cafe.getCafeInfo().setDescription(modifyRequest.getDescription());
 
         cafeRepository.save(cafe);
+    }
+
+    @Override
+    public Boolean addPoint(Long memberId, AddPointRequestForm pointRequestForm) {
+        return null;
     }
 }
