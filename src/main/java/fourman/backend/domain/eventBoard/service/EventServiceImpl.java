@@ -1,9 +1,12 @@
 package fourman.backend.domain.eventBoard.service;
+import fourman.backend.domain.cafeIntroduce.entity.Cafe;
+import fourman.backend.domain.cafeIntroduce.service.response.CafeIntroDetailResponse;
 import fourman.backend.domain.eventBoard.controller.requestForm.EventRequestForm;
 import fourman.backend.domain.eventBoard.entity.Event;
 import fourman.backend.domain.eventBoard.entity.EventBoardImageResource;
 import fourman.backend.domain.eventBoard.repository.EventBoardImageResourceRepository;
 import fourman.backend.domain.eventBoard.repository.EventRepository;
+import fourman.backend.domain.eventBoard.service.response.EventDetailResponse;
 import fourman.backend.domain.eventBoard.service.response.EventListResponse;
 import fourman.backend.domain.member.entity.CafeCode;
 import fourman.backend.domain.member.repository.CafeCodeRepository;
@@ -41,11 +44,10 @@ public class EventServiceImpl implements EventService {
         event.setEventStartDate(eventRequestForm.getEventStartDate());
         event.setEventEndDate(eventRequestForm.getEventEndDate());
         event.setContent(eventRequestForm.getContent());
-        String content = event.getContent();
-        content = content.replaceAll("!\\[[^\\]]*\\]\\([^)]*\\)", ""); // <img> 태그 제거
+//        String content = event.getContent();
+//        content = content.replaceAll("!\\[[^\\]]*\\]\\([^)]*\\)", ""); // <img> 태그 제거
         // base64로 디코딩 하지 않고 단순히 <img> <p> 태그 replace 후 저장
-        event.setContent(content);
-
+//        event.setContent(content);
         Optional<CafeCode> op= cafeCodeRepository.findByCode(eventRequestForm.getCode());
         event.setCafeCode(op.get());
 
@@ -115,6 +117,24 @@ public class EventServiceImpl implements EventService {
         }
         System.out.println("@Events: " + eventResponseList);
         return eventResponseList;
+    }
+
+    @Override
+    public EventDetailResponse read(Long eventId) {
+        Optional<Event> maybeEvent = eventRepository.findById(eventId);
+        if (maybeEvent.isEmpty()) {
+            log.info("이벤트가 없습니다.");
+            return null;
+        }
+        Event event = maybeEvent.get();
+        System.out.println("event.getEventBoardImageResourceList()"+event.getEventBoardImageResourceList());
+        EventDetailResponse eventDetailResponse = new EventDetailResponse(
+                event.getEventId(),event.getEventName(),
+                event.getEventStartDate(),event.getEventEndDate(),
+                event.getContent(),event.getCafeCode().getCafeName(),
+                event.getThumbnailFileName(),event.getEventBoardImageResourceList() );
+        log.info("카페read 서비스 완료");
+        return eventDetailResponse;
     }
 
 }

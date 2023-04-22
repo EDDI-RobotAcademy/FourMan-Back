@@ -1,8 +1,10 @@
 package fourman.backend.domain.eventBoard.controller;
 
+import fourman.backend.domain.cafeIntroduce.service.response.CafeIntroDetailResponse;
 import fourman.backend.domain.cafeIntroduce.service.response.CafeIntroListResponse;
 import fourman.backend.domain.eventBoard.controller.requestForm.EventRequestForm;
 import fourman.backend.domain.eventBoard.service.EventService;
+import fourman.backend.domain.eventBoard.service.response.EventDetailResponse;
 import fourman.backend.domain.eventBoard.service.response.EventListResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -36,6 +38,13 @@ public class EventController {
         return eventService.list();
     }
 
+
+
+    @GetMapping("detail/{eventId}")
+    public EventDetailResponse eventRead(@PathVariable("eventId") Long eventId) {
+        log.info("eventRead()");
+        return eventService.read(eventId);
+    }
 
 
 
