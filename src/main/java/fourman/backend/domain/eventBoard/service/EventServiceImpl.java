@@ -1,10 +1,6 @@
 package fourman.backend.domain.eventBoard.service;
-import fourman.backend.domain.cafeIntroduce.entity.Cafe;
-import fourman.backend.domain.cafeIntroduce.service.response.CafeIntroDetailResponse;
 import fourman.backend.domain.eventBoard.controller.requestForm.EventRequestForm;
 import fourman.backend.domain.eventBoard.entity.Event;
-import fourman.backend.domain.eventBoard.entity.EventBoardImageResource;
-import fourman.backend.domain.eventBoard.repository.EventBoardImageResourceRepository;
 import fourman.backend.domain.eventBoard.repository.EventRepository;
 import fourman.backend.domain.eventBoard.service.response.EventDetailResponse;
 import fourman.backend.domain.eventBoard.service.response.EventListResponse;
@@ -13,10 +9,13 @@ import fourman.backend.domain.member.repository.CafeCodeRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Sort;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -33,27 +32,20 @@ import java.util.Optional;
 @RequiredArgsConstructor
 public class EventServiceImpl implements EventService {
     private final EventRepository eventRepository;
-    private final EventBoardImageResourceRepository eventBoardImageResourceRepository;
     private final CafeCodeRepository cafeCodeRepository;
-    //
     @Override
-    public Long registerEvent(List<MultipartFile> thumbnail, List<MultipartFile> fileList, EventRequestForm eventRequestForm) {
+    public Long registerEvent(List<MultipartFile> thumbnail, EventRequestForm eventRequestForm) {
         // 1. event 저장
         Event event = new Event();
         event.setEventName(eventRequestForm.getEventName());
         event.setEventStartDate(eventRequestForm.getEventStartDate());
         event.setEventEndDate(eventRequestForm.getEventEndDate());
         event.setContent(eventRequestForm.getContent());
-//        String content = event.getContent();
-//        content = content.replaceAll("!\\[[^\\]]*\\]\\([^)]*\\)", ""); // <img> 태그 제거
-        // base64로 디코딩 하지 않고 단순히 <img> <p> 태그 replace 후 저장
-//        event.setContent(content);
         Optional<CafeCode> op= cafeCodeRepository.findByCode(eventRequestForm.getCode());
         event.setCafeCode(op.get());
 
         LocalDateTime now = LocalDateTime.now(ZoneId.of("Asia/Seoul"));
         DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyyMMddHHmmss");
-        List<EventBoardImageResource> eventBoardImageResourceList = new ArrayList<>();
 
         // 실제 파일 frontend 이미지 폴더 경로에 저장
         try {
@@ -73,28 +65,6 @@ public class EventServiceImpl implements EventService {
                 writer1.close();
             }
 
-
-
-            //2. 상세사진
-            if(fileList != null) {
-                for (MultipartFile multipartFile : fileList) {
-                    log.info("requestUploadFilesWithText() - Make file: " + multipartFile.getOriginalFilename());
-
-                    String fileRandomName = now.format(dtf);
-                    String fileReName = 'f' + fileRandomName + multipartFile.getOriginalFilename();
-
-                    FileOutputStream writer2 = new FileOutputStream("../FourMan-Front/src/assets/event/uploadImgs/" + fileReName);
-                    log.info("디렉토리에 파일 배치 성공!");
-
-                    writer2.write(multipartFile.getBytes());
-                    //이미지리스트 이름 저장
-                    writer2.close();
-                    EventBoardImageResource eventBoardImageResource = new EventBoardImageResource(fileReName);
-                    eventBoardImageResourceList.add(eventBoardImageResource);
-                    event.setEventBoardImageResource(eventBoardImageResource);
-                }
-            }
-            eventBoardImageResourceRepository.saveAll(eventBoardImageResourceList);
             eventRepository.save(event);
             return event.getEventId();
 
@@ -106,7 +76,7 @@ public class EventServiceImpl implements EventService {
     }
     @Override
     public List<EventListResponse> list() {
-        List<Event> eventList = eventRepository.findAllWithEventBoardImageResourceList();
+        List<Event> eventList = eventRepository.findAll(Sort.by(Sort.Direction.DESC, "eventId"));
         System.out.println("List<Event> eventList" +eventList);
         List<EventListResponse> eventResponseList = new ArrayList<>();
         for(Event event: eventList){
@@ -127,14 +97,40 @@ public class EventServiceImpl implements EventService {
             return null;
         }
         Event event = maybeEvent.get();
-        System.out.println("event.getEventBoardImageResourceList()"+event.getEventBoardImageResourceList());
         EventDetailResponse eventDetailResponse = new EventDetailResponse(
                 event.getEventId(),event.getEventName(),
                 event.getEventStartDate(),event.getEventEndDate(),
                 event.getContent(),event.getCafeCode().getCafeName(),
-                event.getThumbnailFileName(),event.getEventBoardImageResourceList() );
+                event.getThumbnailFileName() );
         log.info("카페read 서비스 완료");
         return eventDetailResponse;
     }
+    @Override
+    public ResponseEntity<?> uploadImage(MultipartFile file){
+        try {
+            // 이미지 저장 경로 설정
+            String folderPath = "../FourMan-Front/public/assets/event/uploadImgs/";
+            LocalDateTime now = LocalDateTime.now(ZoneId.of("Asia/Seoul"));
+            DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyyMMddHHmmss");
+            String fileRandomName = now.format(dtf);
+            String fileReName = 'f' + fileRandomName + file.getOriginalFilename();
+            log.info("uploadImage파일 저장경로설정");
+            // 이미지 파일 저장
+            File outputFile = new File(folderPath + fileReName);
+            outputFile.getParentFile().mkdirs();
+            try (FileOutputStream fos = new FileOutputStream(outputFile)) {
+                fos.write(file.getBytes());
+                log.info("uploadImage파일 저장");
+            }
+            String imageUrl = "/assets/event/uploadImgs/" + fileReName;
+            System.out.println("imageUrl "+imageUrl);
+            return new ResponseEntity<>(imageUrl, HttpStatus.OK);
+        } catch (IOException e) {
+            e.printStackTrace();
+            return new ResponseEntity<>("Error occurred while uploading image", HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+
+
 
 }
