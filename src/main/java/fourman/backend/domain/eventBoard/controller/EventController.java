@@ -1,7 +1,9 @@
 package fourman.backend.domain.eventBoard.controller;
 
+import fourman.backend.domain.cafeIntroduce.service.response.CafeIntroListResponse;
 import fourman.backend.domain.eventBoard.controller.requestForm.EventRequestForm;
 import fourman.backend.domain.eventBoard.service.EventService;
+import fourman.backend.domain.eventBoard.service.response.EventListResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.MediaType;
@@ -29,6 +31,11 @@ public class EventController {
 
         return eventService.registerEvent(thumbnail, fileList, eventRequestForm);
     }
+    @GetMapping(path = "/list")
+    public List<EventListResponse> eventList() {
+        return eventService.list();
+    }
+
 
 
 

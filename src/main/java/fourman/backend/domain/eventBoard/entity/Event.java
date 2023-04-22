@@ -1,7 +1,9 @@
 package fourman.backend.domain.eventBoard.entity;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import fourman.backend.domain.member.entity.CafeCode;
-import fourman.backend.domain.reviewBoard.entity.ReviewBoardImageResource;
 import lombok.*;
 
 
@@ -35,6 +37,7 @@ public class Event {
     @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(name="cafe_code_id")
     private CafeCode cafeCode;
+    @JsonManagedReference
     @OneToMany(mappedBy = "event", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     private List<EventBoardImageResource> eventBoardImageResourceList = new ArrayList<>();
 

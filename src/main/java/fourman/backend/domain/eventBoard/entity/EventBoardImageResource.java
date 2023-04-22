@@ -1,6 +1,6 @@
 package fourman.backend.domain.eventBoard.entity;
 
-import fourman.backend.domain.reviewBoard.entity.ReviewBoard;
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
@@ -19,6 +19,7 @@ public class EventBoardImageResource {
 
     private String eventBoardImageResourcePath;
 
+    @JsonBackReference
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "Event_id")
     private Event event;

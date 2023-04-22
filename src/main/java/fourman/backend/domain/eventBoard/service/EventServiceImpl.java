@@ -1,19 +1,12 @@
 package fourman.backend.domain.eventBoard.service;
-import fourman.backend.domain.cafeIntroduce.controller.requestForm.CafeIntroRequestForm;
-import fourman.backend.domain.cafeIntroduce.entity.Cafe;
-import fourman.backend.domain.cafeIntroduce.entity.CafeInfo;
-import fourman.backend.domain.cafeIntroduce.repository.CafeRepository;
-import fourman.backend.domain.cafeIntroduce.service.CafeIntroduceService;
-import fourman.backend.domain.cafeIntroduce.service.response.CafeIntroDetailResponse;
-import fourman.backend.domain.cafeIntroduce.service.response.CafeIntroListResponse;
 import fourman.backend.domain.eventBoard.controller.requestForm.EventRequestForm;
 import fourman.backend.domain.eventBoard.entity.Event;
 import fourman.backend.domain.eventBoard.entity.EventBoardImageResource;
 import fourman.backend.domain.eventBoard.repository.EventBoardImageResourceRepository;
 import fourman.backend.domain.eventBoard.repository.EventRepository;
+import fourman.backend.domain.eventBoard.service.response.EventListResponse;
 import fourman.backend.domain.member.entity.CafeCode;
 import fourman.backend.domain.member.repository.CafeCodeRepository;
-import fourman.backend.domain.reviewBoard.entity.ReviewBoardImageResource;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Sort;
@@ -108,6 +101,20 @@ public class EventServiceImpl implements EventService {
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
+    }
+    @Override
+    public List<EventListResponse> list() {
+        List<Event> eventList = eventRepository.findAllWithEventBoardImageResourceList();
+        System.out.println("List<Event> eventList" +eventList);
+        List<EventListResponse> eventResponseList = new ArrayList<>();
+        for(Event event: eventList){
+            eventResponseList.add(new EventListResponse(event.getEventId(),event.getEventName(),
+                    event.getEventStartDate(),event.getEventEndDate(),
+                    event.getCafeCode().getCafeName(),
+                    event.getThumbnailFileName() )   ) ;
+        }
+        System.out.println("@Events: " + eventResponseList);
+        return eventResponseList;
     }
 
 }
