@@ -3,18 +3,30 @@ package fourman.backend.domain.freeBoard.service;
 import fourman.backend.domain.freeBoard.controller.requestForm.FreeBoardRequestForm;
 import fourman.backend.domain.freeBoard.entity.FreeBoard;
 import fourman.backend.domain.freeBoard.entity.FreeBoardComment;
+import fourman.backend.domain.freeBoard.entity.FreeBoardImageResource;
 import fourman.backend.domain.freeBoard.repository.FreeBoardCommentRepository;
+import fourman.backend.domain.freeBoard.repository.FreeBoardImageResourceRepository;
 import fourman.backend.domain.freeBoard.repository.FreeBoardRepository;
 import fourman.backend.domain.freeBoard.service.responseForm.FreeBoardResponseForm;
 import fourman.backend.domain.member.entity.Member;
 import fourman.backend.domain.member.repository.MemberRepository;
 import fourman.backend.domain.questionboard.entity.Comment;
+import fourman.backend.domain.reviewBoard.controller.requestForm.ReviewBoardRequestForm;
+import fourman.backend.domain.reviewBoard.entity.ReviewBoardImageResource;
+import fourman.backend.domain.reviewBoard.repository.ReviewBoardImageResourceRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
 import javax.transaction.Transactional;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.time.LocalDateTime;
+import java.time.ZoneId;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -27,9 +39,17 @@ public class FreeBoardServiceImpl implements FreeBoardService{
     final private FreeBoardRepository freeBoardRepository;
 
     final private MemberRepository memberRepository;
+    final private FreeBoardImageResourceRepository freeBoardImageResourceRepository;
 
+    @Transactional
     @Override
-    public FreeBoard register(FreeBoardRequestForm freeBoardRequest) {
+    public FreeBoard register(List<MultipartFile> fileList, FreeBoardRequestForm freeBoardRequest) {
+
+        List<FreeBoardImageResource> freeBoardImageResourceList = new ArrayList<>();
+
+        // 현재 경로를 기준으로 프론트 엔드의 uploadImgs로 상대경로 값을 문자열로 저장함 (파일을 저장할 경로)
+        final String fixedStringPath = "../FourMan-Front/src/assets/freeBoardImages/";
+
         FreeBoard freeBoard = new FreeBoard();
         freeBoard.setTitle(freeBoardRequest.getTitle());
         freeBoard.setContent(freeBoardRequest.getContent());
@@ -40,6 +60,48 @@ public class FreeBoardServiceImpl implements FreeBoardService{
             return null;
         }
         freeBoard.setMember(maybeMember.get());
+
+        String content = freeBoard.getContent();
+
+        content = content.replaceAll("!\\[[^\\]]*\\]\\([^)]*\\)", ""); // <img> 태그 제거
+
+        // base64로 디코딩 하지 않고 단순히 <img> <p> 태그 replace 후 저장
+        freeBoard.setContent(content);
+
+
+        LocalDateTime now = LocalDateTime.now(ZoneId.of("Asia/Seoul"));
+        DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyyMMddHHmmss");
+
+        if(fileList != null) {
+            try {
+                for (MultipartFile multipartFile: fileList) {
+                    log.info("requestFileUploadWithText() - filename: " + multipartFile.getOriginalFilename());
+
+                    String thumbnailRandomName = now.format(dtf);
+                    String thumbnailReName = 't'+thumbnailRandomName + multipartFile.getOriginalFilename();
+
+                    // 파일 저장 위치에 파일 이름을 더해 fullPath 문자열 저장
+                    String fullPath = fixedStringPath + thumbnailReName;
+
+
+                    FileOutputStream writer = new FileOutputStream(fullPath);
+
+                    writer.write(multipartFile.getBytes());
+                    writer.close();
+
+                    // 이미지 경로를 DB에 저장할때 경로를 제외한 이미지파일 이름만 저장하도록 함 (프론트에서 경로 지정하여 사용하기 위함)
+                    FreeBoardImageResource freeBoardImageResource = new FreeBoardImageResource(thumbnailReName);
+                    freeBoardImageResourceList.add(freeBoardImageResource);
+                    freeBoard.setFreeBoardImageResource(freeBoardImageResource);
+                }
+            } catch (FileNotFoundException e) {
+                e.printStackTrace();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+
+            freeBoardImageResourceRepository.saveAll(freeBoardImageResourceList);
+        }
 
         freeBoard.setViewCnt(0L);
         freeBoard.setRecommendation(0L);
