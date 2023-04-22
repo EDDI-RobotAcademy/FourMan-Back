@@ -6,10 +6,8 @@ import fourman.backend.domain.freeBoard.entity.FreeBoard;
 import fourman.backend.domain.freeBoard.entity.FreeBoardComment;
 import fourman.backend.domain.freeBoard.repository.FreeBoardCommentRepository;
 import fourman.backend.domain.freeBoard.repository.FreeBoardRepository;
-import fourman.backend.domain.member.entity.Address;
-import fourman.backend.domain.member.entity.Member;
-import fourman.backend.domain.member.entity.MemberProfile;
-import fourman.backend.domain.member.entity.Point;
+import fourman.backend.domain.member.entity.*;
+import fourman.backend.domain.member.repository.CafeCodeRepository;
 import fourman.backend.domain.member.repository.MemberProfileRepository;
 import fourman.backend.domain.member.repository.MemberRepository;
 import fourman.backend.domain.member.repository.PointRepository;
@@ -50,6 +48,7 @@ public class MyPageServiceImpl implements MyPageService {
     final private RedisService redisService;
     final private CafeRepository cafeRepository;
     final private PointRepository pointRepository;
+    final private CafeCodeRepository cafeCodeRepository;
 
     @Override
     public MyInfoResponseForm myInfo(Long memberId) {
@@ -137,7 +136,14 @@ public class MyPageServiceImpl implements MyPageService {
         redisService.deleteByKey(userToken.toString());
         redisService.setKeyAndValue(userToken.toString(), member.getId());
 
-        MyInfoModifyResponseForm myInfoModifyResponseForm = new MyInfoModifyResponseForm(userToken.toString(), member.getId(), member.getNickName(), member.getAuthority().getAuthorityName(), null, member.getCode(), null, member.getEmail());
+        MyInfoModifyResponseForm myInfoModifyResponseForm;
+        Optional<CafeCode> op= cafeCodeRepository.findByCode(member.getCode());
+
+        if(op.isEmpty()) {
+            myInfoModifyResponseForm = new MyInfoModifyResponseForm(userToken.toString(), member.getId(), member.getNickName(), member.getAuthority().getAuthorityName(), null, member.getCode(), null, member.getEmail());
+        } else {
+            myInfoModifyResponseForm = new MyInfoModifyResponseForm(userToken.toString(), member.getId(), member.getNickName(), member.getAuthority().getAuthorityName(), op.get().getId(), member.getCode(), op.get().getCafeName(), member.getEmail());
+        }
 
         return myInfoModifyResponseForm;
     }
