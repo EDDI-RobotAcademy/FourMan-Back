@@ -3,7 +3,6 @@ package fourman.backend.domain.freeBoard.entity;
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import fourman.backend.domain.member.entity.Member;
-import fourman.backend.domain.reviewBoard.entity.ReviewBoardImageResource;
 import lombok.Data;
 import org.hibernate.annotations.ColumnDefault;
 import org.hibernate.annotations.CreationTimestamp;
@@ -42,12 +41,28 @@ public class FreeBoard {
     @OneToMany(mappedBy = "freeBoard", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     private List<FreeBoardComment> freeBoardCommentList = new ArrayList<>();
 
+    @JsonIgnore
+    @OneToMany(mappedBy = "freeBoard", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    private List<FreeBoardImageResource> freeBoardImageResourceList = new ArrayList<>();
 
     @ColumnDefault("0")
     private Long viewCnt;
 
     @ColumnDefault("0")
     private Long recommendation;
+
+    public void setFreeBoardImageResource (FreeBoardImageResource freeBoardImageResource) {
+        freeBoardImageResourceList.add(freeBoardImageResource);
+        freeBoardImageResource.setFreeBoard(this);
+    }
+
+    public void setFreeBoardImageResourceList (List<FreeBoardImageResource> freeBoardImageResourceList) {
+        freeBoardImageResourceList.addAll(freeBoardImageResourceList);
+
+        for (int i = 0; i < freeBoardImageResourceList.size(); i++) {
+            freeBoardImageResourceList.get(i).setFreeBoard(this);
+        }
+    }
 
     public void increaseViewCnt() {
         this.viewCnt++;
