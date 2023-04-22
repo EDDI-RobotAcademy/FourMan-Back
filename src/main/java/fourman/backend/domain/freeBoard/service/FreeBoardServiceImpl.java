@@ -2,18 +2,13 @@ package fourman.backend.domain.freeBoard.service;
 
 import fourman.backend.domain.freeBoard.controller.requestForm.FreeBoardRequestForm;
 import fourman.backend.domain.freeBoard.entity.FreeBoard;
-import fourman.backend.domain.freeBoard.entity.FreeBoardComment;
 import fourman.backend.domain.freeBoard.entity.FreeBoardImageResource;
-import fourman.backend.domain.freeBoard.repository.FreeBoardCommentRepository;
 import fourman.backend.domain.freeBoard.repository.FreeBoardImageResourceRepository;
 import fourman.backend.domain.freeBoard.repository.FreeBoardRepository;
+import fourman.backend.domain.freeBoard.service.responseForm.FreeBoardImageResourceResponseForm;
 import fourman.backend.domain.freeBoard.service.responseForm.FreeBoardResponseForm;
 import fourman.backend.domain.member.entity.Member;
 import fourman.backend.domain.member.repository.MemberRepository;
-import fourman.backend.domain.questionboard.entity.Comment;
-import fourman.backend.domain.reviewBoard.controller.requestForm.ReviewBoardRequestForm;
-import fourman.backend.domain.reviewBoard.entity.ReviewBoardImageResource;
-import fourman.backend.domain.reviewBoard.repository.ReviewBoardImageResourceRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Sort;
@@ -199,5 +194,20 @@ public class FreeBoardServiceImpl implements FreeBoardService{
         freeBoard.decreaseRecommendation();
         freeBoardRepository.save(freeBoard);
         return freeBoard.getRecommendation();
+    }
+
+    @Override
+    public List<FreeBoardImageResourceResponseForm> findFreeBoardImage(Long boardId) {
+        List<FreeBoardImageResource> freeBoardImageResourceList = freeBoardImageResourceRepository.findImagePathByFreeBoardId(boardId);
+        List<FreeBoardImageResourceResponseForm> freeBoardImageResourceResponseFormList = new ArrayList<>();
+
+        for (FreeBoardImageResource freeBoardImageResource: freeBoardImageResourceList) {
+            System.out.println("imageResource path: " + freeBoardImageResource.getFreeBoardImageResourcePath());
+
+            freeBoardImageResourceResponseFormList.add(new FreeBoardImageResourceResponseForm(
+                    freeBoardImageResource.getFreeBoardImageResourcePath()));
+        }
+
+        return freeBoardImageResourceResponseFormList;
     }
 }

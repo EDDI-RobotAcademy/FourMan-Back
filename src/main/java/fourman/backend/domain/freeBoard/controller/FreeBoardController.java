@@ -3,8 +3,8 @@ package fourman.backend.domain.freeBoard.controller;
 import fourman.backend.domain.freeBoard.controller.requestForm.FreeBoardRequestForm;
 import fourman.backend.domain.freeBoard.entity.FreeBoard;
 import fourman.backend.domain.freeBoard.service.FreeBoardService;
+import fourman.backend.domain.freeBoard.service.responseForm.FreeBoardImageResourceResponseForm;
 import fourman.backend.domain.freeBoard.service.responseForm.FreeBoardResponseForm;
-import fourman.backend.domain.reviewBoard.controller.requestForm.ReviewBoardRequestForm;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.MediaType;
@@ -77,5 +77,13 @@ public class FreeBoardController {
     @PostMapping("/down-recommend/{boardId}")
     public Long decreaseRecommendation(@PathVariable("boardId") Long boardId) {
         return freeBoardService.decRecommendation(boardId);
+    }
+
+    @GetMapping("/imageList/{boardId}")
+    public List<FreeBoardImageResourceResponseForm> readFreeBoardImageResource(
+            @PathVariable("boardId") Long boardId) {
+
+
+        return freeBoardService.findFreeBoardImage(boardId);
     }
 }
