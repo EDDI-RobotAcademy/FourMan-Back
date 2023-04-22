@@ -1,5 +1,6 @@
 package fourman.backend.domain.myPage.controller;
 
+import fourman.backend.domain.myPage.controller.requestForm.AddPointRequestForm;
 import fourman.backend.domain.myPage.controller.requestForm.CafeInfoModifyRequestForm;
 import fourman.backend.domain.myPage.controller.requestForm.MyInfoModifyRequestForm;
 import fourman.backend.domain.myPage.service.MyPageService;
@@ -71,6 +72,13 @@ public class MyPageController {
                                                      @RequestBody CafeInfoModifyRequestForm modifyRequest) {
 
         myPageService.cafeInfoModify(cafeId, modifyRequest);
+    }
+
+    @PutMapping("/add-point/{memberId}")
+    public Boolean addPoint(@PathVariable("memberId") Long memberId,
+                            @RequestBody AddPointRequestForm pointRequestForm) {
+
+        return myPageService.addPoint(memberId, pointRequestForm);
     }
 
 }

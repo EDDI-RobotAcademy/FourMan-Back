@@ -17,6 +17,7 @@ public class MemberInfoResponseForm {
     final private String authorityName;
     final private String email;
     final private String phoneNumber;
+    final private Long point;
 
 
 
