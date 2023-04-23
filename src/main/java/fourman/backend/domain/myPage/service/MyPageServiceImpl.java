@@ -322,8 +322,68 @@ public class MyPageServiceImpl implements MyPageService {
         }
 
         Cafe cafe = maybeCafe.get();
+
+        Optional<CafeCode> maybeCafeCode = cafeCodeRepository.findByCode(cafe.getCafeCode().getCode());
+
+        if (maybeCafeCode.isEmpty()) {
+            return null;
+        }
+
+        CafeCode cafeCode = maybeCafeCode.get();
+
+        // 카페 별점
+        List<Long> ratings = reviewBoardRepository.findRatingByCafeName(cafeCode.getCafeName());
+
+        // 별점 평균
+        double ratingAverage = ratings.stream()
+                .mapToLong(Long::longValue)
+                .average()
+                .orElse(0.0);
+
+        // 리뷰 갯수
+        int ratingCount = ratings.size();
+
+        // 이번달 주문정보
+        List<OrderInfo> monthOrderInfoList = orderRepository.findMonthOrderInfoByCafeId(cafeId);
+
+        // 이번달 총 매출
+        double monthTotalSales = monthOrderInfoList.stream()
+                .mapToDouble(OrderInfo::getTotalPrice)
+                .sum();
+
+        // 이번달 총 주문
+        int monthOrderCount = monthOrderInfoList.size();
+
+        // 이번달 총 예약
+        int monthReservationCount = 0;
+        for (OrderInfo orderInfo : monthOrderInfoList) {
+            if (orderInfo.isPacking() == false) {
+                monthReservationCount++;
+            }
+        }
+
+        // 금일 주문정보
+        List<OrderInfo> dayOrderInfoList = orderRepository.findDayOrderInfoByCafeId(cafe.getCafeId());
+
+        // 금일 총 매출
+        double dayTotalSales = dayOrderInfoList.stream()
+                .mapToDouble(OrderInfo::getTotalPrice)
+                .sum();
+
+        // 금일 총 주문
+        int dayOrderCount = dayOrderInfoList.size();
+
+        // 금일 총 예약
+        int dayReservationCount = 0;
+        for (OrderInfo orderInfo : dayOrderInfoList) {
+            if (orderInfo.isPacking() == false) {
+                dayReservationCount++;
+            }
+        }
+
         CafeInfoResponse cafeInfoResponse = new CafeInfoResponse(cafe.getCafeId(), cafe.getCafeCode().getCafeName(), cafe.getCafeAddress(),
-                cafe.getCafeTel(), cafe.getStartTime(), cafe.getEndTime(), cafe.getCafeInfo().getSubTitle(), cafe.getCafeInfo().getDescription());
+                cafe.getCafeTel(), cafe.getStartTime(), cafe.getEndTime(), cafe.getCafeInfo().getSubTitle(), cafe.getCafeInfo().getDescription(),
+                ratingAverage, ratingCount, monthTotalSales, monthOrderCount, dayTotalSales, dayOrderCount, monthReservationCount, dayReservationCount);
 
 
         return cafeInfoResponse;
