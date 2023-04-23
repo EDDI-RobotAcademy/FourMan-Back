@@ -13,13 +13,6 @@ import java.util.List;
 @Entity
 @NoArgsConstructor
 public class Cafe {
-//       private String cafeName;
-//        private String cafeAddress;
-//        private String cafeTel;
-//        private String startTime;
-//        private String endTime;
-//        private String subTitle;
-//        private String description;
     @Id
     @Column(name = "cafe_id")
     @GeneratedValue(strategy = GenerationType.IDENTITY)

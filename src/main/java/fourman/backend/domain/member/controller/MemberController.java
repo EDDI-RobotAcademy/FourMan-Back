@@ -1,14 +1,12 @@
 package fourman.backend.domain.member.controller;
 
-import fourman.backend.domain.member.controller.form.EmailMatchForm;
-import fourman.backend.domain.member.controller.form.EmailPasswordForm;
-import fourman.backend.domain.member.controller.form.MemberLoginForm;
-import fourman.backend.domain.member.controller.form.MemberRegisterForm;
+import fourman.backend.domain.member.controller.form.*;
 import fourman.backend.domain.member.service.MemberService;
 import fourman.backend.domain.member.service.response.MemberLoginResponse;
 import fourman.backend.domain.security.service.RedisService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.ResponseEntity;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 
@@ -85,6 +83,19 @@ public class MemberController {
 
         return memberService.applyNewPassword(form.toEmailPasswordRequest());
     }
+
+    @PostMapping("/favorites")
+    public String toggleFavorite(@RequestBody FavoriteForm favoriteForm) {
+        log.info("Controller- toggleFavorite ");
+        return memberService.toggleFavorite(favoriteForm);
+
+    }
+    @GetMapping("/favorites/{memberId}/{cafeId}")
+    public ResponseEntity<Boolean> isFavorite(@PathVariable Long memberId, @PathVariable Long cafeId) {
+        boolean isFavorite = memberService.isFavorite(memberId, cafeId);
+        return ResponseEntity.ok(isFavorite);
+    }
+
 
 
 
