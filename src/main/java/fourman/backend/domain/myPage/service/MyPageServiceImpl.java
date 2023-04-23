@@ -28,6 +28,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
+import javax.transaction.Transactional;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -203,6 +204,7 @@ public class MyPageServiceImpl implements MyPageService {
 
     }
 
+    @Transactional
     @Override
     public List<MemberInfoResponseForm> memberInfoList() {
         List<Member> memberList = memberRepository.findAll();
@@ -211,12 +213,21 @@ public class MyPageServiceImpl implements MyPageService {
         List<MemberInfoResponseForm> memberInfoResponseFormList = new ArrayList<>();
 
         for(Member member: memberList) {
+            Optional<Point> maybePoint = pointRepository.findByMemberId(member);
 
-//
-//            MemberInfoResponseForm memberInfoResponseForm = new MemberInfoResponseForm(member.getId(), member.getNickName(), member.getAuthority().getAuthorityName().getAUTHORITY_TYPE(),
-//                    member.getEmail(), member.getMemberProfile().getPhoneNumber());
+            if(maybePoint.isEmpty()) {
+                MemberInfoResponseForm memberInfoResponseForm = new MemberInfoResponseForm(member.getId(), member.getNickName(), member.getAuthority().getAuthorityName().getAUTHORITY_TYPE(),
+                        member.getEmail(), member.getMemberProfile().getPhoneNumber(), null);
 
-//            memberInfoResponseFormList.add(memberInfoResponseForm);
+                memberInfoResponseFormList.add(memberInfoResponseForm);
+            } else {
+                Point point = maybePoint.get();
+
+                MemberInfoResponseForm memberInfoResponseForm = new MemberInfoResponseForm(member.getId(), member.getNickName(), member.getAuthority().getAuthorityName().getAUTHORITY_TYPE(),
+                        member.getEmail(), member.getMemberProfile().getPhoneNumber(), point.getPoint());
+
+                memberInfoResponseFormList.add(memberInfoResponseForm);
+            }
         }
 
         return memberInfoResponseFormList;
@@ -272,6 +283,24 @@ public class MyPageServiceImpl implements MyPageService {
 
     @Override
     public Boolean addPoint(Long memberId, AddPointRequestForm pointRequestForm) {
-        return null;
+        Optional<Member> maybeMember = memberRepository.findByMemberId(memberId);
+
+        if(maybeMember.isEmpty()) {
+            return false;
+        }
+
+        Member member = maybeMember.get();
+        Optional<Point> maybePoint = pointRepository.findByMemberId(member);
+
+        if(maybePoint.isEmpty()) {
+            return false;
+        }
+
+        Point point = maybePoint.get();
+        point.setPoint(point.getPoint() + pointRequestForm.getPoint());
+
+        pointRepository.save(point);
+
+        return true;
     }
 }
