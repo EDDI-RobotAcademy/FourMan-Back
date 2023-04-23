@@ -1,6 +1,7 @@
 package fourman.backend.domain.freeBoard.controller;
 
 import fourman.backend.domain.freeBoard.controller.requestForm.FreeBoardRequestForm;
+import fourman.backend.domain.freeBoard.controller.requestForm.RecommendationRequestForm;
 import fourman.backend.domain.freeBoard.entity.FreeBoard;
 import fourman.backend.domain.freeBoard.service.FreeBoardService;
 import fourman.backend.domain.freeBoard.service.responseForm.FreeBoardImageResourceResponse;
@@ -68,17 +69,34 @@ public class FreeBoardController {
     public List<FreeBoard> freeBoardSearchList(@PathVariable("searchText") String searchText) {
         return freeBoardService.searchFreeBoardList(searchText);
     }
+//
+//    @PostMapping("/up-recommend/{boardId}")
+//    public Long increaseRecommendation (@PathVariable("boardId") Long boardId) {
+//        return freeBoardService.incRecommendation(boardId);
+//    }
 
-    @PostMapping("/up-recommend/{boardId}")
-    public Long increaseRecommendation (@PathVariable("boardId") Long boardId) {
-        return freeBoardService.incRecommendation(boardId);
+//    @PostMapping("/down-recommend/{boardId}")
+//    public Long decreaseRecommendation(@PathVariable("boardId") Long boardId) {
+//        return freeBoardService.decRecommendation(boardId);
+//    }
+
+    @PostMapping("/down-recommendation/{boardId}")
+    public Long decRecommendation(@PathVariable("boardId") Long boardId,
+                                  @RequestBody RecommendationRequestForm recommendationRequestForm) {
+        return freeBoardService.downRecommendation(boardId, recommendationRequestForm);
     }
+    @PostMapping("/up-recommendation/{boardId}")
+    public Long incRecommendation(@PathVariable("boardId") Long boardId,
+                                   @RequestBody RecommendationRequestForm recommendationRequestForm){
 
-    @PostMapping("/down-recommend/{boardId}")
-    public Long decreaseRecommendation(@PathVariable("boardId") Long boardId) {
-        return freeBoardService.decRecommendation(boardId);
+        if (recommendationRequestForm != null) {
+            System.out.println("보드" + recommendationRequestForm.getBoardId()+ "멤버" + recommendationRequestForm.getMemberId());
+        } else {
+            System.out.println("recommendationRequestForm이 null입니다.");
+        }
+
+        return freeBoardService.upRecommendation(boardId,recommendationRequestForm);
     }
-
     @GetMapping("/imageList/{boardId}")
     public List<FreeBoardImageResourceResponse> readFreeBoardImageResource(
             @PathVariable("boardId") Long boardId) {

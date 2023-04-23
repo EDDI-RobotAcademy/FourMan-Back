@@ -1,10 +1,13 @@
 package fourman.backend.domain.freeBoard.service;
 
 import fourman.backend.domain.freeBoard.controller.requestForm.FreeBoardRequestForm;
+import fourman.backend.domain.freeBoard.controller.requestForm.RecommendationRequestForm;
 import fourman.backend.domain.freeBoard.entity.FreeBoard;
 import fourman.backend.domain.freeBoard.entity.FreeBoardImageResource;
+import fourman.backend.domain.freeBoard.entity.Recommendation;
 import fourman.backend.domain.freeBoard.repository.FreeBoardImageResourceRepository;
 import fourman.backend.domain.freeBoard.repository.FreeBoardRepository;
+import fourman.backend.domain.freeBoard.repository.RecommendataionRepository;
 import fourman.backend.domain.freeBoard.service.responseForm.FreeBoardImageResourceResponse;
 import fourman.backend.domain.freeBoard.service.responseForm.FreeBoardResponse;
 import fourman.backend.domain.member.entity.Member;
@@ -35,6 +38,7 @@ public class FreeBoardServiceImpl implements FreeBoardService{
 
     final private MemberRepository memberRepository;
     final private FreeBoardImageResourceRepository freeBoardImageResourceRepository;
+    final private RecommendataionRepository recommendataionRepository;
 
     @Transactional
     @Override
@@ -172,29 +176,88 @@ public class FreeBoardServiceImpl implements FreeBoardService{
         return freeBoardRepository.findSearchFreeBoardBySearchText(searchText);
     }
 
+//    @Override
+//    public Long incRecommendation(Long boardId) {
+//        Optional<FreeBoard> maybeFreeBoard = freeBoardRepository.findById(boardId);
+//        if(maybeFreeBoard.isEmpty()) {
+//            return null;
+//        }
+//        FreeBoard freeBoard = maybeFreeBoard.get();
+//        freeBoard.increaseRecommendation();
+//        freeBoardRepository.save(freeBoard);
+//        return freeBoard.getRecommendation();
+//    }
+//@Override
+//public Long decRecommendation(Long boardId) {
+//    Optional<FreeBoard> maybeFreeboard = freeBoardRepository.findById(boardId);
+//    if(maybeFreeboard.isEmpty()) {
+//        return null;
+//    }
+//    FreeBoard freeBoard = maybeFreeboard.get();
+//    freeBoard.decreaseRecommendation();
+//    freeBoardRepository.save(freeBoard);
+//    return freeBoard.getRecommendation();
+//}
+
+    @Transactional
     @Override
-    public Long incRecommendation(Long boardId) {
+    public Long upRecommendation(Long boardId, RecommendationRequestForm recommendationRequestForm) {
         Optional<FreeBoard> maybeFreeBoard = freeBoardRepository.findById(boardId);
-        if(maybeFreeBoard.isEmpty()) {
+        if (maybeFreeBoard.isEmpty()) {
             return null;
         }
         FreeBoard freeBoard = maybeFreeBoard.get();
-        freeBoard.increaseRecommendation();
-        freeBoardRepository.save(freeBoard);
-        return freeBoard.getRecommendation();
-    }
 
-    @Override
-    public Long decRecommendation(Long boardId) {
-        Optional<FreeBoard> maybeFreeboard = freeBoardRepository.findById(boardId);
-        if(maybeFreeboard.isEmpty()) {
+        Optional<Member> maybeMember = memberRepository.findById(recommendationRequestForm.getMemberId());
+        if (maybeMember.isEmpty()) {
             return null;
         }
-        FreeBoard freeBoard = maybeFreeboard.get();
-        freeBoard.decreaseRecommendation();
-        freeBoardRepository.save(freeBoard);
-        return freeBoard.getRecommendation();
+        Member member = maybeMember.get();
+
+        if (recommendataionRepository.findByFreeBoardAndMemberId(freeBoard, member.getId()) == null) {
+            freeBoard.setRecommendation(freeBoard.getRecommendation() + 1);
+            Recommendation recommendation = new Recommendation(freeBoard, member); // status true
+            recommendataionRepository.save(recommendation);
+            return freeBoard.getRecommendation();
+        } else {
+            Recommendation recommendation = recommendataionRepository.findByFreeBoardAndMemberId(freeBoard, member.getId());
+            recommendation.unIncRecommendationBoard(freeBoard);
+            recommendataionRepository.delete(recommendation);
+            return freeBoard.getRecommendation();
+        }
     }
+
+        @Transactional
+        @Override
+        public Long downRecommendation(Long boardId, RecommendationRequestForm recommendationRequestForm) {
+            Optional<FreeBoard> maybeFreeBoard = freeBoardRepository.findById(boardId);
+            if(maybeFreeBoard.isEmpty()) {
+                return null;
+            }
+            FreeBoard freeBoard = maybeFreeBoard.get();
+
+            Optional<Member> maybeMember = memberRepository.findById(recommendationRequestForm.getMemberId());
+            if(maybeMember.isEmpty()) {
+                return null;
+            }
+            Member member = maybeMember.get();
+
+            if(recommendataionRepository.findByFreeBoardAndMemberId(freeBoard, member.getId()) == null) {
+                freeBoard.setRecommendation(freeBoard.getRecommendation() -1);
+                Recommendation recommendation = new Recommendation(freeBoard,member); // status true
+                recommendataionRepository.save(recommendation);
+                return freeBoard.getRecommendation();
+            } else {
+                Recommendation recommendation = recommendataionRepository.findByFreeBoardAndMemberId(freeBoard, member.getId());
+                recommendation.unDecRecommendationBoard(freeBoard);
+                recommendataionRepository.delete(recommendation);
+                return freeBoard.getRecommendation();
+            }
+
+    }
+
+
+
 
     @Override
     public List<FreeBoardImageResourceResponse> findFreeBoardImage(Long boardId) {
@@ -210,4 +273,7 @@ public class FreeBoardServiceImpl implements FreeBoardService{
 
         return freeBoardImageResourceResponseList;
     }
+
+
+
 }

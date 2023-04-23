@@ -38,6 +38,7 @@ public class FreeBoard {
     @JoinColumn(name = "member_id")
     private Member member;
 
+    @JsonIgnore
     @OneToMany(mappedBy = "freeBoard", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     private List<FreeBoardComment> freeBoardCommentList = new ArrayList<>();
 
