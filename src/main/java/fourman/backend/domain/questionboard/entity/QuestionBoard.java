@@ -1,6 +1,7 @@
 package fourman.backend.domain.questionboard.entity;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import fourman.backend.domain.member.entity.Member;
 import lombok.Data;
 import org.hibernate.annotations.ColumnDefault;
@@ -48,8 +49,9 @@ public class QuestionBoard {
     @JoinColumn(name = "member_id")
     private Member member;
 
+    @JsonIgnore
     @OneToMany(mappedBy = "questionBoard", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
-    private List<Comment> freeBoardCommentList = new ArrayList<>();
+    private List<Comment> questionBoardCommentList = new ArrayList<>();
 
     private boolean secret;
     @ColumnDefault("0")
