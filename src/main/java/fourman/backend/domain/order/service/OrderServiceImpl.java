@@ -16,6 +16,10 @@ import fourman.backend.domain.order.repository.OrderProductRepository;
 import fourman.backend.domain.order.repository.OrderRepository;
 import fourman.backend.domain.order.repository.OrderReservationRepository;
 import fourman.backend.domain.order.repository.OrderSeatRepository;
+import fourman.backend.domain.reservation.entity.Seat;
+import fourman.backend.domain.reservation.entity.Time;
+import fourman.backend.domain.reservation.repository.SeatRepository;
+import fourman.backend.domain.reservation.repository.TimeRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -36,6 +40,8 @@ public class OrderServiceImpl implements OrderService {
     final private OrderReservationRepository orderReservationRepository;
     final private CafeRepository cafeRepository;
     final private OrderSeatRepository orderSeatRepository;
+    final private SeatRepository seatRepository;
+    final private TimeRepository timeRepository;
 
     @Override
     public void register(OrderInfoRequestForm orderInfoRequestForm) {
@@ -73,10 +79,16 @@ public class OrderServiceImpl implements OrderService {
         orderInfo.setMember(maybeMember.get());
         orderInfo.setCafe(maybeCafe.get());
 
+        // 예약주문일 때(포장 주문 x)
         if( orderInfoRequestForm.isPacking() == false) {
             try {
-                for(Integer seat :reservationInfo.getSeatList()) {
-                    OrderSeat orderSeat = new OrderSeat(seat);
+                for(Integer seatNo :reservationInfo.getSeatList()) {
+                    OrderSeat orderSeat = new OrderSeat(seatNo);
+                    Optional<Time> maybeTime = timeRepository.findByTime(reservationInfo.getTime());
+                    Optional<Seat> existSeat = seatRepository.findSeatNoByCafeAndTimeAndSeatNo(maybeCafe.get(), maybeTime.get(), seatNo);
+                    Seat seat = existSeat.get();
+                    seat.setReserved(true);
+                    seatRepository.save(seat);
                     orderSeatList.add(orderSeat);
                 }
             } catch(NullPointerException e) {
