@@ -1,4 +1,7 @@
 package fourman.backend.domain.member.service;
+import fourman.backend.domain.cafeIntroduce.entity.Cafe;
+import fourman.backend.domain.cafeIntroduce.repository.CafeRepository;
+import fourman.backend.domain.member.controller.form.FavoriteForm;
 import fourman.backend.domain.member.entity.*;
 import fourman.backend.domain.member.repository.*;
 import fourman.backend.domain.member.service.request.EmailMatchRequest;
@@ -10,6 +13,7 @@ import fourman.backend.domain.security.service.RedisService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -25,9 +29,12 @@ public class MemberServiceImpl implements MemberService {
     final private MemberRepository memberRepository;
     final private ManagerCodeRepository managerCodeRepository;
     final private CafeCodeRepository cafeCodeRepository;
+    final private CafeRepository cafeRepository;
     final private AuthenticationRepository authenticationRepository;
     final private RedisService redisService;
     final private PointRepository pointRepository;
+
+    final private FavoriteRepository favoriteRepository;
 
     @Override
     public Boolean emailValidation(String email) {
@@ -47,15 +54,6 @@ public class MemberServiceImpl implements MemberService {
         return true;
     }
 
-
-    @Override
-    public Boolean managerCodeValidation(String managerCode) {
-        Optional<ManagerCode> maybeManager = managerCodeRepository.findByCode(managerCode);
-        if (maybeManager.isPresent()) {
-            return true;
-        }
-        return false;
-    }
 
     @Override
     public Boolean cafeCodeValidation(String cafeCode) {
@@ -172,5 +170,41 @@ public class MemberServiceImpl implements MemberService {
 
         return true;//이미존재하는 이메일
     }
+    @Override
+    public Boolean managerCodeValidation(String managerCode) {
+        Optional<ManagerCode> maybeManager = managerCodeRepository.findByCode(managerCode);
+        if (maybeManager.isPresent()) {
+            return true;
+        }
+        return false;
+    }
+
+    @Override
+    public String toggleFavorite(FavoriteForm favoriteForm) {
+        Optional<Favorite> favorite = favoriteRepository.findByMemberIdAndCafeCafeId(favoriteForm.getMemberId(), favoriteForm.getCafeId());
+        Optional<Member> member = memberRepository.findById(favoriteForm.getMemberId());
+        Optional<Cafe> cafe = cafeRepository.findById(favoriteForm.getCafeId()) ;
+        if (favoriteForm.getIsFavorite()) {
+            if (!favorite.isPresent()) {
+                Favorite newFavorite = new Favorite();
+                newFavorite.setMember(member.get());
+                newFavorite.setCafe(cafe.get());
+                favoriteRepository.save(newFavorite);
+                return"찜 했습니다.";
+            }
+            return "favorite이 존재하지않습니다.";
+        } else {
+            favorite.ifPresent(favoriteRepository::delete);
+            return "찜 취소했습니다.";
+        }
+    }
+
+    @Override
+    public boolean isFavorite(Long memberId, Long cafeId) {
+        return favoriteRepository.existsByMemberIdAndCafeCafeId(memberId, cafeId);
+    }
+
+
+
 
 }
