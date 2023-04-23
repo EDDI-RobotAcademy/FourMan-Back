@@ -5,7 +5,7 @@ import lombok.Getter;
 
 @Getter
 @AllArgsConstructor
-public class MyInfoSideBarResponseForm {
+public class MyInfoSideBarResponse {
 
     final private String nickName;
     final private String memberType;

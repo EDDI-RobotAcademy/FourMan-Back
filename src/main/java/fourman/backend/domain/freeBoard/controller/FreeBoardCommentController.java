@@ -2,9 +2,7 @@ package fourman.backend.domain.freeBoard.controller;
 import fourman.backend.domain.freeBoard.controller.requestForm.FreeBoardCommentRequestForm;
 import fourman.backend.domain.freeBoard.entity.FreeBoardComment;
 import fourman.backend.domain.freeBoard.service.FreeBoardCommentService;
-import fourman.backend.domain.freeBoard.service.responseForm.FreeBoardCommentResponseForm;
-import fourman.backend.domain.questionboard.controller.requestForm.CommentRequestForm;
-import fourman.backend.domain.questionboard.entity.Comment;
+import fourman.backend.domain.freeBoard.service.responseForm.FreeBoardCommentResponse;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -26,7 +24,7 @@ public class FreeBoardCommentController {
     }
 
     @GetMapping("/list/{boardId}")
-    public List<FreeBoardCommentResponseForm> freeBoardCommentList (@PathVariable("boardId") Long boardId) {
+    public List<FreeBoardCommentResponse> freeBoardCommentList (@PathVariable("boardId") Long boardId) {
         log.info("commentList");
         return freeBoardCommentService.commentList(boardId);
     }
