@@ -143,4 +143,13 @@ public class OrderServiceImpl implements OrderService {
 
         return orderInfoResponseList;
     }
+
+    @Override
+    public Number getHoldPoint(Long memberId) {
+        Optional<Member> maybeMember = memberRepository.findByMemberId(memberId);
+        Member member = maybeMember.get();
+        Long point = member.getPoint().getPoint();
+
+        return point;
+    }
 }
