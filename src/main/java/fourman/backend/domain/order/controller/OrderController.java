@@ -31,4 +31,11 @@ public class OrderController {
 
         return orderService.list(memberId);
     }
+
+    @GetMapping("/point/{memberId}")
+    public Number getHoldPoint(@PathVariable("memberId") Long memberId) {
+        log.info("getHoldPoint()");
+
+        return orderService.getHoldPoint(memberId);
+    }
 }

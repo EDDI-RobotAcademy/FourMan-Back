@@ -3,7 +3,9 @@ package fourman.backend.domain.order.service;
 import fourman.backend.domain.cafeIntroduce.entity.Cafe;
 import fourman.backend.domain.cafeIntroduce.repository.CafeRepository;
 import fourman.backend.domain.member.entity.Member;
+import fourman.backend.domain.member.entity.Point;
 import fourman.backend.domain.member.repository.MemberRepository;
+import fourman.backend.domain.member.repository.PointRepository;
 import fourman.backend.domain.order.controller.form.requestForm.CartItemRequestForm;
 import fourman.backend.domain.order.controller.form.requestForm.OrderInfoRequestForm;
 import fourman.backend.domain.order.controller.form.requestForm.OrderReservationRequestForm;
@@ -42,6 +44,7 @@ public class OrderServiceImpl implements OrderService {
     final private OrderSeatRepository orderSeatRepository;
     final private SeatRepository seatRepository;
     final private TimeRepository timeRepository;
+    final private PointRepository pointRepository;
 
     @Override
     public void register(OrderInfoRequestForm orderInfoRequestForm) {
@@ -54,6 +57,15 @@ public class OrderServiceImpl implements OrderService {
         List<OrderSeat> orderSeatList = new ArrayList<>();
         Optional<Cafe> maybeCafe = cafeRepository.findById(orderInfoRequestForm.getCafeId());
         Optional<Member> maybeMember = memberRepository.findByMemberId(orderInfoRequestForm.getMemberId());
+
+        // 포인트 사용 정보 처리
+        Member member = maybeMember.get();
+        Optional<Point> maybePoint = pointRepository.findByMemberId(member);
+        Point point = maybePoint.get();
+        Long usePoint = orderInfoRequestForm.getUsePoint();
+        Long remainPoint = point.getPoint() - usePoint;
+        point.setPoint(remainPoint);
+        pointRepository.save(point);
 
         // 랜덤 주문번호 생성, 주문번호 중복 확인
         LocalDate localDate = LocalDate.now();
@@ -74,9 +86,10 @@ public class OrderServiceImpl implements OrderService {
 
         orderInfo.setTotalQuantity(orderInfoRequestForm.getTotalQuantity());
         orderInfo.setTotalPrice(orderInfoRequestForm.getTotalPrice());
+        orderInfo.setUsePoint(orderInfoRequestForm.getUsePoint());
         orderInfo.setPacking(orderInfoRequestForm.isPacking());
         orderInfo.setReady(false);
-        orderInfo.setMember(maybeMember.get());
+        orderInfo.setMember(member);
         orderInfo.setCafe(maybeCafe.get());
 
         // 예약주문일 때(포장 주문 x)
@@ -142,5 +155,14 @@ public class OrderServiceImpl implements OrderService {
         }
 
         return orderInfoResponseList;
+    }
+
+    @Override
+    public Number getHoldPoint(Long memberId) {
+        Optional<Member> maybeMember = memberRepository.findByMemberId(memberId);
+        Member member = maybeMember.get();
+        Long point = member.getPoint().getPoint();
+
+        return point;
     }
 }

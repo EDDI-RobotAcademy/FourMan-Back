@@ -10,4 +10,6 @@ public interface OrderService {
     void register(OrderInfoRequestForm orderInfoRequestForm);
 
     List<OrderInfoResponseForm> list(Long memberId);
+
+    Number getHoldPoint(Long memberId);
 }
