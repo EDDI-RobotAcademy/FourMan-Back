@@ -16,13 +16,13 @@ public class OrderSeat {
     private Long id;
 
     @Column(nullable = true)
-    private Integer seat;
+    private Integer seatNo;
 
     @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     @JoinColumn(name = "reservation_id")
     private OrderReservation orderReservation;
 
-    public OrderSeat(Integer seat) {
-        this.seat = seat;
+    public OrderSeat(Integer seatNo) {
+        this.seatNo = seatNo;
     }
 }
