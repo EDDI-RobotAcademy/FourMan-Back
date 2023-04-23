@@ -3,8 +3,8 @@ package fourman.backend.domain.freeBoard.controller;
 import fourman.backend.domain.freeBoard.controller.requestForm.FreeBoardRequestForm;
 import fourman.backend.domain.freeBoard.entity.FreeBoard;
 import fourman.backend.domain.freeBoard.service.FreeBoardService;
-import fourman.backend.domain.freeBoard.service.responseForm.FreeBoardImageResourceResponseForm;
-import fourman.backend.domain.freeBoard.service.responseForm.FreeBoardResponseForm;
+import fourman.backend.domain.freeBoard.service.responseForm.FreeBoardImageResourceResponse;
+import fourman.backend.domain.freeBoard.service.responseForm.FreeBoardResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.MediaType;
@@ -31,13 +31,13 @@ public class FreeBoardController {
     }
 
     @GetMapping("/list")
-    public List<FreeBoardResponseForm> FreeBoardList () {
+    public List<FreeBoardResponse> FreeBoardList () {
 
         return freeBoardService.list();
     }
 
     @GetMapping("/{boardId}")
-    public FreeBoardResponseForm boardRead(@PathVariable("boardId") Long boardId) {
+    public FreeBoardResponse boardRead(@PathVariable("boardId") Long boardId) {
         log.info("boardRead()");
 
         return freeBoardService.read(boardId);
@@ -80,7 +80,7 @@ public class FreeBoardController {
     }
 
     @GetMapping("/imageList/{boardId}")
-    public List<FreeBoardImageResourceResponseForm> readFreeBoardImageResource(
+    public List<FreeBoardImageResourceResponse> readFreeBoardImageResource(
             @PathVariable("boardId") Long boardId) {
 
 

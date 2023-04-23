@@ -25,7 +25,6 @@ import fourman.backend.domain.reviewBoard.repository.ReviewBoardRepository;
 import fourman.backend.domain.security.service.RedisService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
@@ -53,7 +52,7 @@ public class MyPageServiceImpl implements MyPageService {
     final private CafeCodeRepository cafeCodeRepository;
 
     @Override
-    public MyInfoResponseForm myInfo(Long memberId) {
+    public MyInfoResponse myInfo(Long memberId) {
         Optional<Member> maybeMember  = memberRepository.findById(memberId);
         Optional<MemberProfile> maybeMemberProfile  = memberProfileRepository.findById(memberId);
 
@@ -65,16 +64,16 @@ public class MyPageServiceImpl implements MyPageService {
         Member member = maybeMember.get();
         MemberProfile memberProfile = maybeMemberProfile.get();
 
-        MyInfoResponseForm myInfoResponseForm = new MyInfoResponseForm(
+        MyInfoResponse myInfoResponse = new MyInfoResponse(
                 member.getNickName(), member.getBirthdate(), member.getEmail(),
                 memberProfile.getPhoneNumber(), memberProfile.getAddress()
         );
 
-        return myInfoResponseForm;
+        return myInfoResponse;
     }
 
     @Override
-    public MyInfoSideBarResponseForm myInfoSideBar(Long memberId) {
+    public MyInfoSideBarResponse myInfoSideBar(Long memberId) {
         Optional<Member> maybeMember  = memberRepository.findById(memberId);
         Member member = maybeMember.get();
 
@@ -93,15 +92,15 @@ public class MyPageServiceImpl implements MyPageService {
         }
 
 
-        MyInfoSideBarResponseForm myInfoSideBarResponseForm = new MyInfoSideBarResponseForm(
+        MyInfoSideBarResponse myInfoSideBarResponse = new MyInfoSideBarResponse(
                 member.getNickName(), member.getAuthority().getAuthorityName().getAUTHORITY_TYPE(), point
         );
 
-        return myInfoSideBarResponseForm;
+        return myInfoSideBarResponse;
     }
 
     @Override
-    public MyInfoModifyResponseForm myInfoModify(Long memberId, MyInfoModifyRequestForm modifyRequest) {
+    public MyInfoModifyResponse myInfoModify(Long memberId, MyInfoModifyRequestForm modifyRequest) {
         // 기존 사용자 정보 조회
         Optional<Member> maybeMember = memberRepository.findById(memberId);
         Optional<MemberProfile> maybeMemberProfile = memberProfileRepository.findById(memberId);
@@ -138,16 +137,16 @@ public class MyPageServiceImpl implements MyPageService {
         redisService.deleteByKey(userToken.toString());
         redisService.setKeyAndValue(userToken.toString(), member.getId());
 
-        MyInfoModifyResponseForm myInfoModifyResponseForm;
+        MyInfoModifyResponse myInfoModifyResponse;
         Optional<CafeCode> op= cafeCodeRepository.findByCode(member.getCode());
 
         if(op.isEmpty()) {
-            myInfoModifyResponseForm = new MyInfoModifyResponseForm(userToken.toString(), member.getId(), member.getNickName(), member.getAuthority().getAuthorityName(), null, member.getCode(), null, member.getEmail());
+            myInfoModifyResponse = new MyInfoModifyResponse(userToken.toString(), member.getId(), member.getNickName(), member.getAuthority().getAuthorityName(), null, member.getCode(), null, member.getEmail());
         } else {
-            myInfoModifyResponseForm = new MyInfoModifyResponseForm(userToken.toString(), member.getId(), member.getNickName(), member.getAuthority().getAuthorityName(), op.get().getId(), member.getCode(), op.get().getCafeName(), member.getEmail());
+            myInfoModifyResponse = new MyInfoModifyResponse(userToken.toString(), member.getId(), member.getNickName(), member.getAuthority().getAuthorityName(), op.get().getId(), member.getCode(), op.get().getCafeName(), member.getEmail());
         }
 
-        return myInfoModifyResponseForm;
+        return myInfoModifyResponse;
     }
 
     @Override
@@ -206,52 +205,52 @@ public class MyPageServiceImpl implements MyPageService {
 
     @Transactional
     @Override
-    public List<MemberInfoResponseForm> memberInfoList() {
+    public List<MemberInfoResponse> memberInfoList() {
         List<Member> memberList = memberRepository.findAll();
 
 
-        List<MemberInfoResponseForm> memberInfoResponseFormList = new ArrayList<>();
+        List<MemberInfoResponse> memberInfoResponseList = new ArrayList<>();
 
         for(Member member: memberList) {
             Optional<Point> maybePoint = pointRepository.findByMemberId(member);
 
             if(maybePoint.isEmpty()) {
-                MemberInfoResponseForm memberInfoResponseForm = new MemberInfoResponseForm(member.getId(), member.getNickName(), member.getAuthority().getAuthorityName().getAUTHORITY_TYPE(),
+                MemberInfoResponse memberInfoResponse = new MemberInfoResponse(member.getId(), member.getNickName(), member.getAuthority().getAuthorityName().getAUTHORITY_TYPE(),
                         member.getEmail(), member.getMemberProfile().getPhoneNumber(), null);
 
-                memberInfoResponseFormList.add(memberInfoResponseForm);
+                memberInfoResponseList.add(memberInfoResponse);
             } else {
                 Point point = maybePoint.get();
 
-                MemberInfoResponseForm memberInfoResponseForm = new MemberInfoResponseForm(member.getId(), member.getNickName(), member.getAuthority().getAuthorityName().getAUTHORITY_TYPE(),
+                MemberInfoResponse memberInfoResponse = new MemberInfoResponse(member.getId(), member.getNickName(), member.getAuthority().getAuthorityName().getAUTHORITY_TYPE(),
                         member.getEmail(), member.getMemberProfile().getPhoneNumber(), point.getPoint());
 
-                memberInfoResponseFormList.add(memberInfoResponseForm);
+                memberInfoResponseList.add(memberInfoResponse);
             }
         }
 
-        return memberInfoResponseFormList;
+        return memberInfoResponseList;
     }
 
     @Override
-    public List<CafeInfoResponseForm> cafeInfoList() {
+    public List<CafeInfoResponse> cafeInfoList() {
         List<Cafe> cafeList = cafeRepository.findAll();
 
-        List<CafeInfoResponseForm> cafeInfoResponseFormList = new ArrayList<>();
+        List<CafeInfoResponse> cafeInfoResponseList = new ArrayList<>();
 
         for (Cafe cafe: cafeList) {
-            CafeInfoResponseForm cafeInfoResponseForm = new CafeInfoResponseForm(
+            CafeInfoResponse cafeInfoResponse = new CafeInfoResponse(
                     cafe.getCafeId(), cafe.getCafeCode().getCafeName(), cafe.getCafeAddress(), cafe.getCafeTel(),
                     cafe.getStartTime(), cafe.getEndTime(), cafe.getCafeInfo().getSubTitle(), cafe.getCafeInfo().getDescription()
             );
 
-            cafeInfoResponseFormList.add(cafeInfoResponseForm);
+            cafeInfoResponseList.add(cafeInfoResponse);
         }
-        return cafeInfoResponseFormList;
+        return cafeInfoResponseList;
     }
 
     @Override
-    public CafeInfoResponseForm myCafeInfo(Long cafeId) {
+    public CafeInfoResponse myCafeInfo(Long cafeId) {
         Optional<Cafe> maybeCafe = cafeRepository.findById(cafeId);
 
         if (maybeCafe.isEmpty()) {
@@ -259,11 +258,11 @@ public class MyPageServiceImpl implements MyPageService {
         }
 
         Cafe cafe = maybeCafe.get();
-        CafeInfoResponseForm cafeInfoResponseForm = new CafeInfoResponseForm(cafe.getCafeId(), cafe.getCafeCode().getCafeName(), cafe.getCafeAddress(),
+        CafeInfoResponse cafeInfoResponse = new CafeInfoResponse(cafe.getCafeId(), cafe.getCafeCode().getCafeName(), cafe.getCafeAddress(),
                 cafe.getCafeTel(), cafe.getStartTime(), cafe.getEndTime(), cafe.getCafeInfo().getSubTitle(), cafe.getCafeInfo().getDescription());
 
 
-        return cafeInfoResponseForm;
+        return cafeInfoResponse;
     }
 
     @Override

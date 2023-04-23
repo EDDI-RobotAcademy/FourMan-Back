@@ -1,4 +1,4 @@
-package fourman.backend.domain.reviewBoard.controller.responseForm;
+package fourman.backend.domain.reviewBoard.service.responseForm;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -9,7 +9,7 @@ import java.util.Date;
 @Getter
 @ToString
 @AllArgsConstructor
-public class ReviewBoardReadResponseForm {
+public class ReviewBoardReadResponse {
 
     // 상품 상세 정보를 응답하기 위한 객체
 

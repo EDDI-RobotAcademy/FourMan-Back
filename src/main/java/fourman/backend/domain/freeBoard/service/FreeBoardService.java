@@ -2,8 +2,8 @@ package fourman.backend.domain.freeBoard.service;
 
 import fourman.backend.domain.freeBoard.controller.requestForm.FreeBoardRequestForm;
 import fourman.backend.domain.freeBoard.entity.FreeBoard;
-import fourman.backend.domain.freeBoard.service.responseForm.FreeBoardImageResourceResponseForm;
-import fourman.backend.domain.freeBoard.service.responseForm.FreeBoardResponseForm;
+import fourman.backend.domain.freeBoard.service.responseForm.FreeBoardImageResourceResponse;
+import fourman.backend.domain.freeBoard.service.responseForm.FreeBoardResponse;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
@@ -12,9 +12,9 @@ public interface FreeBoardService {
     public FreeBoard register(List<MultipartFile> fileList,
                               FreeBoardRequestForm freeBoardRequest);
 
-    List<FreeBoardResponseForm> list();
+    List<FreeBoardResponse> list();
 
-    FreeBoardResponseForm read(Long boardId);
+    FreeBoardResponse read(Long boardId);
 
     void remove(Long boardId);
 
@@ -28,5 +28,5 @@ public interface FreeBoardService {
 
     Long decRecommendation(Long boardId);
 
-    List<FreeBoardImageResourceResponseForm> findFreeBoardImage(Long boardId);
+    List<FreeBoardImageResourceResponse> findFreeBoardImage(Long boardId);
 }

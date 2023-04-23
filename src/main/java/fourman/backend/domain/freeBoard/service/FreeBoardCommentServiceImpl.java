@@ -6,15 +6,12 @@ import fourman.backend.domain.freeBoard.entity.FreeBoard;
 import fourman.backend.domain.freeBoard.entity.FreeBoardComment;
 import fourman.backend.domain.freeBoard.repository.FreeBoardCommentRepository;
 import fourman.backend.domain.freeBoard.repository.FreeBoardRepository;
-import fourman.backend.domain.freeBoard.service.responseForm.FreeBoardCommentResponseForm;
-import fourman.backend.domain.freeBoard.service.responseForm.FreeBoardResponseForm;
+import fourman.backend.domain.freeBoard.service.responseForm.FreeBoardCommentResponse;
 import fourman.backend.domain.member.entity.Member;
 import fourman.backend.domain.member.repository.MemberRepository;
-import fourman.backend.domain.questionboard.entity.Comment;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
@@ -60,21 +57,21 @@ public class FreeBoardCommentServiceImpl implements FreeBoardCommentService{
 
     @Transactional
     @Override
-    public List<FreeBoardCommentResponseForm> commentList(Long boardId) {
+    public List<FreeBoardCommentResponse> commentList(Long boardId) {
 
         List<FreeBoardComment> freeBoardCommentList = freeBoardCommentRepository.findFreeBoardCommentByBoardId(boardId);
-        List<FreeBoardCommentResponseForm> freeBoardCommentResponseFormList = new ArrayList<>();
+        List<FreeBoardCommentResponse> freeBoardCommentResponseList = new ArrayList<>();
 
         for (FreeBoardComment freeBoardComment: freeBoardCommentList) {
-            FreeBoardCommentResponseForm freeBoardCommentResponseForm = new FreeBoardCommentResponseForm(
+            FreeBoardCommentResponse freeBoardCommentResponse = new FreeBoardCommentResponse(
                     freeBoardComment.getCommentId(), freeBoardComment.getComment(), freeBoardComment.getMember().getNickName(), freeBoardComment.getRegDate(),
                     freeBoardComment.getUdpDate(), freeBoardComment.getMember().getId(), freeBoardComment.getFreeBoard().getBoardId()
             );
 
-            freeBoardCommentResponseFormList.add(freeBoardCommentResponseForm);
+            freeBoardCommentResponseList.add(freeBoardCommentResponse);
         }
 
-        return freeBoardCommentResponseFormList;
+        return freeBoardCommentResponseList;
     }
 
     @Override

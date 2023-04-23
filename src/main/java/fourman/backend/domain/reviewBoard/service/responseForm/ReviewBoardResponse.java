@@ -1,4 +1,4 @@
-package fourman.backend.domain.reviewBoard.controller.responseForm;
+package fourman.backend.domain.reviewBoard.service.responseForm;
 
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
@@ -7,7 +7,7 @@ import java.util.Date;
 
 @Getter
 @RequiredArgsConstructor
-public class ReviewBoardResponseForm {
+public class ReviewBoardResponse {
 
     final private Long reviewBoardId;
     final private String cafeName;

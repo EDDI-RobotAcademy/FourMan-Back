@@ -20,7 +20,7 @@ public class MyPageController {
     final private MyPageService myPageService;
 
     @GetMapping("/{memberId}")
-    public MyInfoResponseForm myInfo(
+    public MyInfoResponse myInfo(
             @PathVariable("memberId") Long memberId) {
 
         log.info("memberInfo(): " + memberId);
@@ -29,15 +29,15 @@ public class MyPageController {
     }
 
     @GetMapping("/side-bar/{memberId}")
-    public MyInfoSideBarResponseForm myInfoSideBar(@PathVariable("memberId") Long memberId) {
+    public MyInfoSideBarResponse myInfoSideBar(@PathVariable("memberId") Long memberId) {
         log.info("myInfoSideBar()");
 
         return myPageService.myInfoSideBar(memberId);
     }
 
     @PutMapping("/member-info-modify/{memberId}")
-    public MyInfoModifyResponseForm memberInfoModify(@PathVariable("memberId") Long memberId,
-                                                     @RequestBody MyInfoModifyRequestForm modifyRequest) {
+    public MyInfoModifyResponse memberInfoModify(@PathVariable("memberId") Long memberId,
+                                                 @RequestBody MyInfoModifyRequestForm modifyRequest) {
 
         return myPageService.myInfoModify(memberId, modifyRequest);
     }
@@ -49,17 +49,17 @@ public class MyPageController {
         myPageService.withdrawal(memberId);
     }
     @GetMapping("/member-list")
-    public List<MemberInfoResponseForm> memberInfoList() {
+    public List<MemberInfoResponse> memberInfoList() {
         return myPageService.memberInfoList();
     }
 
     @GetMapping("/cafe-list")
-    public List<CafeInfoResponseForm> cafeInfoList() {
+    public List<CafeInfoResponse> cafeInfoList() {
         return myPageService.cafeInfoList();
     }
 
     @GetMapping("/my-cafe-info/{cafeId}")
-    public CafeInfoResponseForm myCafeInfo(
+    public CafeInfoResponse myCafeInfo(
             @PathVariable("cafeId") Long cafeId) {
 
         log.info("myCafeInfo(): " + cafeId);

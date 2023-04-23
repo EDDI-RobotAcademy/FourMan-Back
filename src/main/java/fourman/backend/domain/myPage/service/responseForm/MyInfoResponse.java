@@ -8,7 +8,7 @@ import lombok.ToString;
 @Getter
 @ToString
 @AllArgsConstructor
-public class MyInfoResponseForm {
+public class MyInfoResponse {
 
     final private String nickName;
     final private int birthdate;
