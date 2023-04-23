@@ -1,6 +1,8 @@
 package fourman.backend.domain.order.entity;
 
 import com.fasterxml.jackson.annotation.JsonManagedReference;
+import fourman.backend.domain.cafeIntroduce.entity.Cafe;
+import fourman.backend.domain.member.entity.Member;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.CreationTimestamp;
@@ -20,14 +22,24 @@ public class OrderInfo {
     private Long orderId;
     @Column(nullable = false)
     private String orderNo;
-    @Column(nullable = false)
-    private Long memberId;
     @CreationTimestamp
     private Date orderDate;
     @Column(nullable = false)
     private int totalQuantity;
     @Column(nullable = false)
     private int totalPrice;
+    @Column(nullable = false)
+    private boolean isPacking;
+    @Column(nullable = false)
+    private boolean isReady;
+    @OneToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "member_id")
+    private Member member;
+    @OneToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "cafe_id")
+    private Cafe cafe;
+    @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    private OrderReservation orderReservation;
     @JsonManagedReference
     @OneToMany(mappedBy = "orderInfo",fetch = FetchType.LAZY, cascade = CascadeType.REMOVE)
     private List<OrderProduct> orderProductList = new ArrayList<>();
@@ -35,5 +47,10 @@ public class OrderInfo {
     public void setOrderProduct(OrderProduct orderProduct) {
         orderProductList.add(orderProduct);
         orderProduct.setOrderInfo(this);
+    }
+
+    public void setOrderReservation(OrderReservation orderReservation) {
+        this.orderReservation = orderReservation;
+        orderReservation.setOrderInfo(this);
     }
 }
