@@ -6,13 +6,12 @@ import fourman.backend.domain.freeBoard.entity.FreeBoard;
 import fourman.backend.domain.freeBoard.entity.FreeBoardComment;
 import fourman.backend.domain.freeBoard.repository.FreeBoardCommentRepository;
 import fourman.backend.domain.freeBoard.repository.FreeBoardRepository;
-import fourman.backend.domain.member.entity.Address;
-import fourman.backend.domain.member.entity.Member;
-import fourman.backend.domain.member.entity.MemberProfile;
-import fourman.backend.domain.member.entity.Point;
+import fourman.backend.domain.member.entity.*;
+import fourman.backend.domain.member.repository.CafeCodeRepository;
 import fourman.backend.domain.member.repository.MemberProfileRepository;
 import fourman.backend.domain.member.repository.MemberRepository;
 import fourman.backend.domain.member.repository.PointRepository;
+import fourman.backend.domain.myPage.controller.requestForm.AddPointRequestForm;
 import fourman.backend.domain.myPage.controller.requestForm.CafeInfoModifyRequestForm;
 import fourman.backend.domain.myPage.controller.requestForm.MyInfoModifyRequestForm;
 import fourman.backend.domain.myPage.service.responseForm.*;
@@ -29,6 +28,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
+import javax.transaction.Transactional;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -50,6 +50,7 @@ public class MyPageServiceImpl implements MyPageService {
     final private RedisService redisService;
     final private CafeRepository cafeRepository;
     final private PointRepository pointRepository;
+    final private CafeCodeRepository cafeCodeRepository;
 
     @Override
     public MyInfoResponseForm myInfo(Long memberId) {
@@ -137,7 +138,14 @@ public class MyPageServiceImpl implements MyPageService {
         redisService.deleteByKey(userToken.toString());
         redisService.setKeyAndValue(userToken.toString(), member.getId());
 
-        MyInfoModifyResponseForm myInfoModifyResponseForm = new MyInfoModifyResponseForm(userToken.toString(), member.getId(), member.getNickName(), member.getAuthority().getAuthorityName(), null, member.getCode(), null, member.getEmail());
+        MyInfoModifyResponseForm myInfoModifyResponseForm;
+        Optional<CafeCode> op= cafeCodeRepository.findByCode(member.getCode());
+
+        if(op.isEmpty()) {
+            myInfoModifyResponseForm = new MyInfoModifyResponseForm(userToken.toString(), member.getId(), member.getNickName(), member.getAuthority().getAuthorityName(), null, member.getCode(), null, member.getEmail());
+        } else {
+            myInfoModifyResponseForm = new MyInfoModifyResponseForm(userToken.toString(), member.getId(), member.getNickName(), member.getAuthority().getAuthorityName(), op.get().getId(), member.getCode(), op.get().getCafeName(), member.getEmail());
+        }
 
         return myInfoModifyResponseForm;
     }
@@ -196,6 +204,7 @@ public class MyPageServiceImpl implements MyPageService {
 
     }
 
+    @Transactional
     @Override
     public List<MemberInfoResponseForm> memberInfoList() {
         List<Member> memberList = memberRepository.findAll();
@@ -204,12 +213,21 @@ public class MyPageServiceImpl implements MyPageService {
         List<MemberInfoResponseForm> memberInfoResponseFormList = new ArrayList<>();
 
         for(Member member: memberList) {
+            Optional<Point> maybePoint = pointRepository.findByMemberId(member);
 
+            if(maybePoint.isEmpty()) {
+                MemberInfoResponseForm memberInfoResponseForm = new MemberInfoResponseForm(member.getId(), member.getNickName(), member.getAuthority().getAuthorityName().getAUTHORITY_TYPE(),
+                        member.getEmail(), member.getMemberProfile().getPhoneNumber(), null);
 
-            MemberInfoResponseForm memberInfoResponseForm = new MemberInfoResponseForm(member.getId(), member.getNickName(), member.getAuthority().getAuthorityName().getAUTHORITY_TYPE(),
-                    member.getEmail(), member.getMemberProfile().getPhoneNumber());
+                memberInfoResponseFormList.add(memberInfoResponseForm);
+            } else {
+                Point point = maybePoint.get();
 
-            memberInfoResponseFormList.add(memberInfoResponseForm);
+                MemberInfoResponseForm memberInfoResponseForm = new MemberInfoResponseForm(member.getId(), member.getNickName(), member.getAuthority().getAuthorityName().getAUTHORITY_TYPE(),
+                        member.getEmail(), member.getMemberProfile().getPhoneNumber(), point.getPoint());
+
+                memberInfoResponseFormList.add(memberInfoResponseForm);
+            }
         }
 
         return memberInfoResponseFormList;
@@ -261,5 +279,28 @@ public class MyPageServiceImpl implements MyPageService {
         cafe.getCafeInfo().setDescription(modifyRequest.getDescription());
 
         cafeRepository.save(cafe);
+    }
+
+    @Override
+    public Boolean addPoint(Long memberId, AddPointRequestForm pointRequestForm) {
+        Optional<Member> maybeMember = memberRepository.findByMemberId(memberId);
+
+        if(maybeMember.isEmpty()) {
+            return false;
+        }
+
+        Member member = maybeMember.get();
+        Optional<Point> maybePoint = pointRepository.findByMemberId(member);
+
+        if(maybePoint.isEmpty()) {
+            return false;
+        }
+
+        Point point = maybePoint.get();
+        point.setPoint(point.getPoint() + pointRequestForm.getPoint());
+
+        pointRepository.save(point);
+
+        return true;
     }
 }
