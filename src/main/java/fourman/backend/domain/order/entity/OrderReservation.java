@@ -16,11 +16,11 @@ public class OrderReservation {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(nullable = false)
+    @Column(nullable = true)
     @OneToMany(mappedBy = "orderReservation", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     private List<OrderSeat> seatNoList;
 
-    @Column(nullable = false)
+    @Column(nullable = true)
     private String time;
 
     @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)

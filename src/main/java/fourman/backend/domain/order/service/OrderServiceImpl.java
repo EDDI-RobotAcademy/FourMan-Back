@@ -43,17 +43,16 @@ public class OrderServiceImpl implements OrderService {
         List<CartItemRequestForm> cartItemList = orderInfoRequestForm.getCartItemList();
         OrderReservationRequestForm reservationInfo = orderInfoRequestForm.getReservationInfo();
 
-
         OrderInfo orderInfo = new OrderInfo();
         List<OrderProduct> orderProductList = new ArrayList<>();
         List<OrderSeat> orderSeatList = new ArrayList<>();
         Optional<Cafe> maybeCafe = cafeRepository.findById(orderInfoRequestForm.getCafeId());
         Optional<Member> maybeMember = memberRepository.findByMemberId(orderInfoRequestForm.getMemberId());
 
-        // 랜덤 주문번호 생성
+        // 랜덤 주문번호 생성, 주문번호 중복 확인
         LocalDate localDate = LocalDate.now();
         int year = localDate.getYear();
-        // 주문번호 중복 확인
+
         while(true) {
             Random random = new Random();
             int orderNumber = random.nextInt(100000);
@@ -74,19 +73,23 @@ public class OrderServiceImpl implements OrderService {
         orderInfo.setMember(maybeMember.get());
         orderInfo.setCafe(maybeCafe.get());
 
-
-        try {
-            for(Integer seat :reservationInfo.getSeatList()) {
-                OrderSeat orderSeat = new OrderSeat(seat);
-                orderSeatList.add(orderSeat);
+        if( orderInfoRequestForm.isPacking() == false) {
+            try {
+                for(Integer seat :reservationInfo.getSeatList()) {
+                    OrderSeat orderSeat = new OrderSeat(seat);
+                    orderSeatList.add(orderSeat);
+                }
+            } catch(NullPointerException e) {
+                e.printStackTrace();
             }
-        } catch(NullPointerException e) {
-            e.printStackTrace();
+
+            OrderReservation orderReservation = new OrderReservation(orderSeatList, reservationInfo.getTime());
+
+            orderInfo.setOrderReservation(orderReservation);
+
+            orderReservationRepository.save(orderReservation);
+            orderSeatRepository.saveAll(orderSeatList);
         }
-
-        OrderReservation orderReservation = new OrderReservation(orderSeatList, reservationInfo.getTime());
-
-        orderInfo.setOrderReservation(orderReservation);
 
         try {
             for (CartItemRequestForm cartItemRequestForm : cartItemList) {
@@ -105,8 +108,6 @@ public class OrderServiceImpl implements OrderService {
 
         orderRepository.save(orderInfo);
         orderProductRepository.saveAll(orderProductList);
-        orderReservationRepository.save(orderReservation);
-        orderSeatRepository.saveAll(orderSeatList);
 
     }
 
