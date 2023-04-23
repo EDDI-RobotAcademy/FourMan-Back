@@ -15,7 +15,7 @@ public class OrderSeat {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(nullable = false)
+    @Column(nullable = true)
     private Integer seat;
 
     @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
