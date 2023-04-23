@@ -29,6 +29,8 @@ public class OrderInfo {
     @Column(nullable = false)
     private int totalPrice;
     @Column(nullable = false)
+    private Long usePoint;
+    @Column(nullable = false)
     private boolean isPacking;
     @Column(nullable = false)
     private boolean isReady;

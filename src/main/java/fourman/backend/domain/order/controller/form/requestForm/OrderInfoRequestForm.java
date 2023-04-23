@@ -14,6 +14,7 @@ public class OrderInfoRequestForm {
     private final Long memberId;
     private final int totalQuantity;
     private final int totalPrice;
+    private final Long usePoint;
     private final boolean isPacking;
     private final Long cafeId;
     private final List<CartItemRequestForm> cartItemList;
