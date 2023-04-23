@@ -8,7 +8,7 @@ import lombok.ToString;
 @Getter
 @ToString
 @AllArgsConstructor
-public class MyInfoModifyResponseForm {
+public class MyInfoModifyResponse {
     private final String token;
     private final Long id;
     private final String nickName;

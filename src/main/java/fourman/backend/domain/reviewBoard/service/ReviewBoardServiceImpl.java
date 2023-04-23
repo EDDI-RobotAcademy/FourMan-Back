@@ -3,9 +3,9 @@ package fourman.backend.domain.reviewBoard.service;
 import fourman.backend.domain.member.entity.Member;
 import fourman.backend.domain.member.repository.MemberRepository;
 import fourman.backend.domain.reviewBoard.controller.requestForm.ReviewBoardRequestForm;
-import fourman.backend.domain.reviewBoard.controller.responseForm.ReviewBoardImageResourceResponseForm;
-import fourman.backend.domain.reviewBoard.controller.responseForm.ReviewBoardReadResponseForm;
-import fourman.backend.domain.reviewBoard.controller.responseForm.ReviewBoardResponseForm;
+import fourman.backend.domain.reviewBoard.service.responseForm.ReviewBoardImageResourceResponse;
+import fourman.backend.domain.reviewBoard.service.responseForm.ReviewBoardReadResponse;
+import fourman.backend.domain.reviewBoard.service.responseForm.ReviewBoardResponse;
 import fourman.backend.domain.reviewBoard.entity.ReviewBoard;
 import fourman.backend.domain.reviewBoard.entity.ReviewBoardImageResource;
 import fourman.backend.domain.reviewBoard.repository.ReviewBoardImageResourceRepository;
@@ -108,11 +108,11 @@ public class ReviewBoardServiceImpl implements ReviewBoardService {
 
     @Transactional
     @Override
-    public List<ReviewBoardResponseForm> list() {
+    public List<ReviewBoardResponse> list() {
         // DB에서 모든 상품을 불러와 리스트에 저장
         List<ReviewBoard> reviewBoardList = reviewBoardRepository.findAll(Sort.by(Sort.Direction.DESC, "reviewBoardId"));
         // 응답 파일 리스트를 응답할 리스트 생성
-        List<ReviewBoardResponseForm> reviewBoardResponseList = new ArrayList<>();
+        List<ReviewBoardResponse> reviewBoardResponseList = new ArrayList<>();
 
         // 불러온 상품 리스트를 반복문을 통해 productResponseList에 추가
         for (ReviewBoard reviewBoard: reviewBoardList) {
@@ -122,7 +122,7 @@ public class ReviewBoardServiceImpl implements ReviewBoardService {
                 firstPhoto = images.get(0).getReviewBoardImageResourcePath();
             }
 
-            reviewBoardResponseList.add(new ReviewBoardResponseForm(
+            reviewBoardResponseList.add(new ReviewBoardResponse(
                     reviewBoard.getReviewBoardId(), reviewBoard.getCafeName(), reviewBoard.getTitle(),
                     reviewBoard.getMember().getNickName(), reviewBoard.getContent(), reviewBoard.getRating(),
                     reviewBoard.getMember().getId(), reviewBoard.getRegDate(), reviewBoard.getUpdDate(), firstPhoto
@@ -135,7 +135,7 @@ public class ReviewBoardServiceImpl implements ReviewBoardService {
 
     @Transactional
     @Override
-    public ReviewBoardReadResponseForm read(Long reviewBoardId) {
+    public ReviewBoardReadResponse read(Long reviewBoardId) {
         // 매개변수로 받아온 상품 아이디를 조건으로 DB에서 상품 정보를 불러와 maybeProduct에 저장
         Optional<ReviewBoard> maybeReviewBoard = reviewBoardRepository.findById(reviewBoardId);
 
@@ -149,28 +149,28 @@ public class ReviewBoardServiceImpl implements ReviewBoardService {
         ReviewBoard reviewBoard = maybeReviewBoard.get();
 
         // 상품 상세 정보를 Response 해줄 객체에 정보를 담음
-        ReviewBoardReadResponseForm reviewBoardReadResponseForm = new ReviewBoardReadResponseForm(
+        ReviewBoardReadResponse reviewBoardReadResponse = new ReviewBoardReadResponse(
                 reviewBoard.getReviewBoardId(), reviewBoard.getCafeName(), reviewBoard.getTitle(), reviewBoard.getMember().getNickName(),
                 reviewBoard.getContent(), reviewBoard.getRegDate(), reviewBoard.getMember().getId(), reviewBoard.getRating()
         );
 
         // productReadResponse 응답
-        return reviewBoardReadResponseForm;
+        return reviewBoardReadResponse;
     }
 
     @Override
-    public List<ReviewBoardImageResourceResponseForm> findReviewBoardImage(Long reviewBoardId) {
+    public List<ReviewBoardImageResourceResponse> findReviewBoardImage(Long reviewBoardId) {
         List<ReviewBoardImageResource> reviewBoardImageResourceList = reviewBoardImageResourceRepository.findImagePathByReviewBoardId(reviewBoardId);
-        List<ReviewBoardImageResourceResponseForm> reviewBoardImageResourceResponseFormList = new ArrayList<>();
+        List<ReviewBoardImageResourceResponse> reviewBoardImageResourceResponseList = new ArrayList<>();
 
         for (ReviewBoardImageResource reviewBoardImageResource: reviewBoardImageResourceList) {
             System.out.println("imageResource path: " + reviewBoardImageResource.getReviewBoardImageResourcePath());
 
-            reviewBoardImageResourceResponseFormList.add(new ReviewBoardImageResourceResponseForm(
+            reviewBoardImageResourceResponseList.add(new ReviewBoardImageResourceResponse(
                     reviewBoardImageResource.getReviewBoardImageResourcePath()));
         }
 
-        return reviewBoardImageResourceResponseFormList;
+        return reviewBoardImageResourceResponseList;
     }
 
     @Override
@@ -217,11 +217,11 @@ public class ReviewBoardServiceImpl implements ReviewBoardService {
 
     @Transactional
     @Override
-    public List<ReviewBoardResponseForm> myPageList(Long memberId) {
+    public List<ReviewBoardResponse> myPageList(Long memberId) {
         List<ReviewBoard> reviewBoardList = reviewBoardRepository.findReviewBoardByMemberId(memberId);
 
         // 응답 파일 리스트를 응답할 리스트 생성
-        List<ReviewBoardResponseForm> reviewBoardResponseList = new ArrayList<>();
+        List<ReviewBoardResponse> reviewBoardResponseList = new ArrayList<>();
 
         // 불러온 상품 리스트를 반복문을 통해 productResponseList에 추가
         for (ReviewBoard reviewBoard: reviewBoardList) {
@@ -231,7 +231,7 @@ public class ReviewBoardServiceImpl implements ReviewBoardService {
                 firstPhoto = images.get(0).getReviewBoardImageResourcePath();
             }
 
-            reviewBoardResponseList.add(new ReviewBoardResponseForm(
+            reviewBoardResponseList.add(new ReviewBoardResponse(
                     reviewBoard.getReviewBoardId(), reviewBoard.getCafeName(), reviewBoard.getTitle(),
                     reviewBoard.getMember().getNickName(), reviewBoard.getContent(), reviewBoard.getRating(),
                     reviewBoard.getMember().getId(), reviewBoard.getRegDate(), reviewBoard.getUpdDate(), firstPhoto

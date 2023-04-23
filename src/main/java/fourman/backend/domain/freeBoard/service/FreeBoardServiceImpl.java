@@ -5,8 +5,8 @@ import fourman.backend.domain.freeBoard.entity.FreeBoard;
 import fourman.backend.domain.freeBoard.entity.FreeBoardImageResource;
 import fourman.backend.domain.freeBoard.repository.FreeBoardImageResourceRepository;
 import fourman.backend.domain.freeBoard.repository.FreeBoardRepository;
-import fourman.backend.domain.freeBoard.service.responseForm.FreeBoardImageResourceResponseForm;
-import fourman.backend.domain.freeBoard.service.responseForm.FreeBoardResponseForm;
+import fourman.backend.domain.freeBoard.service.responseForm.FreeBoardImageResourceResponse;
+import fourman.backend.domain.freeBoard.service.responseForm.FreeBoardResponse;
 import fourman.backend.domain.member.entity.Member;
 import fourman.backend.domain.member.repository.MemberRepository;
 import lombok.RequiredArgsConstructor;
@@ -106,25 +106,25 @@ public class FreeBoardServiceImpl implements FreeBoardService{
     }
     @Transactional
     @Override
-    public List<FreeBoardResponseForm> list() {
+    public List<FreeBoardResponse> list() {
 
         List<FreeBoard> freeBoardList = freeBoardRepository.findAll(Sort.by(Sort.Direction.DESC, "boardId"));
-        List<FreeBoardResponseForm> freeBoardResponseFormList = new ArrayList<>();
+        List<FreeBoardResponse> freeBoardResponseList = new ArrayList<>();
 
         for (FreeBoard freeBoard: freeBoardList) {
-            FreeBoardResponseForm freeBoardResponseForm = new FreeBoardResponseForm(
+            FreeBoardResponse freeBoardResponse = new FreeBoardResponse(
                     freeBoard.getBoardId(), freeBoard.getTitle(), freeBoard.getMember().getNickName(), freeBoard.getContent(),
                     freeBoard.getRegDate(), freeBoard.getUpdDate(), freeBoard.getMember().getId(), freeBoard.getViewCnt(), freeBoard.getRecommendation()
             );
 
-            freeBoardResponseFormList.add(freeBoardResponseForm);
+            freeBoardResponseList.add(freeBoardResponse);
         }
-        return freeBoardResponseFormList;
+        return freeBoardResponseList;
     }
 
     @Transactional
     @Override
-    public FreeBoardResponseForm read(Long boardId) {
+    public FreeBoardResponse read(Long boardId) {
         // 일 수도 있고 아닐 수도 있고
         Optional<FreeBoard> maybeBoard = freeBoardRepository.findById(boardId);
         if (maybeBoard.isEmpty()) {
@@ -135,11 +135,11 @@ public class FreeBoardServiceImpl implements FreeBoardService{
         freeBoard.increaseViewCnt();
         freeBoardRepository.save(freeBoard);
 
-        FreeBoardResponseForm freeBoardResponseForm = new FreeBoardResponseForm(
+        FreeBoardResponse freeBoardResponse = new FreeBoardResponse(
                 freeBoard.getBoardId(), freeBoard.getTitle(), freeBoard.getMember().getNickName(), freeBoard.getContent(),
                 freeBoard.getRegDate(), freeBoard.getUpdDate(), freeBoard.getMember().getId(), freeBoard.getViewCnt(), freeBoard.getRecommendation()
         );
-        return freeBoardResponseForm;
+        return freeBoardResponse;
     }
 
     @Override
@@ -197,17 +197,17 @@ public class FreeBoardServiceImpl implements FreeBoardService{
     }
 
     @Override
-    public List<FreeBoardImageResourceResponseForm> findFreeBoardImage(Long boardId) {
+    public List<FreeBoardImageResourceResponse> findFreeBoardImage(Long boardId) {
         List<FreeBoardImageResource> freeBoardImageResourceList = freeBoardImageResourceRepository.findImagePathByFreeBoardId(boardId);
-        List<FreeBoardImageResourceResponseForm> freeBoardImageResourceResponseFormList = new ArrayList<>();
+        List<FreeBoardImageResourceResponse> freeBoardImageResourceResponseList = new ArrayList<>();
 
         for (FreeBoardImageResource freeBoardImageResource: freeBoardImageResourceList) {
             System.out.println("imageResource path: " + freeBoardImageResource.getFreeBoardImageResourcePath());
 
-            freeBoardImageResourceResponseFormList.add(new FreeBoardImageResourceResponseForm(
+            freeBoardImageResourceResponseList.add(new FreeBoardImageResourceResponse(
                     freeBoardImageResource.getFreeBoardImageResourcePath()));
         }
 
-        return freeBoardImageResourceResponseFormList;
+        return freeBoardImageResourceResponseList;
     }
 }

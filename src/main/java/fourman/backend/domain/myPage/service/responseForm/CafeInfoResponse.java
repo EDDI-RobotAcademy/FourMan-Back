@@ -1,6 +1,5 @@
 package fourman.backend.domain.myPage.service.responseForm;
 
-import fourman.backend.domain.member.entity.CafeCode;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;
@@ -10,7 +9,7 @@ import lombok.ToString;
 @Getter
 @ToString
 @AllArgsConstructor
-public class CafeInfoResponseForm {
+public class CafeInfoResponse {
 
     final private Long cafeId;
     final private String cafeName;

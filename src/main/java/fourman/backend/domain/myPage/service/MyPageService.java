@@ -9,19 +9,19 @@ import java.util.List;
 
 public interface MyPageService {
 
-    MyInfoResponseForm myInfo(Long memberId);
+    MyInfoResponse myInfo(Long memberId);
 
-    MyInfoSideBarResponseForm myInfoSideBar(Long memberId);
+    MyInfoSideBarResponse myInfoSideBar(Long memberId);
 
-    MyInfoModifyResponseForm myInfoModify(Long memberId, MyInfoModifyRequestForm modifyRequest);
+    MyInfoModifyResponse myInfoModify(Long memberId, MyInfoModifyRequestForm modifyRequest);
 
     void withdrawal(Long memberId);
 
-    List<MemberInfoResponseForm> memberInfoList();
+    List<MemberInfoResponse> memberInfoList();
 
-    List<CafeInfoResponseForm> cafeInfoList();
+    List<CafeInfoResponse> cafeInfoList();
 
-    CafeInfoResponseForm myCafeInfo(Long cafeId);
+    CafeInfoResponse myCafeInfo(Long cafeId);
 
     void cafeInfoModify(Long cafeId, CafeInfoModifyRequestForm modifyRequest);
 

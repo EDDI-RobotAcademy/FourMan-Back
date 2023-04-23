@@ -1,10 +1,9 @@
 package fourman.backend.domain.reviewBoard.controller;
 
 import fourman.backend.domain.reviewBoard.controller.requestForm.ReviewBoardRequestForm;
-import fourman.backend.domain.reviewBoard.controller.responseForm.ReviewBoardImageResourceResponseForm;
-import fourman.backend.domain.reviewBoard.controller.responseForm.ReviewBoardReadResponseForm;
-import fourman.backend.domain.reviewBoard.controller.responseForm.ReviewBoardResponseForm;
-import fourman.backend.domain.reviewBoard.entity.ReviewBoard;
+import fourman.backend.domain.reviewBoard.service.responseForm.ReviewBoardImageResourceResponse;
+import fourman.backend.domain.reviewBoard.service.responseForm.ReviewBoardReadResponse;
+import fourman.backend.domain.reviewBoard.service.responseForm.ReviewBoardResponse;
 import fourman.backend.domain.reviewBoard.service.ReviewBoardService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -35,21 +34,21 @@ public class ReviewBoardController {
     }
 
     @GetMapping("/list")
-    public List<ReviewBoardResponseForm> reviewBoardList () {
+    public List<ReviewBoardResponse> reviewBoardList () {
         log.info("reviewBoardList()");
 
         return reviewBoardService.list();
     }
 
     @GetMapping("/{reviewBoardId}")
-    public ReviewBoardReadResponseForm reivewBoardRead(@PathVariable("reviewBoardId") Long reviewBoardId) {
+    public ReviewBoardReadResponse reivewBoardRead(@PathVariable("reviewBoardId") Long reviewBoardId) {
         log.info("productRead()");
 
         return reviewBoardService.read(reviewBoardId);
     }
 
     @GetMapping("/imageList/{reviewBoardId}")
-    public List<ReviewBoardImageResourceResponseForm> readReviewBoardImageResource(
+    public List<ReviewBoardImageResourceResponse> readReviewBoardImageResource(
             @PathVariable("reviewBoardId") Long reviewBoardId) {
 
         log.info("readProductImageResource(): " + reviewBoardId);
@@ -81,7 +80,7 @@ public class ReviewBoardController {
     }
 
     @GetMapping("/myPage/{memberId}")
-    public List<ReviewBoardResponseForm> myReviewBoardList(@PathVariable("memberId") Long memberId) {
+    public List<ReviewBoardResponse> myReviewBoardList(@PathVariable("memberId") Long memberId) {
         return reviewBoardService.myPageList(memberId);
     }
 }

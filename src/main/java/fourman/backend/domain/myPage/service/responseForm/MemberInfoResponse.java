@@ -1,6 +1,5 @@
 package fourman.backend.domain.myPage.service.responseForm;
 
-import fourman.backend.domain.member.entity.Address;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;
@@ -10,7 +9,7 @@ import lombok.ToString;
 @Getter
 @ToString
 @AllArgsConstructor
-public class MemberInfoResponseForm {
+public class MemberInfoResponse {
 
     final private Long id;
     final private String nickName;
