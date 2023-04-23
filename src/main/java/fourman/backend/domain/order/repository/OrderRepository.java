@@ -18,4 +18,9 @@ public interface OrderRepository extends JpaRepository<OrderInfo, Long> {
     @Query("select oi from OrderInfo oi where oi.member = :member")
     List<OrderInfo> findOrderInfoByMember(Member member);
 
+    @Query("select oi from OrderInfo oi join fetch oi.cafe c where c.cafeId = :cafeId and MONTH(oi.orderDate) = MONTH(CURRENT_DATE) and YEAR(oi.orderDate) = YEAR(CURRENT_DATE)")
+    List<OrderInfo> findMonthOrderInfoByCafeId(Long cafeId);
+
+    @Query("select oi from OrderInfo oi join fetch oi.cafe c where c.cafeId = :cafeId and DAY(oi.orderDate) = DAY(CURRENT_DATE) and MONTH(oi.orderDate) = MONTH(CURRENT_DATE) and YEAR(oi.orderDate) = YEAR(CURRENT_DATE)")
+    List<OrderInfo> findDayOrderInfoByCafeId(Long cafeId);
 }

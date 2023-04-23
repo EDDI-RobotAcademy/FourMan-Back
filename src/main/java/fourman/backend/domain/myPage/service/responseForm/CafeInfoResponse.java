@@ -19,4 +19,14 @@ public class CafeInfoResponse {
     final private String endTime;
     final private String subTitle;
     final private String description;
+    final private double ratingAverage;
+    final private int ratingCount;
+    final private double monthTotalSales;
+    final private int monthOrderCount;
+    final private double dayTotalSales;
+    final private int dayOrderCount;
+    final private int monthReservationCount;
+    final private int dayReservationCount;
+
+
 }
