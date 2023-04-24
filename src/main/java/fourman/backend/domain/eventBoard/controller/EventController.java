@@ -58,6 +58,13 @@ public class EventController {
         return eventService.modifyEvent(eventId,thumbnail, eventRequestForm);
     }
 
+    @DeleteMapping("/delete/{eventId}")
+    public ResponseEntity<Void> deleteEvent(@PathVariable Long eventId) {
+        log.info("이벤트 삭제 컨트롤러");
+        eventService.deleteEvent(eventId);
+        return ResponseEntity.ok().build();
+    }
+
 
     @PostMapping("/api/upload")
     public ResponseEntity<?> uploadImage(@RequestParam("file") MultipartFile file) {
