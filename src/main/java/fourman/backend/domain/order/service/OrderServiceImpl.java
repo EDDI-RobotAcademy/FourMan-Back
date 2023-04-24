@@ -2,8 +2,10 @@ package fourman.backend.domain.order.service;
 
 import fourman.backend.domain.cafeIntroduce.entity.Cafe;
 import fourman.backend.domain.cafeIntroduce.repository.CafeRepository;
+import fourman.backend.domain.member.entity.CafeCode;
 import fourman.backend.domain.member.entity.Member;
 import fourman.backend.domain.member.entity.Point;
+import fourman.backend.domain.member.repository.CafeCodeRepository;
 import fourman.backend.domain.member.repository.MemberRepository;
 import fourman.backend.domain.member.repository.PointRepository;
 import fourman.backend.domain.order.controller.form.requestForm.CartItemRequestForm;
@@ -25,6 +27,7 @@ import fourman.backend.domain.reservation.repository.TimeRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.criteria.Order;
 import java.text.SimpleDateFormat;
@@ -45,6 +48,7 @@ public class OrderServiceImpl implements OrderService {
     final private SeatRepository seatRepository;
     final private TimeRepository timeRepository;
     final private PointRepository pointRepository;
+    final private CafeCodeRepository cafeCodeRepository;
 
     @Override
     public void register(OrderInfoRequestForm orderInfoRequestForm) {
@@ -137,7 +141,7 @@ public class OrderServiceImpl implements OrderService {
     }
 
     @Override
-    public List<OrderInfoResponseForm> list(Long memberId) {
+    public List<OrderInfoResponseForm> orderList(Long memberId) {
 
         Optional<Member> maybeMember = memberRepository.findByMemberId(memberId);
         Member member = maybeMember.get();
@@ -150,8 +154,34 @@ public class OrderServiceImpl implements OrderService {
             SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy년 MM월 dd일 HH시 mm분");
             String orderDate = simpleDateFormat.format(orderInfo.getOrderDate());
             List<OrderProduct> orderProductList = orderProductRepository.findOrderProductByOrderId(orderInfo.getOrderId());
-            orderInfoResponseList.add(new OrderInfoResponseForm(orderInfo.getOrderId(), orderInfo.getOrderNo(), customer, orderDate,
-                                      orderInfo.getTotalQuantity(), orderInfo.getTotalPrice(), orderProductList));
+
+            if(orderInfo.getOrderReservation() == null) { // 포장 주문
+                System.out.println("orderReservation값: null -> 포장 주문");
+
+                Optional<CafeCode> maybeCafeCode = cafeCodeRepository.findById(orderInfo.getCafe().getCafeId());
+
+                CafeCode cafeCode = maybeCafeCode.get();
+                System.out.println("cafeCode: " + cafeCode.getCafeName());
+
+                orderInfoResponseList.add(new OrderInfoResponseForm(orderInfo.getOrderId(), orderInfo.getOrderNo(), customer, orderDate,
+                        orderInfo.getTotalQuantity(), orderInfo.getTotalPrice(), orderInfo.getUsePoint(), orderInfo.isPacking(), orderInfo.isReady(),
+                        cafeCode.getCafeName(), null, null, orderProductList));
+            } else { // 예약 주문
+                System.out.println("orderReservation값 존재 -> 예약 주문");
+                Optional<OrderReservation> maybeOrderReservation = orderReservationRepository.findByReservationId(orderInfo.getOrderReservation().getId());
+                if(maybeOrderReservation.isEmpty()) {
+                    System.out.println("maybeOrderReservation값이 존재하지 않습니다.");
+                }
+                OrderReservation orderReservation = maybeOrderReservation.get();
+
+                Optional<CafeCode> maybeCafeCode = cafeCodeRepository.findById(orderInfo.getCafe().getCafeId());
+
+                CafeCode cafeCode = maybeCafeCode.get();
+
+                orderInfoResponseList.add(new OrderInfoResponseForm(orderInfo.getOrderId(), orderInfo.getOrderNo(), customer, orderDate,
+                                          orderInfo.getTotalQuantity(), orderInfo.getTotalPrice(), orderInfo.getUsePoint(), orderInfo.isPacking(), orderInfo.isReady(),
+                                          cafeCode.getCafeName(), orderReservation.getTime(), orderReservation.getSeatNoList(), orderProductList));
+            }
         }
 
         return orderInfoResponseList;
