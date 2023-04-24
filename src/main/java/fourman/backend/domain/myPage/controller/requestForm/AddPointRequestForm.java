@@ -12,4 +12,6 @@ import lombok.ToString;
 public class AddPointRequestForm {
 
     private Long point;
+
+    private String history;
 }

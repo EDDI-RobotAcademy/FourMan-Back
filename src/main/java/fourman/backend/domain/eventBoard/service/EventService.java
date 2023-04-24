@@ -1,5 +1,6 @@
 package fourman.backend.domain.eventBoard.service;
 
+import fourman.backend.domain.cafeIntroduce.entity.Cafe;
 import fourman.backend.domain.eventBoard.controller.requestForm.EventRequestForm;
 import fourman.backend.domain.eventBoard.service.response.EventDetailResponse;
 import fourman.backend.domain.eventBoard.service.response.EventListResponse;
@@ -15,4 +16,5 @@ public interface EventService {
     EventDetailResponse read(Long eventId);
     ResponseEntity<?> uploadImage(MultipartFile file);
 
+    Cafe getCafeByEventId(Long eventId);
 }

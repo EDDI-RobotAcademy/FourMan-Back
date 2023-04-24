@@ -1,5 +1,7 @@
 package fourman.backend.domain.order.entity;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
@@ -18,6 +20,7 @@ public class OrderSeat {
     @Column(nullable = true)
     private Integer seatNo;
 
+    @JsonBackReference
     @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     @JoinColumn(name = "reservation_id")
     private OrderReservation orderReservation;

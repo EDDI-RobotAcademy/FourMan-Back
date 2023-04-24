@@ -1,4 +1,5 @@
 package fourman.backend.domain.eventBoard.service;
+import fourman.backend.domain.cafeIntroduce.entity.Cafe;
 import fourman.backend.domain.eventBoard.controller.requestForm.EventRequestForm;
 import fourman.backend.domain.eventBoard.entity.Event;
 import fourman.backend.domain.eventBoard.repository.EventRepository;
@@ -131,6 +132,14 @@ public class EventServiceImpl implements EventService {
         }
     }
 
+    @Override
+    public Cafe getCafeByEventId(Long eventId) {
+        Optional<Event> maybeEvent=eventRepository.findById(eventId);
+        if(maybeEvent.isPresent()){
+            return maybeEvent.get().getCafeCode().getCafe();
+        }
+        return null;
+    }
 
 
 }
