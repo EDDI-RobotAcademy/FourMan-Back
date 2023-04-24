@@ -2,8 +2,11 @@ package fourman.backend.domain.member.entity;
 
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.CreationTimestamp;
 
 import javax.persistence.*;
+import java.util.Date;
+import java.util.List;
 
 @Entity
 @Data
@@ -22,8 +25,15 @@ public class Point {
     @JoinColumn(name = "member_id")
     private Member member;
 
-    public Point(Long point, Member member) {
+    @OneToMany(mappedBy = "point", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    private List<PointInfo> infoList;
+
+    public Point(Long point, Member member, List<PointInfo> infoList) {
         this.point = point;
         this.member = member;
+        this.infoList = infoList;
+        for(PointInfo pointInfo : infoList) {
+            pointInfo.setPoint(this);
+        }
     }
 }
