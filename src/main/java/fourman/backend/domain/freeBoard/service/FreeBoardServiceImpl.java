@@ -38,7 +38,7 @@ public class FreeBoardServiceImpl implements FreeBoardService{
 
     final private MemberRepository memberRepository;
     final private FreeBoardImageResourceRepository freeBoardImageResourceRepository;
-    final private RecommendataionRepository recommendataionRepository;
+    final private RecommendataionRepository recommendationRepository;
 
     @Transactional
     @Override
@@ -104,6 +104,7 @@ public class FreeBoardServiceImpl implements FreeBoardService{
 
         freeBoard.setViewCnt(0L);
         freeBoard.setRecommendation(0L);
+        freeBoard.setUnRecommendation(0L);
         freeBoardRepository.save(freeBoard);
 
         return freeBoard;
@@ -118,7 +119,8 @@ public class FreeBoardServiceImpl implements FreeBoardService{
         for (FreeBoard freeBoard: freeBoardList) {
             FreeBoardResponse freeBoardResponse = new FreeBoardResponse(
                     freeBoard.getBoardId(), freeBoard.getTitle(), freeBoard.getMember().getNickName(), freeBoard.getContent(),
-                    freeBoard.getRegDate(), freeBoard.getUpdDate(), freeBoard.getMember().getId(), freeBoard.getViewCnt(), freeBoard.getRecommendation()
+                    freeBoard.getRegDate(), freeBoard.getUpdDate(), freeBoard.getMember().getId(), freeBoard.getViewCnt(), freeBoard.getRecommendation(),
+                    freeBoard.getUnRecommendation()
             );
 
             freeBoardResponseList.add(freeBoardResponse);
@@ -141,15 +143,26 @@ public class FreeBoardServiceImpl implements FreeBoardService{
 
         FreeBoardResponse freeBoardResponse = new FreeBoardResponse(
                 freeBoard.getBoardId(), freeBoard.getTitle(), freeBoard.getMember().getNickName(), freeBoard.getContent(),
-                freeBoard.getRegDate(), freeBoard.getUpdDate(), freeBoard.getMember().getId(), freeBoard.getViewCnt(), freeBoard.getRecommendation()
+                freeBoard.getRegDate(), freeBoard.getUpdDate(), freeBoard.getMember().getId(), freeBoard.getViewCnt(), freeBoard.getRecommendation(),
+                freeBoard.getUnRecommendation()
         );
         return freeBoardResponse;
     }
 
     @Override
     public void remove(Long boardId) {
+        Optional<FreeBoard> maybeFreeBoard = freeBoardRepository.findById(boardId);
+        if (maybeFreeBoard.isPresent()) {
+            FreeBoard freeBoard = maybeFreeBoard.get();
 
-        freeBoardRepository.deleteById(boardId);
+            List<Recommendation> recommendations = recommendationRepository.findAllByFreeBoard(freeBoard);
+            if (!recommendations.isEmpty()) {
+                recommendationRepository.deleteAll(recommendations);
+            }
+
+            // 이제 게시물을 삭제합니다.
+            freeBoardRepository.deleteById(boardId);
+        }
     }
 
     @Override
@@ -214,16 +227,21 @@ public class FreeBoardServiceImpl implements FreeBoardService{
         }
         Member member = maybeMember.get();
 
-        if (recommendataionRepository.findByFreeBoardAndMemberId(freeBoard, member.getId()) == null) {
-            freeBoard.setRecommendation(freeBoard.getRecommendation() + 1);
-            Recommendation recommendation = new Recommendation(freeBoard, member); // status true
-            recommendataionRepository.save(recommendation);
+        Recommendation findRecommendation = recommendationRepository.findByFreeBoardAndMemberId(freeBoard, member.getId());
+        if(findRecommendation == null) {
+            Recommendation recommendation = new Recommendation(freeBoard, member);
+            recommendation.incRecommendation();
+            recommendation.setIncRecommendationStatus(true);
+            recommendationRepository.save(recommendation);
             return freeBoard.getRecommendation();
         } else {
-            Recommendation recommendation = recommendataionRepository.findByFreeBoardAndMemberId(freeBoard, member.getId());
-            recommendation.unIncRecommendationBoard(freeBoard);
-            recommendataionRepository.delete(recommendation);
-            return freeBoard.getRecommendation();
+            if(findRecommendation.isIncRecommendationStatus()) {
+                Recommendation recommendation = recommendationRepository.findByFreeBoardAndMemberId(freeBoard, member.getId());
+                recommendation.decRecommendation();
+                recommendationRepository.delete(recommendation);
+                return freeBoard.getRecommendation();
+            }
+            return null;
         }
     }
 
@@ -242,22 +260,23 @@ public class FreeBoardServiceImpl implements FreeBoardService{
             }
             Member member = maybeMember.get();
 
-            if(recommendataionRepository.findByFreeBoardAndMemberId(freeBoard, member.getId()) == null) {
-                freeBoard.setRecommendation(freeBoard.getRecommendation() -1);
-                Recommendation recommendation = new Recommendation(freeBoard,member); // status true
-                recommendataionRepository.save(recommendation);
-                return freeBoard.getRecommendation();
+            Recommendation findRecommendation = recommendationRepository.findByFreeBoardAndMemberId(freeBoard, member.getId());
+            if(findRecommendation== null) {
+                Recommendation recommendation = new Recommendation(freeBoard, member);
+                recommendation.decUnRecommendation();
+                recommendation.setDecRecommendationStatus(true);
+                recommendationRepository.save(recommendation);
+                return freeBoard.getUnRecommendation();
             } else {
-                Recommendation recommendation = recommendataionRepository.findByFreeBoardAndMemberId(freeBoard, member.getId());
-                recommendation.unDecRecommendationBoard(freeBoard);
-                recommendataionRepository.delete(recommendation);
-                return freeBoard.getRecommendation();
+                if(findRecommendation.isDecRecommendationStatus()) {
+                    Recommendation recommendation = recommendationRepository.findByFreeBoardAndMemberId(freeBoard, member.getId());
+                    recommendation.incUnRecommendation();
+                    recommendationRepository.delete(recommendation);
+                    return freeBoard.getUnRecommendation();
+                }
+                return null;
             }
-
     }
-
-
-
 
     @Override
     public List<FreeBoardImageResourceResponse> findFreeBoardImage(Long boardId) {

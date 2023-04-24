@@ -52,6 +52,9 @@ public class FreeBoard {
     @ColumnDefault("0")
     private Long recommendation;
 
+    @ColumnDefault("0")
+    private Long unRecommendation;
+
     public void setFreeBoardImageResource (FreeBoardImageResource freeBoardImageResource) {
         freeBoardImageResourceList.add(freeBoardImageResource);
         freeBoardImageResource.setFreeBoard(this);

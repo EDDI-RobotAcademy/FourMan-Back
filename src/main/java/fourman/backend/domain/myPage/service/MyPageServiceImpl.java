@@ -7,10 +7,7 @@ import fourman.backend.domain.freeBoard.entity.FreeBoardComment;
 import fourman.backend.domain.freeBoard.repository.FreeBoardCommentRepository;
 import fourman.backend.domain.freeBoard.repository.FreeBoardRepository;
 import fourman.backend.domain.member.entity.*;
-import fourman.backend.domain.member.repository.CafeCodeRepository;
-import fourman.backend.domain.member.repository.MemberProfileRepository;
-import fourman.backend.domain.member.repository.MemberRepository;
-import fourman.backend.domain.member.repository.PointRepository;
+import fourman.backend.domain.member.repository.*;
 import fourman.backend.domain.myPage.controller.requestForm.AddPointRequestForm;
 import fourman.backend.domain.myPage.controller.requestForm.CafeInfoModifyRequestForm;
 import fourman.backend.domain.myPage.controller.requestForm.MyInfoModifyRequestForm;
@@ -53,6 +50,7 @@ public class MyPageServiceImpl implements MyPageService {
     final private PointRepository pointRepository;
     final private CafeCodeRepository cafeCodeRepository;
     final private OrderRepository orderRepository;
+    final private PointInfoRepository pointInfoRepository;
 
     @Override
     public MyInfoResponse myInfo(Long memberId) {
@@ -435,6 +433,22 @@ public class MyPageServiceImpl implements MyPageService {
         point.setPoint(point.getPoint() + pointRequestForm.getPoint());
 
         pointRepository.save(point);
+
+        PointInfo pointInfo = new PointInfo();
+
+        if(pointRequestForm.getPoint() < 0) {
+            pointInfo.setHistory(pointRequestForm.getHistory());
+            pointInfo.setAmount(pointRequestForm.getPoint());
+            pointInfo.setUse(true);
+            pointInfo.setPoint(point);
+        } else {
+            pointInfo.setHistory(pointRequestForm.getHistory());
+            pointInfo.setAmount(pointRequestForm.getPoint());
+            pointInfo.setUse(false);
+            pointInfo.setPoint(point);
+        }
+
+        pointInfoRepository.save(pointInfo);
 
         return true;
     }

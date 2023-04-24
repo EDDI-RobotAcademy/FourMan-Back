@@ -29,7 +29,7 @@ public class PointInfo {
     @CreationTimestamp
     private Date date;
 
-    @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "point_id")
     private Point point;
 
@@ -37,6 +37,13 @@ public class PointInfo {
         this.history = history;
         this.amount = amount;
         this.isUse = isUse;
+    }
+
+    public void setPointInfo(String history, Long amount, boolean isUse, Point point) {
+        this.history = history;
+        this.amount = amount;
+        this.isUse = isUse;
+        this.point = point;
     }
 
 }
