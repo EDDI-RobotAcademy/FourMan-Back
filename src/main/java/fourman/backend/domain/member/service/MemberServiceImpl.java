@@ -17,8 +17,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.Optional;
-import java.util.UUID;
+import java.util.*;
 
 @Transactional
 @Service
@@ -33,8 +32,8 @@ public class MemberServiceImpl implements MemberService {
     final private AuthenticationRepository authenticationRepository;
     final private RedisService redisService;
     final private PointRepository pointRepository;
-
     final private FavoriteRepository favoriteRepository;
+    final private PointInfoRepository pointInfoRepository;
 
     @Override
     public Boolean emailValidation(String email) {
@@ -69,8 +68,14 @@ public class MemberServiceImpl implements MemberService {
         final Member member = memberRegisterRequest.toMember();
 
         if(member.getAuthority().getAuthorityName().equals(AuthorityType.MEMBER)) {
-            Point point = new Point(1000l, member);
+            List<PointInfo> infoList = new ArrayList<>();
+            String history = "회원가입 축하 포인트";
+            PointInfo pointInfo = new PointInfo(history, 1000l, false);
+            infoList.add(pointInfo);
+            Point point = new Point(1000l, member, infoList);
             member.setPoint(point);
+            pointRepository.save(point);
+            pointInfoRepository.saveAll(infoList);
         }
 
         memberRepository.save(member);

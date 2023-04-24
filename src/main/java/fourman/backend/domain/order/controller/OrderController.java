@@ -25,11 +25,11 @@ public class OrderController {
         orderService.register(orderInfoRequestForm);
     }
 
-    @GetMapping("/list/{memberId}")
+    @GetMapping("/orderList/{memberId}")
     public List<OrderInfoResponseForm> orderList(@PathVariable("memberId") Long memberId) {
         log.info("orderList()");
 
-        return orderService.list(memberId);
+        return orderService.orderList(memberId);
     }
 
     @GetMapping("/point/{memberId}")
