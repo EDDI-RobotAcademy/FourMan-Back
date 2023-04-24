@@ -3,7 +3,7 @@ server:
 
 spring:
   datasource:
-    url: jdbc:mysql://localhost:3306/db_cafe?allowpublickeyretrieval=true&usessl=false&serverTimezone=UTC
+    url: jdbc:mysql://localhost:3306/db_cafe?allowpublickeyretrieval=true&usessl=false&serverTimezone=Asia/Seoul
     username: eddi
     password: eddi@123
     driver-class-name: com.mysql.cj.jdbc.Driver
