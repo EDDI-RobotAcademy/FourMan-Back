@@ -21,4 +21,5 @@ public class FreeBoardResponse {
     final private Long memberId;
     final private Long viewCnt;
     final private Long recommendation;
+    final private Long unRecommendation;
 }
