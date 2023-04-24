@@ -1,6 +1,8 @@
 package fourman.backend.domain.reviewBoard.entity;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import fourman.backend.domain.cafeIntroduce.entity.Cafe;
 import fourman.backend.domain.member.entity.Member;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -21,8 +23,6 @@ public class ReviewBoard {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long reviewBoardId;
 
-    private String cafeName;
-
     @Column(length = 128, nullable = false)
     private String title;
 
@@ -33,6 +33,11 @@ public class ReviewBoard {
     private List<ReviewBoardImageResource> reviewBoardImageResourceList = new ArrayList<>();
 
     private Long rating;
+
+    @JsonIgnore
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "cafe_id")
+    private Cafe cafe;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "member_id")
