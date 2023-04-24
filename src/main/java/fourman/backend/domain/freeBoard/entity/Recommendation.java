@@ -9,7 +9,6 @@ import java.util.Date;
 
 @Data
 @Entity
-
 public class Recommendation {
 
     @Id
@@ -25,7 +24,10 @@ public class Recommendation {
     private Member member;
 
     @Column(nullable = false)
-    private boolean status;
+    private boolean incRecommendationStatus;
+
+    @Column(nullable = false)
+    private boolean decRecommendationStatus;
 
     @CreationTimestamp
     private Date regDate;
@@ -36,16 +38,20 @@ public class Recommendation {
     public Recommendation(FreeBoard freeBoard, Member member) {
         this.freeBoard = freeBoard;
         this.member = member;
-        this.status = true;
+    }
+    public void incRecommendation() {
+        freeBoard.setRecommendation(freeBoard.getRecommendation() +1);
     }
 
-    public void unIncRecommendationBoard(FreeBoard freeBoard) {
-        this.status = false;
+    public void decRecommendation() {
         freeBoard.setRecommendation(freeBoard.getRecommendation() -1);
     }
 
-    public void unDecRecommendationBoard(FreeBoard freeBoard) {
-        this.status = false;
-        freeBoard.setRecommendation(freeBoard.getRecommendation() +1);
+    public void incUnRecommendation() {
+        freeBoard.setUnRecommendation(freeBoard.getUnRecommendation() +1);
+    }
+
+    public void decUnRecommendation() {
+        freeBoard.setUnRecommendation(freeBoard.getUnRecommendation() -1);
     }
 }

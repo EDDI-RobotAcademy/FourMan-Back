@@ -34,4 +34,5 @@ public interface FreeBoardService {
     Long upRecommendation(Long boardId, RecommendationRequestForm recommendationRequestForm);
 
     Long downRecommendation(Long boardId, RecommendationRequestForm recommendationRequestForm);
+
 }
