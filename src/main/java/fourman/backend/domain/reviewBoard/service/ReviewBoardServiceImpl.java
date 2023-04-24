@@ -1,6 +1,10 @@
 package fourman.backend.domain.reviewBoard.service;
 
+import fourman.backend.domain.cafeIntroduce.entity.Cafe;
+import fourman.backend.domain.cafeIntroduce.repository.CafeRepository;
+import fourman.backend.domain.member.entity.CafeCode;
 import fourman.backend.domain.member.entity.Member;
+import fourman.backend.domain.member.repository.CafeCodeRepository;
 import fourman.backend.domain.member.repository.MemberRepository;
 import fourman.backend.domain.reviewBoard.controller.requestForm.ReviewBoardRequestForm;
 import fourman.backend.domain.reviewBoard.service.responseForm.ReviewBoardImageResourceResponse;
@@ -37,6 +41,8 @@ public class ReviewBoardServiceImpl implements ReviewBoardService {
 
     final private ReviewBoardImageResourceRepository reviewBoardImageResourceRepository;
     final private MemberRepository memberRepository;
+    final private CafeRepository cafeRepository;
+    final private CafeCodeRepository cafeCodeRepository;
 
     @Transactional
     @Override
@@ -50,8 +56,24 @@ public class ReviewBoardServiceImpl implements ReviewBoardService {
 
         ReviewBoard reviewBoard = new ReviewBoard();
 
+        // 카페 이름으로 카페 코드를 받아와 해당 카페 객체 저장
+        Optional<CafeCode> maybeCafeCode = cafeCodeRepository.findCafeIdByCafeName(reviewBoardRequest.getCafeName());
+
+        if(maybeCafeCode.isEmpty()) {
+
+        }
+
+        CafeCode cafeCode = maybeCafeCode.get();
+        Optional<Cafe> maybeCafe = cafeRepository.findByCafeCode(cafeCode);
+
+        if(maybeCafe.isEmpty()) {
+
+        }
+
+        Cafe cafe = maybeCafe.get();
+
         // 받아온 상품정보 값 setting
-        reviewBoard.setCafeName(reviewBoardRequest.getCafeName());
+        reviewBoard.setCafe(cafe);
         reviewBoard.setTitle(reviewBoardRequest.getTitle());
         reviewBoard.setContent(reviewBoardRequest.getContent());
         reviewBoard.setRating(reviewBoardRequest.getRating());
@@ -62,12 +84,13 @@ public class ReviewBoardServiceImpl implements ReviewBoardService {
 
         }
         reviewBoard.setMember(maybeMember.get());
-//        String content = reviewBoard.getContent();
-//
-//        content = content.replaceAll("!\\[[^\\]]*\\]\\([^)]*\\)", ""); // <img> 태그 제거
-//
-//        // base64로 디코딩 하지 않고 단순히 <img> <p> 태그 replace 후 저장
-//        reviewBoard.setContent(content);
+
+        String content = reviewBoard.getContent();
+
+        content = content.replaceAll("!\\[[^\\]]*\\]\\([^)]*\\)", ""); // <img> 태그 제거
+
+        // base64로 디코딩 하지 않고 단순히 <img> <p> 태그 replace 후 저장
+        reviewBoard.setContent(content);
 
         LocalDateTime now = LocalDateTime.now(ZoneId.of("Asia/Seoul"));
         DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyyMMddHHmmss");
@@ -123,7 +146,7 @@ public class ReviewBoardServiceImpl implements ReviewBoardService {
             }
 
             reviewBoardResponseList.add(new ReviewBoardResponse(
-                    reviewBoard.getReviewBoardId(), reviewBoard.getCafeName(), reviewBoard.getTitle(),
+                    reviewBoard.getReviewBoardId(), reviewBoard.getCafe().getCafeCode().getCafeName(), reviewBoard.getTitle(),
                     reviewBoard.getMember().getNickName(), reviewBoard.getContent(), reviewBoard.getRating(),
                     reviewBoard.getMember().getId(), reviewBoard.getRegDate(), reviewBoard.getUpdDate(), firstPhoto
             ));
@@ -150,7 +173,7 @@ public class ReviewBoardServiceImpl implements ReviewBoardService {
 
         // 상품 상세 정보를 Response 해줄 객체에 정보를 담음
         ReviewBoardReadResponse reviewBoardReadResponse = new ReviewBoardReadResponse(
-                reviewBoard.getReviewBoardId(), reviewBoard.getCafeName(), reviewBoard.getTitle(), reviewBoard.getMember().getNickName(),
+                reviewBoard.getReviewBoardId(), reviewBoard.getCafe().getCafeCode().getCafeName(), reviewBoard.getTitle(), reviewBoard.getMember().getNickName(),
                 reviewBoard.getContent(), reviewBoard.getRegDate(), reviewBoard.getMember().getId(), reviewBoard.getRating()
         );
 
@@ -212,7 +235,15 @@ public class ReviewBoardServiceImpl implements ReviewBoardService {
     @Override
     public List<Long> Rating(String cafeName) {
 
-        return reviewBoardRepository.findRatingByCafeName(cafeName);
+        List<ReviewBoard> reviewBoardList = reviewBoardRepository.findByCafeName(cafeName);
+        List<Long> ratingList = new ArrayList<>();
+
+        for(ReviewBoard reviewBoard: reviewBoardList) {
+            Long rating = reviewBoard.getRating();
+            ratingList.add(rating);
+        }
+
+        return ratingList;
     }
 
     @Transactional
@@ -223,7 +254,6 @@ public class ReviewBoardServiceImpl implements ReviewBoardService {
         // 응답 파일 리스트를 응답할 리스트 생성
         List<ReviewBoardResponse> reviewBoardResponseList = new ArrayList<>();
 
-        // 불러온 상품 리스트를 반복문을 통해 productResponseList에 추가
         for (ReviewBoard reviewBoard: reviewBoardList) {
             String firstPhoto = null;
             List<ReviewBoardImageResource> images = reviewBoardImageResourceRepository.findAllImagesByReviewBoardId(reviewBoard.getReviewBoardId());
@@ -231,8 +261,10 @@ public class ReviewBoardServiceImpl implements ReviewBoardService {
                 firstPhoto = images.get(0).getReviewBoardImageResourcePath();
             }
 
+
+
             reviewBoardResponseList.add(new ReviewBoardResponse(
-                    reviewBoard.getReviewBoardId(), reviewBoard.getCafeName(), reviewBoard.getTitle(),
+                    reviewBoard.getReviewBoardId(), reviewBoard.getCafe().getCafeCode().getCafeName(), reviewBoard.getTitle(),
                     reviewBoard.getMember().getNickName(), reviewBoard.getContent(), reviewBoard.getRating(),
                     reviewBoard.getMember().getId(), reviewBoard.getRegDate(), reviewBoard.getUpdDate(), firstPhoto
             ));

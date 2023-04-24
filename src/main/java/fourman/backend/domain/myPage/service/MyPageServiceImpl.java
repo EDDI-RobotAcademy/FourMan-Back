@@ -253,7 +253,13 @@ public class MyPageServiceImpl implements MyPageService {
             CafeCode cafeCode = maybeCafeCode.get();
 
             // 카페 별점
-            List<Long> ratings = reviewBoardRepository.findRatingByCafeName(cafeCode.getCafeName());
+            List<ReviewBoard> reviewBoardList = reviewBoardRepository.findByCafeName(cafeCode.getCafeName());
+            List<Long> ratings = new ArrayList<>();
+
+            for(ReviewBoard reviewBoard: reviewBoardList) {
+                Long rating = reviewBoard.getRating();
+                ratings.add(rating);
+            }
 
             // 별점 평균
             double ratingAverage = ratings.stream()
@@ -332,7 +338,13 @@ public class MyPageServiceImpl implements MyPageService {
         CafeCode cafeCode = maybeCafeCode.get();
 
         // 카페 별점
-        List<Long> ratings = reviewBoardRepository.findRatingByCafeName(cafeCode.getCafeName());
+        List<ReviewBoard> reviewBoardList = reviewBoardRepository.findByCafeName(cafeCode.getCafeName());
+        List<Long> ratings = new ArrayList<>();
+
+        for(ReviewBoard reviewBoard: reviewBoardList) {
+            Long rating = reviewBoard.getRating();
+            ratings.add(rating);
+        }
 
         // 별점 평균
         double ratingAverage = ratings.stream()
