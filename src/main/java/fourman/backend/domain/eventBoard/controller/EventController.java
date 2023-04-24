@@ -1,5 +1,6 @@
 package fourman.backend.domain.eventBoard.controller;
 
+import fourman.backend.domain.cafeIntroduce.entity.Cafe;
 import fourman.backend.domain.cafeIntroduce.service.response.CafeIntroDetailResponse;
 import fourman.backend.domain.cafeIntroduce.service.response.CafeIntroListResponse;
 import fourman.backend.domain.eventBoard.controller.requestForm.EventRequestForm;
@@ -51,6 +52,12 @@ public class EventController {
     public ResponseEntity<?> uploadImage(@RequestParam("file") MultipartFile file) {
         log.info("uploadImage()");
         return eventService.uploadImage(file);
+    }
+
+    @GetMapping("/getCafe/{eventId}")
+    public Cafe getCafeByEventId(@PathVariable("eventId") Long eventId) {
+        log.info("getCafeByEventId");
+        return eventService.getCafeByEventId(eventId);
     }
 
 
