@@ -5,8 +5,10 @@ import fourman.backend.domain.cafeIntroduce.repository.CafeRepository;
 import fourman.backend.domain.member.entity.CafeCode;
 import fourman.backend.domain.member.entity.Member;
 import fourman.backend.domain.member.entity.Point;
+import fourman.backend.domain.member.entity.PointInfo;
 import fourman.backend.domain.member.repository.CafeCodeRepository;
 import fourman.backend.domain.member.repository.MemberRepository;
+import fourman.backend.domain.member.repository.PointInfoRepository;
 import fourman.backend.domain.member.repository.PointRepository;
 import fourman.backend.domain.order.controller.form.requestForm.CartItemRequestForm;
 import fourman.backend.domain.order.controller.form.requestForm.OrderInfoRequestForm;
@@ -48,6 +50,7 @@ public class OrderServiceImpl implements OrderService {
     final private SeatRepository seatRepository;
     final private TimeRepository timeRepository;
     final private PointRepository pointRepository;
+    final private PointInfoRepository pointInfoRepository;
     final private CafeCodeRepository cafeCodeRepository;
 
     @Override
@@ -61,15 +64,23 @@ public class OrderServiceImpl implements OrderService {
         List<OrderSeat> orderSeatList = new ArrayList<>();
         Optional<Cafe> maybeCafe = cafeRepository.findById(orderInfoRequestForm.getCafeId());
         Optional<Member> maybeMember = memberRepository.findByMemberId(orderInfoRequestForm.getMemberId());
+        Member member = maybeMember.get();
 
         // 포인트 사용 정보 처리
-        Member member = maybeMember.get();
-        Optional<Point> maybePoint = pointRepository.findByMemberId(member);
-        Point point = maybePoint.get();
-        Long usePoint = orderInfoRequestForm.getUsePoint();
-        Long remainPoint = point.getPoint() - usePoint;
-        point.setPoint(remainPoint);
-        pointRepository.save(point);
+        if(orderInfoRequestForm.getUsePoint() != 0) {
+            Optional<Point> maybePoint = pointRepository.findByMemberId(member);
+            Point point = maybePoint.get();
+            Long usedPoint = orderInfoRequestForm.getUsePoint();
+            Long remainPoint = point.getPoint() - usedPoint;
+            PointInfo pointInfo = new PointInfo();
+            String history = "포인트 사용";
+
+            point.setPoint(remainPoint);
+            pointInfo.setPointInfo(history, usedPoint, true, point);
+
+            pointRepository.save(point);
+            pointInfoRepository.save(pointInfo);
+        }
 
         // 랜덤 주문번호 생성, 주문번호 중복 확인
         LocalDate localDate = LocalDate.now();
