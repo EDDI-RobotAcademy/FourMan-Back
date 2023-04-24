@@ -46,6 +46,17 @@ public class EventController {
         log.info("eventRead()");
         return eventService.read(eventId);
     }
+    @PutMapping(value = "/modify/{eventId}",
+            consumes = {  MediaType.MULTIPART_FORM_DATA_VALUE, MediaType.APPLICATION_JSON_VALUE }) // 이미지+텍스트 업로드하는 경우 value , consumes 정보(이미지타입, json타입) 추가
+    public Long modifyEvent(
+            @RequestPart(value = "thumbnail", required = false) List<MultipartFile> thumbnail,
+            @RequestPart(value = "info") EventRequestForm eventRequestForm,
+            @PathVariable("eventId") Long eventId ) {
+
+        log.info("이벤트 수정 컨트롤러-리퀘스트내용: " + eventRequestForm);
+
+        return eventService.modifyEvent(eventId,thumbnail, eventRequestForm);
+    }
 
 
     @PostMapping("/api/upload")
