@@ -5,6 +5,7 @@ import fourman.backend.domain.cafeIntroduce.entity.CafeInfo;
 import fourman.backend.domain.cafeIntroduce.repository.CafeRepository;
 import fourman.backend.domain.cafeIntroduce.service.response.CafeIntroDetailResponse;
 import fourman.backend.domain.cafeIntroduce.service.response.CafeIntroListResponse;
+import fourman.backend.domain.eventBoard.entity.Event;
 import fourman.backend.domain.member.entity.CafeCode;
 import fourman.backend.domain.member.repository.CafeCodeRepository;
 import lombok.RequiredArgsConstructor;
@@ -60,7 +61,7 @@ public class CafeIntroduceServiceImpl implements CafeIntroduceService {
                 String thumbnailReName = 't'+thumbnailRandomName + multipartFile.getOriginalFilename();
 
                 //저장 경로 지정 + 파일네임
-                FileOutputStream writer1 = new FileOutputStream("../FourMan-Front/src/assets/cafe/uploadImgs/" + thumbnailReName);
+                FileOutputStream writer1 = new FileOutputStream("../FourMan-Front/public/assets/cafe/uploadImgs/" + thumbnailReName);
                 log.info("디렉토리에 파일 배치 성공!");
 
                 //파일 저장(저장할때는 byte 형식으로 저장해야 해서 파라미터로 받은 multipartFile 파일들의 getBytes() 메소드 적용해서 저장하는 듯)
@@ -78,7 +79,7 @@ public class CafeIntroduceServiceImpl implements CafeIntroduceService {
                 String fileRandomName = now.format(dtf);
                 String fileReName = 'f' + fileRandomName + multipartFile.getOriginalFilename();
 
-                FileOutputStream writer2 = new FileOutputStream("../FourMan-Front/src/assets/cafe/uploadImgs/" + fileReName);
+                FileOutputStream writer2 = new FileOutputStream("../FourMan-Front/public/assets/cafe/uploadImgs/" + fileReName);
                 log.info("디렉토리에 파일 배치 성공!");
 
                 writer2.write(multipartFile.getBytes());
@@ -138,5 +139,91 @@ public class CafeIntroduceServiceImpl implements CafeIntroduceService {
         //글내용만 보내기
         log.info("카페read 서비스 완료");
         return cafeIntroDetailResponse;
+    }
+
+    @Override
+    public Long modifyCafe(Long cafeId, List<MultipartFile> thumbnail, List<MultipartFile> fileList, CafeIntroRequestForm cafeIntroRequestForm) {
+        Optional<Cafe> optionalCafe = cafeRepository.findById(cafeId);
+        if (!optionalCafe.isPresent()) {
+            log.info("카페가 존재하지 않습니다.");
+            return null;
+        }
+        Cafe cafe = optionalCafe.get();
+        // 1. cafe 저장
+        cafe.setCafeAddress(cafeIntroRequestForm.getCafeAddress());
+        cafe.setCafeTel(cafeIntroRequestForm.getCafeTel());
+        cafe.setStartTime(cafeIntroRequestForm.getStartTime());
+        cafe.setEndTime(cafeIntroRequestForm.getEndTime());
+        Optional<CafeCode> maybeCafeCode= cafeCodeRepository.findById(cafe.getCafeCode().getId());
+        if (maybeCafeCode.isEmpty()) {
+            log.info("카페코드가 존재하지 않습니다.");
+            return null;
+        }
+        cafe.setCafeCode(maybeCafeCode.get());
+        //3. cafeInfo 저장
+        // cafeInfo-> String thumbnailFileName,List<String> cafeImagesName,List<String>  String subTitle,String description
+        CafeInfo cafeInfo= cafe.getCafeInfo();
+        cafeInfo.setSubTitle(cafeIntroRequestForm.getSubTitle());
+        cafeInfo.setDescription(cafeIntroRequestForm.getDescription());
+
+        LocalDateTime now = LocalDateTime.now(ZoneId.of("Asia/Seoul"));
+        DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyyMMddHHmmss");
+
+        // 실제 파일 frontend 이미지 폴더 경로에 저장
+        try {
+            //1. 썸네일 저장
+            if (thumbnail != null && !thumbnail.isEmpty()) {
+                for (MultipartFile multipartFile : thumbnail) {
+                    log.info("requestUploadFilesWithText() - Make file: " + multipartFile.getOriginalFilename());
+                    String thumbnailRandomName = now.format(dtf);
+                    String thumbnailReName = 't' + thumbnailRandomName + multipartFile.getOriginalFilename();
+
+                    //저장 경로 지정 + 파일네임
+                    FileOutputStream writer1 = new FileOutputStream("../FourMan-Front/public/assets/cafe/uploadImgs/" + thumbnailReName);
+                    log.info("디렉토리에 파일 배치 성공!");
+
+                    //파일 저장(저장할때는 byte 형식으로 저장해야 해서 파라미터로 받은 multipartFile 파일들의 getBytes() 메소드 적용해서 저장하는 듯)
+                    writer1.write(multipartFile.getBytes());
+                    cafeInfo.setThumbnailFileName(thumbnailReName);
+                    writer1.close();
+                }
+            }
+
+            //2. 상품 상세사진 저장
+            if (fileList != null && !fileList.isEmpty()) {
+                List<String> imageList=null;
+
+                if(cafeIntroRequestForm.isAdd()) {//추가
+                    imageList= cafeInfo.getCafeImagesName();
+                }else{//덮어쓰기
+                    imageList= new ArrayList<>();
+                }
+
+                for (MultipartFile multipartFile : fileList) {
+                    log.info("requestUploadFilesWithText() - Make file: " + multipartFile.getOriginalFilename());
+
+                    String fileRandomName = now.format(dtf);
+                    String fileReName = 'f' + fileRandomName + multipartFile.getOriginalFilename();
+
+                    FileOutputStream writer2 = new FileOutputStream("../FourMan-Front/public/assets/cafe/uploadImgs/" + fileReName);
+                    log.info("디렉토리에 파일 배치 성공!");
+                    writer2.write(multipartFile.getBytes());
+
+                    //이미지리스트 이름 저장
+                    imageList.add(fileReName);
+
+                    writer2.close();
+                }
+                cafeInfo.setCafeImagesName(imageList);
+            }
+            cafe.setCafeInfo(cafeInfo);
+            cafeRepository.save(cafe);
+            return cafe.getCafeId();
+
+        } catch (FileNotFoundException e) {
+            throw new RuntimeException(e);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
     }
 }

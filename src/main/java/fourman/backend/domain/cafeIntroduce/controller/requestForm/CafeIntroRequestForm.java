@@ -16,6 +16,8 @@ public class CafeIntroRequestForm{
         private String subTitle;
         private String description;
         private String code;
+        private boolean add;
+
 
 
 }

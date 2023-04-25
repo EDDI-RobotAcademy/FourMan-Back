@@ -4,6 +4,7 @@ import fourman.backend.domain.cafeIntroduce.controller.requestForm.CafeIntroRequ
 import fourman.backend.domain.cafeIntroduce.service.CafeIntroduceService;
 import fourman.backend.domain.cafeIntroduce.service.response.CafeIntroDetailResponse;
 import fourman.backend.domain.cafeIntroduce.service.response.CafeIntroListResponse;
+import fourman.backend.domain.eventBoard.controller.requestForm.EventRequestForm;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.MediaType;
@@ -50,6 +51,18 @@ public class CafeIntroduceController {
     public CafeIntroDetailResponse cafeRead(@PathVariable("cafeId") Long cafeId) {
         log.info("cafeRead()");
         return cafeIntroduceService.read(cafeId);
+    }
+    @PutMapping(value = "/modify/{cafeId}",
+            consumes = {  MediaType.MULTIPART_FORM_DATA_VALUE, MediaType.MULTIPART_FORM_DATA_VALUE, MediaType.APPLICATION_JSON_VALUE }) // 이미지+텍스트 업로드하는 경우 value , consumes 정보(이미지타입, json타입) 추가
+    public Long modifyEvent(
+            @RequestPart(value = "thumbnail", required = false) List<MultipartFile> thumbnail,
+            @RequestPart(value = "fileList", required = false) List<MultipartFile> fileList,
+            @RequestPart(value = "info") CafeIntroRequestForm cafeIntroRequestForm,
+            @PathVariable("cafeId") Long cafeId ) {
+
+        log.info("카페 수정 컨트롤러-리퀘스트내용: " + cafeIntroRequestForm);
+
+        return cafeIntroduceService.modifyCafe(cafeId,thumbnail, fileList, cafeIntroRequestForm);
     }
 
 }
