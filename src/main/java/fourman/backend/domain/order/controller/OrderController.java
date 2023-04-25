@@ -38,4 +38,11 @@ public class OrderController {
 
         return orderService.getHoldPoint(memberId);
     }
+
+    @PostMapping("/cancel/{orderId}")
+    public void orderCancel(@PathVariable("orderId") Long orderId) {
+        log.info("orderCancel()");
+
+        orderService.orderCancel(orderId);
+    }
 }

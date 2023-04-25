@@ -34,6 +34,8 @@ public class OrderInfo {
     private boolean isPacking;
     @Column(nullable = false)
     private boolean isReady;
+    @Column
+    private Date canceledAt;
     @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "member_id")
     private Member member;

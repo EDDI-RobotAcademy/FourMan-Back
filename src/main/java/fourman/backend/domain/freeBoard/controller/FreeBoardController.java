@@ -104,4 +104,9 @@ public class FreeBoardController {
 
         return freeBoardService.findFreeBoardImage(boardId);
     }
+
+    @GetMapping("/best-free-board")
+    public List<FreeBoardResponse> bestFreeBoardList() {
+        return freeBoardService.bestFreeBoardList();
+    }
 }
