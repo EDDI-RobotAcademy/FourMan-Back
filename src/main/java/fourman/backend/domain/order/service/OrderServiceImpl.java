@@ -19,7 +19,7 @@ import fourman.backend.domain.order.entity.OrderProduct;
 import fourman.backend.domain.order.entity.OrderReservation;
 import fourman.backend.domain.order.entity.OrderSeat;
 import fourman.backend.domain.order.repository.OrderProductRepository;
-import fourman.backend.domain.order.repository.OrderRepository;
+import fourman.backend.domain.order.repository.OrderInfoRepository;
 import fourman.backend.domain.order.repository.OrderReservationRepository;
 import fourman.backend.domain.order.repository.OrderSeatRepository;
 import fourman.backend.domain.reservation.entity.Seat;
@@ -29,9 +29,7 @@ import fourman.backend.domain.reservation.repository.TimeRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
-import javax.persistence.criteria.Order;
 import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.util.*;
@@ -41,7 +39,7 @@ import java.util.*;
 @RequiredArgsConstructor
 public class OrderServiceImpl implements OrderService {
 
-    final private OrderRepository orderRepository;
+    final private OrderInfoRepository orderInfoRepository;
     final private OrderProductRepository orderProductRepository;
     final private MemberRepository memberRepository;
     final private OrderReservationRepository orderReservationRepository;
@@ -91,7 +89,7 @@ public class OrderServiceImpl implements OrderService {
             int orderNumber = random.nextInt(100000);
             String fullOrderNumber = "FourMan" + year + "-" + orderNumber;
 
-            Optional<OrderInfo> existOrder = orderRepository.findExistOrderNumber(fullOrderNumber);
+            Optional<OrderInfo> existOrder = orderInfoRepository.findExistOrderNumber(fullOrderNumber);
 
             if(existOrder.isEmpty()) {
                 orderInfo.setOrderNo(fullOrderNumber);
@@ -104,6 +102,7 @@ public class OrderServiceImpl implements OrderService {
         orderInfo.setUsePoint(orderInfoRequestForm.getUsePoint());
         orderInfo.setPacking(orderInfoRequestForm.isPacking());
         orderInfo.setReady(false);
+        orderInfo.setCanceledAt(null);
         orderInfo.setMember(member);
         orderInfo.setCafe(maybeCafe.get());
 
@@ -146,7 +145,7 @@ public class OrderServiceImpl implements OrderService {
             e.printStackTrace();
         }
 
-        orderRepository.save(orderInfo);
+        orderInfoRepository.save(orderInfo);
         orderProductRepository.saveAll(orderProductList);
 
     }
@@ -156,7 +155,7 @@ public class OrderServiceImpl implements OrderService {
 
         Optional<Member> maybeMember = memberRepository.findByMemberId(memberId);
         Member member = maybeMember.get();
-        List<OrderInfo> orderInfoList = orderRepository.findOrderInfoByMember(member);
+        List<OrderInfo> orderInfoList = orderInfoRepository.findOrderInfoByMember(member);
         List<OrderInfoResponseForm> orderInfoResponseList = new ArrayList<>();
 
         String customer = member.getNickName();
@@ -164,6 +163,13 @@ public class OrderServiceImpl implements OrderService {
 
             SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy년 MM월 dd일 HH시 mm분");
             String orderDate = simpleDateFormat.format(orderInfo.getOrderDate());
+            String canceledAt;
+            if(orderInfo.getCanceledAt() == null) {
+                canceledAt = null;
+            } else {
+                canceledAt = simpleDateFormat.format(orderInfo.getCanceledAt());
+            }
+
             List<OrderProduct> orderProductList = orderProductRepository.findOrderProductByOrderId(orderInfo.getOrderId());
             Optional<Cafe> maybeCafe = cafeRepository.findById(orderInfo.getCafe().getCafeId());
             Cafe cafe = maybeCafe.get();
@@ -178,9 +184,10 @@ public class OrderServiceImpl implements OrderService {
 
                 orderInfoResponseList.add(new OrderInfoResponseForm(orderInfo.getOrderId(), orderInfo.getOrderNo(), customer, orderDate,
                         orderInfo.getTotalQuantity(), orderInfo.getTotalPrice(), orderInfo.getUsePoint(), orderInfo.isPacking(), orderInfo.isReady(),
-                        cafeCode.getCafeName(), cafe.getCafeInfo().getThumbnailFileName(),null, null, orderProductList));
+                        canceledAt, cafeCode.getCafeName(), cafe.getCafeInfo().getThumbnailFileName(),null, null, orderProductList));
             } else { // 예약 주문
                 System.out.println("orderReservation값 존재 -> 예약 주문");
+
                 Optional<OrderReservation> maybeOrderReservation = orderReservationRepository.findByReservationId(orderInfo.getOrderReservation().getId());
                 if(maybeOrderReservation.isEmpty()) {
                     System.out.println("maybeOrderReservation값이 존재하지 않습니다.");
@@ -193,7 +200,8 @@ public class OrderServiceImpl implements OrderService {
 
                 orderInfoResponseList.add(new OrderInfoResponseForm(orderInfo.getOrderId(), orderInfo.getOrderNo(), customer, orderDate,
                                           orderInfo.getTotalQuantity(), orderInfo.getTotalPrice(), orderInfo.getUsePoint(), orderInfo.isPacking(), orderInfo.isReady(),
-                                          cafeCode.getCafeName(), cafe.getCafeInfo().getThumbnailFileName(), orderReservation.getTime(), orderReservation.getSeatNoList(), orderProductList));
+                        canceledAt, cafeCode.getCafeName(), cafe.getCafeInfo().getThumbnailFileName(), orderReservation.getTime(), orderReservation.getSeatNoList(),
+                                          orderProductList));
             }
         }
 
@@ -207,5 +215,31 @@ public class OrderServiceImpl implements OrderService {
         Long point = member.getPoint().getPoint();
 
         return point;
+    }
+
+    @Override
+    public void orderCancel(Long orderId) {
+
+        Optional<OrderInfo> maybeOrderInfo = orderInfoRepository.findById(orderId);
+        OrderInfo orderInfo = maybeOrderInfo.get();
+        Date currentDate = new Date();
+        orderInfo.setCanceledAt(currentDate);
+
+        // 사용 포인트 환불
+        Optional<Point> maybePoint = pointRepository.findByMemberId(orderInfo.getMember());
+        Point point = maybePoint.get();
+        Long refundPoint = point.getPoint() + orderInfo.getUsePoint();
+        PointInfo pointInfo = new PointInfo();
+        String history = "주문 취소로 인한 포인트 환불";
+
+        point.setPoint(refundPoint);
+        pointInfo.setPointInfo(history, +orderInfo.getUsePoint(), false, point);
+
+        pointRepository.save(point);
+        pointInfoRepository.save(pointInfo);
+
+        orderInfoRepository.save(orderInfo);
+
+
     }
 }

@@ -13,7 +13,7 @@ import fourman.backend.domain.myPage.controller.requestForm.CafeInfoModifyReques
 import fourman.backend.domain.myPage.controller.requestForm.MyInfoModifyRequestForm;
 import fourman.backend.domain.myPage.service.responseForm.*;
 import fourman.backend.domain.order.entity.OrderInfo;
-import fourman.backend.domain.order.repository.OrderRepository;
+import fourman.backend.domain.order.repository.OrderInfoRepository;
 import fourman.backend.domain.questionboard.entity.Comment;
 import fourman.backend.domain.questionboard.entity.QuestionBoard;
 import fourman.backend.domain.questionboard.repository.CommentRepository;
@@ -50,7 +50,7 @@ public class MyPageServiceImpl implements MyPageService {
     final private CafeRepository cafeRepository;
     final private PointRepository pointRepository;
     final private CafeCodeRepository cafeCodeRepository;
-    final private OrderRepository orderRepository;
+    final private OrderInfoRepository orderInfoRepository;
     final private PointInfoRepository pointInfoRepository;
 
     @Override
@@ -270,7 +270,7 @@ public class MyPageServiceImpl implements MyPageService {
             int ratingCount = ratings.size();
 
             // 이번달 주문정보
-            List<OrderInfo> monthOrderInfoList = orderRepository.findMonthOrderInfoByCafeId(cafe.getCafeId());
+            List<OrderInfo> monthOrderInfoList = orderInfoRepository.findMonthOrderInfoByCafeId(cafe.getCafeId());
 
             // 이번달 총 매출
             double monthTotalSales = monthOrderInfoList.stream()
@@ -289,7 +289,7 @@ public class MyPageServiceImpl implements MyPageService {
             }
 
             // 금일 주문정보
-            List<OrderInfo> dayOrderInfoList = orderRepository.findDayOrderInfoByCafeId(cafe.getCafeId());
+            List<OrderInfo> dayOrderInfoList = orderInfoRepository.findDayOrderInfoByCafeId(cafe.getCafeId());
 
             // 금일 총 매출
             double dayTotalSales = dayOrderInfoList.stream()
@@ -355,7 +355,7 @@ public class MyPageServiceImpl implements MyPageService {
         int ratingCount = ratings.size();
 
         // 이번달 주문정보
-        List<OrderInfo> monthOrderInfoList = orderRepository.findMonthOrderInfoByCafeId(cafeId);
+        List<OrderInfo> monthOrderInfoList = orderInfoRepository.findMonthOrderInfoByCafeId(cafeId);
 
         // 이번달 총 매출
         double monthTotalSales = monthOrderInfoList.stream()
@@ -374,7 +374,7 @@ public class MyPageServiceImpl implements MyPageService {
         }
 
         // 금일 주문정보
-        List<OrderInfo> dayOrderInfoList = orderRepository.findDayOrderInfoByCafeId(cafe.getCafeId());
+        List<OrderInfo> dayOrderInfoList = orderInfoRepository.findDayOrderInfoByCafeId(cafe.getCafeId());
 
         // 금일 총 매출
         double dayTotalSales = dayOrderInfoList.stream()
