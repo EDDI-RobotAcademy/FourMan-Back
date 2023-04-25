@@ -26,4 +26,6 @@ public interface MyPageService {
     void cafeInfoModify(Long cafeId, CafeInfoModifyRequestForm modifyRequest);
 
     Boolean addPoint(Long memberId, AddPointRequestForm pointRequestForm);
+
+    List<PointDetailsResponse> pointDetailsList();
 }
