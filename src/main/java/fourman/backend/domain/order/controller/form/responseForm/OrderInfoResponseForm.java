@@ -4,6 +4,7 @@ import fourman.backend.domain.order.entity.OrderProduct;
 import fourman.backend.domain.order.entity.OrderSeat;
 import lombok.Getter;
 
+import java.util.Date;
 import java.util.List;
 
 @Getter
@@ -18,6 +19,7 @@ public class OrderInfoResponseForm {
     final Long usePoint;
     final boolean isPacking;
     final boolean isReady;
+    final String canceledAt;
     final String cafeName;
     final String cafeThumbnailFile;
     final String reservationTime;
@@ -25,7 +27,7 @@ public class OrderInfoResponseForm {
     final List<OrderProduct> orderProductList;
 
     public OrderInfoResponseForm(Long orderId, String orderNo, String customer, String orderDate, int totalQuantity,
-                                 int totalPrice, Long usePoint, boolean isPacking, boolean isReady,
+                                 int totalPrice, Long usePoint, boolean isPacking, boolean isReady, String canceledAt,
                                  String cafeName, String cafeThumbnailFile ,String reservationTime,
                                  List<OrderSeat> seatNoList, List<OrderProduct> orderProductList) {
         this.orderId = orderId;
@@ -37,6 +39,7 @@ public class OrderInfoResponseForm {
         this.usePoint = usePoint;
         this.isPacking = isPacking;
         this.isReady = isReady;
+        this.canceledAt = canceledAt;
         this.cafeName = cafeName;
         this.cafeThumbnailFile = cafeThumbnailFile;
         this.reservationTime = reservationTime;
