@@ -19,13 +19,15 @@ public class OrderInfoResponseForm {
     final boolean isPacking;
     final boolean isReady;
     final String cafeName;
+    final String cafeThumbnailFile;
     final String reservationTime;
     final List<OrderSeat> seatNoList;
     final List<OrderProduct> orderProductList;
 
     public OrderInfoResponseForm(Long orderId, String orderNo, String customer, String orderDate, int totalQuantity,
                                  int totalPrice, Long usePoint, boolean isPacking, boolean isReady,
-                                 String cafeName, String reservationTime, List<OrderSeat> seatNoList, List<OrderProduct> orderProductList) {
+                                 String cafeName, String cafeThumbnailFile ,String reservationTime,
+                                 List<OrderSeat> seatNoList, List<OrderProduct> orderProductList) {
         this.orderId = orderId;
         this.orderNo = orderNo;
         this.customer = customer;
@@ -36,6 +38,7 @@ public class OrderInfoResponseForm {
         this.isPacking = isPacking;
         this.isReady = isReady;
         this.cafeName = cafeName;
+        this.cafeThumbnailFile = cafeThumbnailFile;
         this.reservationTime = reservationTime;
         this.seatNoList = seatNoList;
         this.orderProductList = orderProductList;
