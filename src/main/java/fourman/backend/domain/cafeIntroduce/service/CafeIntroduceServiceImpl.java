@@ -8,6 +8,9 @@ import fourman.backend.domain.cafeIntroduce.service.response.CafeIntroListRespon
 import fourman.backend.domain.eventBoard.entity.Event;
 import fourman.backend.domain.member.entity.CafeCode;
 import fourman.backend.domain.member.repository.CafeCodeRepository;
+import fourman.backend.domain.reservation.repository.CafeTableRepository;
+import fourman.backend.domain.reservation.repository.ReservationRepository;
+import fourman.backend.domain.reservation.repository.SeatRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Sort;
@@ -32,6 +35,10 @@ import java.util.Optional;
 public class CafeIntroduceServiceImpl implements CafeIntroduceService {
     private final CafeRepository cafeRepository;
     private final CafeCodeRepository cafeCodeRepository;
+    private final SeatRepository seatRepository;
+    private final ReservationRepository reservationRepository;
+    private final CafeTableRepository cafeTableRepository;
+
     //
     @Override
     public Long registerCafe(List<MultipartFile> thumbnail, List<MultipartFile> fileList, CafeIntroRequestForm cafeIntroRequestForm) {
@@ -225,5 +232,20 @@ public class CafeIntroduceServiceImpl implements CafeIntroduceService {
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
+    }
+
+    @Override
+    public void deleteCafe(Long cafeId) {
+        Optional<Cafe> maycafe = cafeRepository.findById(cafeId);
+        seatRepository.deleteByCafeCafeId(cafeId);
+        cafeTableRepository.deleteByCafeCafeId(cafeId);
+        reservationRepository.deleteByCafeCafeId(cafeId);
+        Cafe cafe=maycafe.get();
+        CafeCode cafeCode = cafe.getCafeCode();
+        if (cafeCode != null) {
+            cafeCode.setCafe(null);
+            cafe.setCafeCode(null);
+        }
+        cafeRepository.deleteById(cafeId);
     }
 }

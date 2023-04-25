@@ -8,6 +8,7 @@ import fourman.backend.domain.eventBoard.controller.requestForm.EventRequestForm
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -63,6 +64,13 @@ public class CafeIntroduceController {
         log.info("카페 수정 컨트롤러-리퀘스트내용: " + cafeIntroRequestForm);
 
         return cafeIntroduceService.modifyCafe(cafeId,thumbnail, fileList, cafeIntroRequestForm);
+    }
+
+    @DeleteMapping("/delete/{cafeId}")
+    public ResponseEntity<Void> deleteCafe(@PathVariable Long cafeId) {
+        log.info("cafe 삭제 컨트롤러");
+        cafeIntroduceService.deleteCafe(cafeId);
+        return ResponseEntity.ok().build();
     }
 
 }

@@ -28,7 +28,7 @@ public class CafeCode {
 
 
     @JsonIgnore
-    @OneToOne(mappedBy="cafeCode")
+    @OneToOne(mappedBy="cafeCode", cascade = CascadeType.ALL)
     private Cafe cafe;
 
 

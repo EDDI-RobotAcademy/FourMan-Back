@@ -18,4 +18,6 @@ public interface SeatRepository extends JpaRepository<Seat, Long> {
 //    Optional<Seat> findByIdAndCafeAndTime(Long seatId, Cafe cafe, Time time);
 
     Optional<Seat> findBySeatNoAndCafeAndTime(int seatNo, Cafe cafe, Time time);
+
+    void deleteByCafeCafeId(Long cafeId);
 }
