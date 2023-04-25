@@ -15,4 +15,8 @@ public interface CafeIntroduceService {
     Boolean cafeNumValidation(String code);
 
     CafeIntroDetailResponse read(Long cafeId);
+
+    Long modifyCafe(Long cafeId,List<MultipartFile> thumbnail, List<MultipartFile> fileList, CafeIntroRequestForm cafeIntroRequestForm);
+
+    void deleteCafe(Long cafeId);
 }

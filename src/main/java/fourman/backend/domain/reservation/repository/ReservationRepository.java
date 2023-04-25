@@ -13,4 +13,7 @@ public interface ReservationRepository extends JpaRepository<Reservation, Long> 
 
     @Query("select r from Reservation r join fetch r.member m where m.id = :memberId")
     List<Reservation> findReservationByMemberId(Long memberId);
+
+
+    void deleteByCafeCafeId(Long cafeId);
 }

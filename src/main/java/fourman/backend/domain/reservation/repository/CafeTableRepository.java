@@ -12,4 +12,8 @@ public interface CafeTableRepository extends JpaRepository<CafeTable, Long> {
 
 
     List<CafeTable> findByCafe(Cafe cafe);
+
+
+
+    void deleteByCafeCafeId(Long cafeId);
 }
