@@ -14,6 +14,9 @@ import fourman.backend.domain.member.entity.Member;
 import fourman.backend.domain.member.repository.MemberRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
@@ -32,7 +35,7 @@ import java.util.Optional;
 @Slf4j
 @Service
 @RequiredArgsConstructor
-public class FreeBoardServiceImpl implements FreeBoardService{
+public class FreeBoardServiceImpl implements FreeBoardService {
 
     final private FreeBoardRepository freeBoardRepository;
 
@@ -55,7 +58,7 @@ public class FreeBoardServiceImpl implements FreeBoardService{
 
         Optional<Member> maybeMember = memberRepository.findById(freeBoardRequest.getMemberId());
 
-        if(maybeMember.isEmpty()) {
+        if (maybeMember.isEmpty()) {
             return null;
         }
         freeBoard.setMember(maybeMember.get());
@@ -71,13 +74,13 @@ public class FreeBoardServiceImpl implements FreeBoardService{
         LocalDateTime now = LocalDateTime.now(ZoneId.of("Asia/Seoul"));
         DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyyMMddHHmmss");
 
-        if(fileList != null) {
+        if (fileList != null) {
             try {
-                for (MultipartFile multipartFile: fileList) {
+                for (MultipartFile multipartFile : fileList) {
                     log.info("requestFileUploadWithText() - filename: " + multipartFile.getOriginalFilename());
 
                     String thumbnailRandomName = now.format(dtf);
-                    String thumbnailReName = 't'+thumbnailRandomName + multipartFile.getOriginalFilename();
+                    String thumbnailReName = 't' + thumbnailRandomName + multipartFile.getOriginalFilename();
 
                     // 파일 저장 위치에 파일 이름을 더해 fullPath 문자열 저장
                     String fullPath = fixedStringPath + thumbnailReName;
@@ -109,6 +112,7 @@ public class FreeBoardServiceImpl implements FreeBoardService{
 
         return freeBoard;
     }
+
     @Transactional
     @Override
     public List<FreeBoardResponse> list() {
@@ -116,7 +120,7 @@ public class FreeBoardServiceImpl implements FreeBoardService{
         List<FreeBoard> freeBoardList = freeBoardRepository.findAll(Sort.by(Sort.Direction.DESC, "boardId"));
         List<FreeBoardResponse> freeBoardResponseList = new ArrayList<>();
 
-        for (FreeBoard freeBoard: freeBoardList) {
+        for (FreeBoard freeBoard : freeBoardList) {
             FreeBoardResponse freeBoardResponse = new FreeBoardResponse(
                     freeBoard.getBoardId(), freeBoard.getTitle(), freeBoard.getMember().getNickName(), freeBoard.getContent(),
                     freeBoard.getRegDate(), freeBoard.getUpdDate(), freeBoard.getMember().getId(), freeBoard.getViewCnt(), freeBoard.getRecommendation(),
@@ -212,6 +216,7 @@ public class FreeBoardServiceImpl implements FreeBoardService{
 //    return freeBoard.getRecommendation();
 //}
 
+
     @Transactional
     @Override
     public Long upRecommendation(Long boardId, RecommendationRequestForm recommendationRequestForm) {
@@ -228,14 +233,14 @@ public class FreeBoardServiceImpl implements FreeBoardService{
         Member member = maybeMember.get();
 
         Recommendation findRecommendation = recommendationRepository.findByFreeBoardAndMemberId(freeBoard, member.getId());
-        if(findRecommendation == null) {
+        if (findRecommendation == null) {
             Recommendation recommendation = new Recommendation(freeBoard, member);
             recommendation.incRecommendation();
             recommendation.setIncRecommendationStatus(true);
             recommendationRepository.save(recommendation);
             return freeBoard.getRecommendation();
         } else {
-            if(findRecommendation.isIncRecommendationStatus()) {
+            if (findRecommendation.isIncRecommendationStatus()) {
                 Recommendation recommendation = recommendationRepository.findByFreeBoardAndMemberId(freeBoard, member.getId());
                 recommendation.decRecommendation();
                 recommendationRepository.delete(recommendation);
@@ -245,37 +250,37 @@ public class FreeBoardServiceImpl implements FreeBoardService{
         }
     }
 
-        @Transactional
-        @Override
-        public Long downRecommendation(Long boardId, RecommendationRequestForm recommendationRequestForm) {
-            Optional<FreeBoard> maybeFreeBoard = freeBoardRepository.findById(boardId);
-            if(maybeFreeBoard.isEmpty()) {
-                return null;
-            }
-            FreeBoard freeBoard = maybeFreeBoard.get();
+    @Transactional
+    @Override
+    public Long downRecommendation(Long boardId, RecommendationRequestForm recommendationRequestForm) {
+        Optional<FreeBoard> maybeFreeBoard = freeBoardRepository.findById(boardId);
+        if (maybeFreeBoard.isEmpty()) {
+            return null;
+        }
+        FreeBoard freeBoard = maybeFreeBoard.get();
 
-            Optional<Member> maybeMember = memberRepository.findById(recommendationRequestForm.getMemberId());
-            if(maybeMember.isEmpty()) {
-                return null;
-            }
-            Member member = maybeMember.get();
+        Optional<Member> maybeMember = memberRepository.findById(recommendationRequestForm.getMemberId());
+        if (maybeMember.isEmpty()) {
+            return null;
+        }
+        Member member = maybeMember.get();
 
-            Recommendation findRecommendation = recommendationRepository.findByFreeBoardAndMemberId(freeBoard, member.getId());
-            if(findRecommendation== null) {
-                Recommendation recommendation = new Recommendation(freeBoard, member);
-                recommendation.decUnRecommendation();
-                recommendation.setDecRecommendationStatus(true);
-                recommendationRepository.save(recommendation);
+        Recommendation findRecommendation = recommendationRepository.findByFreeBoardAndMemberId(freeBoard, member.getId());
+        if (findRecommendation == null) {
+            Recommendation recommendation = new Recommendation(freeBoard, member);
+            recommendation.decUnRecommendation();
+            recommendation.setDecRecommendationStatus(true);
+            recommendationRepository.save(recommendation);
+            return freeBoard.getUnRecommendation();
+        } else {
+            if (findRecommendation.isDecRecommendationStatus()) {
+                Recommendation recommendation = recommendationRepository.findByFreeBoardAndMemberId(freeBoard, member.getId());
+                recommendation.incUnRecommendation();
+                recommendationRepository.delete(recommendation);
                 return freeBoard.getUnRecommendation();
-            } else {
-                if(findRecommendation.isDecRecommendationStatus()) {
-                    Recommendation recommendation = recommendationRepository.findByFreeBoardAndMemberId(freeBoard, member.getId());
-                    recommendation.incUnRecommendation();
-                    recommendationRepository.delete(recommendation);
-                    return freeBoard.getUnRecommendation();
-                }
-                return null;
             }
+            return null;
+        }
     }
 
     @Override
@@ -283,7 +288,7 @@ public class FreeBoardServiceImpl implements FreeBoardService{
         List<FreeBoardImageResource> freeBoardImageResourceList = freeBoardImageResourceRepository.findImagePathByFreeBoardId(boardId);
         List<FreeBoardImageResourceResponse> freeBoardImageResourceResponseList = new ArrayList<>();
 
-        for (FreeBoardImageResource freeBoardImageResource: freeBoardImageResourceList) {
+        for (FreeBoardImageResource freeBoardImageResource : freeBoardImageResourceList) {
             System.out.println("imageResource path: " + freeBoardImageResource.getFreeBoardImageResourcePath());
 
             freeBoardImageResourceResponseList.add(new FreeBoardImageResourceResponse(
@@ -293,6 +298,25 @@ public class FreeBoardServiceImpl implements FreeBoardService{
         return freeBoardImageResourceResponseList;
     }
 
+    @Transactional
+    @Override
+    public List<FreeBoardResponse> bestFreeBoardList() {
+        Pageable pageable = PageRequest.of(0, 3, Sort.by("recommendation").descending());
+        //pageable 내장객체를 사용해서 index 0 부터 3개를 recommendation 으로 내림차
+        Page<FreeBoard> freeBoardPage = freeBoardRepository.findAll(pageable);
+        List<FreeBoard> freeBoards = freeBoardPage.getContent();
 
+        List<FreeBoardResponse> freeBoardResponses = new ArrayList<>();
 
+        for (FreeBoard freeBoard : freeBoards) {
+            FreeBoardResponse freeBoardResponse = new FreeBoardResponse(
+                    freeBoard.getBoardId(), freeBoard.getTitle(), freeBoard.getMember().getNickName(),
+                    freeBoard.getContent(), freeBoard.getRegDate(), freeBoard.getUpdDate(), freeBoard.getMember().getId(),
+                    freeBoard.getViewCnt(), freeBoard.getRecommendation(), freeBoard.getUnRecommendation()
+            );
+            freeBoardResponses.add(freeBoardResponse);
+            //response에 담아서 return
+        }
+        return freeBoardResponses;
+    }
 }

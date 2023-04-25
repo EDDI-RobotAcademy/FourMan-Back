@@ -35,4 +35,5 @@ public interface FreeBoardService {
 
     Long downRecommendation(Long boardId, RecommendationRequestForm recommendationRequestForm);
 
+    List<FreeBoardResponse> bestFreeBoardList();
 }
