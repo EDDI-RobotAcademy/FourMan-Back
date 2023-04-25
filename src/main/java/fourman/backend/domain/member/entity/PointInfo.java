@@ -1,6 +1,7 @@
 package fourman.backend.domain.member.entity;
 
 import lombok.Data;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.CreationTimestamp;
 
@@ -32,6 +33,10 @@ public class PointInfo {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "point_id")
     private Point point;
+
+    public boolean isUse() {
+        return isUse;
+    }
 
     public PointInfo(String history, Long amount, boolean isUse) {
         this.history = history;

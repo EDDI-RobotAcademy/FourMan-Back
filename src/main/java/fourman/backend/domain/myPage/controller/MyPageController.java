@@ -81,4 +81,16 @@ public class MyPageController {
         return myPageService.addPoint(memberId, pointRequestForm);
     }
 
+    @GetMapping("/point-details-list")
+    public List<PointDetailsResponse> pointDetailsList() {
+        System.out.println("pointDetailsList() 실행");
+        return myPageService.pointDetailsList();
+    }
+
+    @GetMapping("/point-details/{memberId}")
+    public List<PointDetailsResponse> memberPointDetails(@PathVariable("memberId") Long memberId) {
+        System.out.println("memberPointDetails() 실행");
+        return myPageService.memberPointDetails(memberId);
+    }
+
 }

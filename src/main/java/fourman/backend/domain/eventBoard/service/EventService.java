@@ -17,4 +17,8 @@ public interface EventService {
     ResponseEntity<?> uploadImage(MultipartFile file);
 
     Cafe getCafeByEventId(Long eventId);
+
+    Long modifyEvent(Long eventId, List<MultipartFile> thumbnail, EventRequestForm eventRequestForm);
+
+    void deleteEvent(Long eventId);
 }
