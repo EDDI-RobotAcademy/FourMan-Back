@@ -24,6 +24,7 @@ import fourman.backend.domain.reviewBoard.repository.ReviewBoardRepository;
 import fourman.backend.domain.security.service.RedisService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
@@ -207,7 +208,7 @@ public class MyPageServiceImpl implements MyPageService {
     @Transactional
     @Override
     public List<MemberInfoResponse> memberInfoList() {
-        List<Member> memberList = memberRepository.findAll();
+        List<Member> memberList = memberRepository.findAll(Sort.by(Sort.Direction.DESC, "id"));
 
 
         List<MemberInfoResponse> memberInfoResponseList = new ArrayList<>();
@@ -451,5 +452,67 @@ public class MyPageServiceImpl implements MyPageService {
         pointInfoRepository.save(pointInfo);
 
         return true;
+    }
+
+    @Transactional
+    @Override
+    public List<PointDetailsResponse> pointDetailsList() {
+        List<PointInfo> pointInfoList = pointInfoRepository.findAll(Sort.by(Sort.Direction.DESC, "infoId"));
+
+        List<PointDetailsResponse> pointDetailsResponseList = new ArrayList<>();
+
+        for(PointInfo pointInfo: pointInfoList) {
+            Optional<Point> maybePoint = pointRepository.findById(pointInfo.getPoint().getPointId());
+
+            if(maybePoint.isEmpty()) {
+                return null;
+            }
+
+            Point point = maybePoint.get();
+
+            PointDetailsResponse pointDetailsResponse = new PointDetailsResponse(
+                    pointInfo.getInfoId(), point.getMember().getNickName(), pointInfo.getHistory(), pointInfo.getDate(),
+                    pointInfo.getAmount(), pointInfo.isUse()
+            );
+            pointDetailsResponseList.add(pointDetailsResponse);
+        }
+
+        return pointDetailsResponseList;
+    }
+
+    @Override
+    public List<PointDetailsResponse> memberPointDetails(Long memberId) {
+        Optional<Member> maybeMember = memberRepository.findById(memberId);
+
+        if (maybeMember.isEmpty()) {
+            return null;
+        }
+
+        Member member = maybeMember.get();
+
+        Optional<Point> maybePoint = pointRepository.findByMemberId(member);
+
+        if (maybeMember.isEmpty()) {
+            return null;
+        }
+
+        Point point = maybePoint.get();
+
+        List<PointInfo> pointInfoList = pointInfoRepository.findByPointIdOrderByidDesc(point.getPointId());
+
+        List<PointDetailsResponse> pointDetailsResponseList = new ArrayList<>();
+
+        for(PointInfo pointInfo: pointInfoList) {
+
+            PointDetailsResponse pointDetailsResponse = new PointDetailsResponse(
+                    pointInfo.getInfoId(), point.getMember().getNickName(), pointInfo.getHistory(), pointInfo.getDate(),
+                    pointInfo.getAmount(), pointInfo.isUse()
+            );
+            pointDetailsResponseList.add(pointDetailsResponse);
+        }
+
+
+
+        return pointDetailsResponseList;
     }
 }

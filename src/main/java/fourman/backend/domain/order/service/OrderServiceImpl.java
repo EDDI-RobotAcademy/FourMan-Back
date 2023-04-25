@@ -76,7 +76,7 @@ public class OrderServiceImpl implements OrderService {
             String history = "포인트 사용";
 
             point.setPoint(remainPoint);
-            pointInfo.setPointInfo(history, usedPoint, true, point);
+            pointInfo.setPointInfo(history, -usedPoint, true, point);
 
             pointRepository.save(point);
             pointInfoRepository.save(pointInfo);
@@ -165,6 +165,8 @@ public class OrderServiceImpl implements OrderService {
             SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy년 MM월 dd일 HH시 mm분");
             String orderDate = simpleDateFormat.format(orderInfo.getOrderDate());
             List<OrderProduct> orderProductList = orderProductRepository.findOrderProductByOrderId(orderInfo.getOrderId());
+            Optional<Cafe> maybeCafe = cafeRepository.findById(orderInfo.getCafe().getCafeId());
+            Cafe cafe = maybeCafe.get();
 
             if(orderInfo.getOrderReservation() == null) { // 포장 주문
                 System.out.println("orderReservation값: null -> 포장 주문");
@@ -176,7 +178,7 @@ public class OrderServiceImpl implements OrderService {
 
                 orderInfoResponseList.add(new OrderInfoResponseForm(orderInfo.getOrderId(), orderInfo.getOrderNo(), customer, orderDate,
                         orderInfo.getTotalQuantity(), orderInfo.getTotalPrice(), orderInfo.getUsePoint(), orderInfo.isPacking(), orderInfo.isReady(),
-                        cafeCode.getCafeName(), null, null, orderProductList));
+                        cafeCode.getCafeName(), cafe.getCafeInfo().getThumbnailFileName(),null, null, orderProductList));
             } else { // 예약 주문
                 System.out.println("orderReservation값 존재 -> 예약 주문");
                 Optional<OrderReservation> maybeOrderReservation = orderReservationRepository.findByReservationId(orderInfo.getOrderReservation().getId());
@@ -191,7 +193,7 @@ public class OrderServiceImpl implements OrderService {
 
                 orderInfoResponseList.add(new OrderInfoResponseForm(orderInfo.getOrderId(), orderInfo.getOrderNo(), customer, orderDate,
                                           orderInfo.getTotalQuantity(), orderInfo.getTotalPrice(), orderInfo.getUsePoint(), orderInfo.isPacking(), orderInfo.isReady(),
-                                          cafeCode.getCafeName(), orderReservation.getTime(), orderReservation.getSeatNoList(), orderProductList));
+                                          cafeCode.getCafeName(), cafe.getCafeInfo().getThumbnailFileName(), orderReservation.getTime(), orderReservation.getSeatNoList(), orderProductList));
             }
         }
 
