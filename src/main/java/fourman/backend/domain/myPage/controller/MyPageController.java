@@ -87,4 +87,10 @@ public class MyPageController {
         return myPageService.pointDetailsList();
     }
 
+    @GetMapping("/point-details/{memberId}")
+    public List<PointDetailsResponse> memberPointDetails(@PathVariable("memberId") Long memberId) {
+        System.out.println("memberPointDetails() 실행");
+        return myPageService.memberPointDetails(memberId);
+    }
+
 }

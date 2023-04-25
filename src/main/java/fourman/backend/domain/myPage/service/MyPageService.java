@@ -28,4 +28,6 @@ public interface MyPageService {
     Boolean addPoint(Long memberId, AddPointRequestForm pointRequestForm);
 
     List<PointDetailsResponse> pointDetailsList();
+
+    List<PointDetailsResponse> memberPointDetails(Long memberId);
 }
