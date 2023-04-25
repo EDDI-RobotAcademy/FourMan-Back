@@ -44,7 +44,7 @@ public class EventServiceImpl implements EventService {
         event.setEventEndDate(eventRequestForm.getEventEndDate());
         event.setContent(eventRequestForm.getContent());
         Optional<CafeCode> op= cafeCodeRepository.findByCode(eventRequestForm.getCode());
-        event.setCafeCode(op.get());
+        event.setCafe(op.get().getCafe());
 
         LocalDateTime now = LocalDateTime.now(ZoneId.of("Asia/Seoul"));
         DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyyMMddHHmmss");
@@ -84,7 +84,7 @@ public class EventServiceImpl implements EventService {
         for(Event event: eventList){
             eventResponseList.add(new EventListResponse(event.getEventId(),event.getEventName(),
                     event.getEventStartDate(),event.getEventEndDate(),
-                    event.getCafeCode().getCafeName(),
+                    event.getCafe().getCafeCode().getCafeName(),
                     event.getThumbnailFileName() )   ) ;
         }
         System.out.println("@Events: " + eventResponseList);
@@ -102,7 +102,7 @@ public class EventServiceImpl implements EventService {
         EventDetailResponse eventDetailResponse = new EventDetailResponse(
                 event.getEventId(),event.getEventName(),
                 event.getEventStartDate(),event.getEventEndDate(),
-                event.getContent(),event.getCafeCode().getCafeName(),
+                event.getContent(), event.getCafe().getCafeCode().getCafeName(),
                 event.getThumbnailFileName() );
         log.info("카페read 서비스 완료");
         return eventDetailResponse;
@@ -137,7 +137,7 @@ public class EventServiceImpl implements EventService {
     public Cafe getCafeByEventId(Long eventId) {
         Optional<Event> maybeEvent=eventRepository.findById(eventId);
         if(maybeEvent.isPresent()){
-            return maybeEvent.get().getCafeCode().getCafe();
+            return maybeEvent.get().getCafe();
         }
         return null;
     }
@@ -157,7 +157,7 @@ public class EventServiceImpl implements EventService {
         event.setEventEndDate(eventRequestForm.getEventEndDate());
         event.setContent(eventRequestForm.getContent());
         Optional<CafeCode> op= cafeCodeRepository.findByCode(eventRequestForm.getCode());
-        event.setCafeCode(op.get());
+        event.setCafe(op.get().getCafe());
 
         LocalDateTime now = LocalDateTime.now(ZoneId.of("Asia/Seoul"));
         DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyyMMddHHmmss");
@@ -194,7 +194,20 @@ public class EventServiceImpl implements EventService {
 
     @Override
     public void deleteEvent(Long eventId) {
-        eventRepository.deleteById(eventId);
+        Optional<Event> maybeEvent = eventRepository.findById(eventId);
+        if (maybeEvent.isPresent()) {
+            Event event = maybeEvent.get();
+            Cafe cafe = event.getCafe();
+
+            if (cafe != null) {
+                cafe.getEvents().remove(event); // Cafe의 이벤트 목록에서 이벤트 제거
+                event.setCafe(null); // 이벤트 객체의 카페 참조 해제
+            }
+
+            eventRepository.deleteById(eventId);
+        } else {
+            log.info("이벤트가 존재하지 않습니다.");
+        }
     }
 
 

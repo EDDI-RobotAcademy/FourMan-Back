@@ -3,6 +3,7 @@ package fourman.backend.domain.eventBoard.entity;
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
+import fourman.backend.domain.cafeIntroduce.entity.Cafe;
 import fourman.backend.domain.member.entity.CafeCode;
 import lombok.*;
 
@@ -33,9 +34,9 @@ public class Event {
 
     private String thumbnailFileName;
 
-    @OneToOne(cascade = CascadeType.ALL)
-    @JoinColumn(name="cafe_code_id")
-    private CafeCode cafeCode;
+    @ManyToOne
+    @JoinColumn(name="cafe_id")
+    private Cafe cafe;
 
 
 
