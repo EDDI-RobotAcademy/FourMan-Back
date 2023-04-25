@@ -479,4 +479,40 @@ public class MyPageServiceImpl implements MyPageService {
 
         return pointDetailsResponseList;
     }
+
+    @Override
+    public List<PointDetailsResponse> memberPointDetails(Long memberId) {
+        Optional<Member> maybeMember = memberRepository.findById(memberId);
+
+        if (maybeMember.isEmpty()) {
+            return null;
+        }
+
+        Member member = maybeMember.get();
+
+        Optional<Point> maybePoint = pointRepository.findByMemberId(member);
+
+        if (maybeMember.isEmpty()) {
+            return null;
+        }
+
+        Point point = maybePoint.get();
+
+        List<PointInfo> pointInfoList = pointInfoRepository.findByPointIdOrderByidDesc(point.getPointId());
+
+        List<PointDetailsResponse> pointDetailsResponseList = new ArrayList<>();
+
+        for(PointInfo pointInfo: pointInfoList) {
+
+            PointDetailsResponse pointDetailsResponse = new PointDetailsResponse(
+                    pointInfo.getInfoId(), point.getMember().getNickName(), pointInfo.getHistory(), pointInfo.getDate(),
+                    pointInfo.getAmount(), pointInfo.isUse()
+            );
+            pointDetailsResponseList.add(pointDetailsResponse);
+        }
+
+
+
+        return pointDetailsResponseList;
+    }
 }
