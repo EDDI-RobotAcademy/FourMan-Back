@@ -208,7 +208,7 @@ public class MyPageServiceImpl implements MyPageService {
     @Transactional
     @Override
     public List<MemberInfoResponse> memberInfoList() {
-        List<Member> memberList = memberRepository.findAll();
+        List<Member> memberList = memberRepository.findAll(Sort.by(Sort.Direction.DESC, "id"));
 
 
         List<MemberInfoResponse> memberInfoResponseList = new ArrayList<>();
