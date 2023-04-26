@@ -14,6 +14,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
+import javax.transaction.Transactional;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -32,16 +33,18 @@ public class QuestionBoardServiceImpl implements QuestionBoardService {
     final private MemberRepository memberRepository;
 
 
+    @Transactional
     @Override
     public List<QuestionBoardResponse> list() {
         List<QuestionBoard> questionBoardList = questionBoardRepository.findAll(Sort.by(Sort.Direction.DESC, "boardId"));
         List<QuestionBoardResponse> questionBoardResponseList = new ArrayList<>();
 
         for(QuestionBoard questionBoard: questionBoardList) {
+            Long commentCount = (long) questionBoard.getQuestionBoardCommentList().size();
             QuestionBoardResponse questionBoardResponse = new QuestionBoardResponse(
                    questionBoard.getMember().getId(), questionBoard.getBoardId(), questionBoard.getTitle(),
                     questionBoard.getWriter(), questionBoard.getQuestionType(), questionBoard.getContent(),
-                    questionBoard.getRegDate(), questionBoard.getUpdDate(), questionBoard.isSecret(), questionBoard.getViewCnt());
+                    questionBoard.getRegDate(), questionBoard.getUpdDate(), questionBoard.isSecret(), questionBoard.getViewCnt(), commentCount);
             questionBoardResponseList.add(questionBoardResponse);
         }
             return questionBoardResponseList;
@@ -87,7 +90,7 @@ public class QuestionBoardServiceImpl implements QuestionBoardService {
         QuestionBoardResponse questionBoardResponse = new QuestionBoardResponse(
                 questionBoard.getMember().getId(), questionBoard.getBoardId(), questionBoard.getTitle(),
                 questionBoard.getWriter(), questionBoard.getQuestionType(), questionBoard.getContent(),
-                questionBoard.getRegDate(), questionBoard.getUpdDate(), questionBoard.isSecret(), questionBoard.getViewCnt());
+                questionBoard.getRegDate(), questionBoard.getUpdDate(), questionBoard.isSecret(), questionBoard.getViewCnt(), 0L);
 
         return questionBoardResponse;
         //처리 로직

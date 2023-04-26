@@ -123,8 +123,7 @@ public class FreeBoardServiceImpl implements FreeBoardService {
             FreeBoardResponse freeBoardResponse = new FreeBoardResponse(
                     freeBoard.getBoardId(), freeBoard.getTitle(), freeBoard.getMember().getNickName(), freeBoard.getContent(),
                     freeBoard.getRegDate(), freeBoard.getUpdDate(), freeBoard.getMember().getId(), freeBoard.getViewCnt(), freeBoard.getRecommendation(),
-                    freeBoard.getUnRecommendation(), commentCount
-            );
+                    freeBoard.getUnRecommendation(), commentCount);
             freeBoardResponseList.add(freeBoardResponse);
         }
         return freeBoardResponseList;
@@ -147,7 +146,7 @@ public class FreeBoardServiceImpl implements FreeBoardService {
         FreeBoardResponse freeBoardResponse = new FreeBoardResponse(
                 freeBoard.getBoardId(), freeBoard.getTitle(), freeBoard.getMember().getNickName(), freeBoard.getContent(),
                 freeBoard.getRegDate(), freeBoard.getUpdDate(), freeBoard.getMember().getId(), freeBoard.getViewCnt(), freeBoard.getRecommendation(),
-                freeBoard.getUnRecommendation(),null
+                freeBoard.getUnRecommendation(),0L
         );
         return freeBoardResponse;
     }
