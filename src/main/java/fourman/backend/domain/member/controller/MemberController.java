@@ -1,6 +1,7 @@
 package fourman.backend.domain.member.controller;
 
 import fourman.backend.domain.member.controller.form.*;
+import fourman.backend.domain.member.entity.Member;
 import fourman.backend.domain.member.service.MemberService;
 import fourman.backend.domain.member.service.response.MemberLoginResponse;
 import fourman.backend.domain.security.service.RedisService;
@@ -95,9 +96,15 @@ public class MemberController {
         boolean isFavorite = memberService.isFavorite(memberId, cafeId);
         return ResponseEntity.ok(isFavorite);
     }
-
-
-
+    @PostMapping("/user-verification")
+    public Member userVerification(@RequestBody String token) {
+        System.out.println("token:"+token);
+        String realToken = token.substring(0, token.length() - 1);
+        System.out.println("realToken:"+realToken);
+        Member member = memberService.returnMemberInfo(realToken);
+        log.info(member.getEmail());
+        return member;
+    }
 
 
 }
