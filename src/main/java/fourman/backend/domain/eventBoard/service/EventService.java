@@ -21,4 +21,6 @@ public interface EventService {
     Long modifyEvent(Long eventId, List<MultipartFile> thumbnail, EventRequestForm eventRequestForm);
 
     void deleteEvent(Long eventId);
+
+    List<EventListResponse> eventListByCafeId(Long cafeId);
 }

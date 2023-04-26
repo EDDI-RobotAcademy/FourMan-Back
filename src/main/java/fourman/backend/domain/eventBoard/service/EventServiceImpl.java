@@ -210,5 +210,20 @@ public class EventServiceImpl implements EventService {
         }
     }
 
+    @Override
+    public List<EventListResponse> eventListByCafeId(Long cafeId) {
+        List<Event> eventList = eventRepository.findByCafeCafeIdOrderByEventIdDesc(cafeId);
+        System.out.println("List<Event> eventList" +eventList);
+        List<EventListResponse> eventResponseList = new ArrayList<>();
+        for(Event event: eventList){
+            eventResponseList.add(new EventListResponse(event.getEventId(),event.getEventName(),
+                    event.getEventStartDate(),event.getEventEndDate(),
+                    event.getCafe().getCafeCode().getCafeName(),
+                    event.getThumbnailFileName() )   ) ;
+        }
+        System.out.println("@Events: " + eventResponseList);
+        return eventResponseList;
+    }
+
 
 }
