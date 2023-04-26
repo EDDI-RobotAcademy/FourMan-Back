@@ -8,6 +8,7 @@ import fourman.backend.domain.cafeIntroduce.service.response.CafeIntroListRespon
 import fourman.backend.domain.eventBoard.entity.Event;
 import fourman.backend.domain.member.entity.CafeCode;
 import fourman.backend.domain.member.repository.CafeCodeRepository;
+import fourman.backend.domain.member.repository.FavoriteRepository;
 import fourman.backend.domain.reservation.repository.CafeTableRepository;
 import fourman.backend.domain.reservation.repository.ReservationRepository;
 import fourman.backend.domain.reservation.repository.SeatRepository;
@@ -38,6 +39,7 @@ public class CafeIntroduceServiceImpl implements CafeIntroduceService {
     private final SeatRepository seatRepository;
     private final ReservationRepository reservationRepository;
     private final CafeTableRepository cafeTableRepository;
+    private final FavoriteRepository favoriteRepository;
 
     //
     @Override
@@ -240,6 +242,7 @@ public class CafeIntroduceServiceImpl implements CafeIntroduceService {
         seatRepository.deleteByCafeCafeId(cafeId);
         cafeTableRepository.deleteByCafeCafeId(cafeId);
         reservationRepository.deleteByCafeCafeId(cafeId);
+        favoriteRepository.deleteByCafeCafeId(cafeId);
         Cafe cafe=maycafe.get();
         CafeCode cafeCode = cafe.getCafeCode();
         if (cafeCode != null) {
