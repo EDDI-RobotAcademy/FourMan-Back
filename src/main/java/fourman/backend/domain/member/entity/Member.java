@@ -1,5 +1,6 @@
 package fourman.backend.domain.member.entity;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -38,7 +39,6 @@ public class Member {
     private String code;
 
     @Getter
-    @JsonIgnore
     @JoinColumn(name ="authority_id")
     @ManyToOne(fetch = FetchType.EAGER, cascade = {CascadeType.PERSIST, CascadeType.REMOVE})
     private Authority authority;
