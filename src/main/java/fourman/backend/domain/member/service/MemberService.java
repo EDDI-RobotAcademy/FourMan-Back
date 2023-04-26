@@ -2,6 +2,7 @@ package fourman.backend.domain.member.service;
 
 import fourman.backend.domain.member.controller.form.FavoriteForm;
 import fourman.backend.domain.member.entity.CafeCode;
+import fourman.backend.domain.member.entity.Member;
 import fourman.backend.domain.member.service.request.EmailMatchRequest;
 import fourman.backend.domain.member.service.request.EmailPasswordRequest;
 import fourman.backend.domain.member.service.request.MemberLoginRequest;
@@ -24,4 +25,6 @@ public interface MemberService {
     String toggleFavorite(FavoriteForm favoriteForm);
 
     boolean isFavorite(Long memberId, Long cafeId);
+
+    Member returnMemberInfo(String subString);
 }
