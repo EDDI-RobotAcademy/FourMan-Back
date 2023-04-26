@@ -251,4 +251,18 @@ public class CafeIntroduceServiceImpl implements CafeIntroduceService {
         }
         cafeRepository.deleteById(cafeId);
     }
+
+    @Override
+    public List<CafeIntroListResponse> favoriteList(long memberId) {
+            List<Cafe> cafeList= cafeRepository.findCafesByMemberIdOrderByCafeIdDesc(memberId);
+            List<CafeIntroListResponse> cafeReponseList= new ArrayList<>();
+            for(Cafe cafe: cafeList){
+                cafeReponseList.add(new CafeIntroListResponse(
+                        cafe.getCafeId(),cafe.getCafeCode().getCafeName(),cafe.getCafeAddress(),cafe.getCafeTel(),
+                        cafe.getStartTime(),cafe.getEndTime(), cafe.getCafeInfo() ));
+            }
+            return cafeReponseList;
+    }
+
+
 }
