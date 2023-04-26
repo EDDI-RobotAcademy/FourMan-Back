@@ -278,7 +278,12 @@ public class MyPageServiceImpl implements MyPageService {
                     .sum();
 
             // 이번달 총 주문
-            int monthOrderCount = monthOrderInfoList.size();
+            int monthOrderCount = 0;
+            for (OrderInfo orderInfo : monthOrderInfoList) {
+                if (orderInfo.isPacking() == true) {
+                    monthOrderCount++;
+                }
+            }
 
             // 이번달 총 예약
             int monthReservationCount = 0;
@@ -363,7 +368,12 @@ public class MyPageServiceImpl implements MyPageService {
                 .sum();
 
         // 이번달 총 주문
-        int monthOrderCount = monthOrderInfoList.size();
+        int monthOrderCount = 0;
+        for (OrderInfo orderInfo : monthOrderInfoList) {
+            if (orderInfo.isPacking() == true) {
+                monthOrderCount++;
+            }
+        }
 
         // 이번달 총 예약
         int monthReservationCount = 0;
@@ -382,7 +392,12 @@ public class MyPageServiceImpl implements MyPageService {
                 .sum();
 
         // 금일 총 주문
-        int dayOrderCount = dayOrderInfoList.size();
+        int dayOrderCount = 0;
+        for (OrderInfo orderInfo : dayOrderInfoList) {
+            if (orderInfo.isPacking() == true) {
+                dayOrderCount++;
+            }
+        }
 
         // 금일 총 예약
         int dayReservationCount = 0;
