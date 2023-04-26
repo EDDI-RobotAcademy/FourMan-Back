@@ -53,4 +53,11 @@ public class OrderController {
 
         return orderService.cafeOrderList(cafeId);
     }
+
+    @PostMapping("/ready/{orderId}")
+    public void orderReady(@PathVariable("orderId") Long orderId) {
+        log.info("orderReady()");
+
+        orderService.orderReady(orderId);
+    }
 }
