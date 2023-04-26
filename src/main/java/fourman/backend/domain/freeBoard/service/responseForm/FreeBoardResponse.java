@@ -22,4 +22,5 @@ public class FreeBoardResponse {
     final private Long viewCnt;
     final private Long recommendation;
     final private Long unRecommendation;
+    final private Long commentCount;
 }

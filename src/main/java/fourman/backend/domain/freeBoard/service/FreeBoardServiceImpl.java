@@ -112,25 +112,24 @@ public class FreeBoardServiceImpl implements FreeBoardService {
 
         return freeBoard;
     }
-
-    @Transactional
     @Override
+    @Transactional
     public List<FreeBoardResponse> list() {
-
         List<FreeBoard> freeBoardList = freeBoardRepository.findAll(Sort.by(Sort.Direction.DESC, "boardId"));
         List<FreeBoardResponse> freeBoardResponseList = new ArrayList<>();
 
         for (FreeBoard freeBoard : freeBoardList) {
+            Long commentCount = (long) freeBoard.getFreeBoardCommentList().size();
             FreeBoardResponse freeBoardResponse = new FreeBoardResponse(
                     freeBoard.getBoardId(), freeBoard.getTitle(), freeBoard.getMember().getNickName(), freeBoard.getContent(),
                     freeBoard.getRegDate(), freeBoard.getUpdDate(), freeBoard.getMember().getId(), freeBoard.getViewCnt(), freeBoard.getRecommendation(),
-                    freeBoard.getUnRecommendation()
+                    freeBoard.getUnRecommendation(), commentCount
             );
-
             freeBoardResponseList.add(freeBoardResponse);
         }
         return freeBoardResponseList;
     }
+
 
     @Transactional
     @Override
@@ -148,7 +147,7 @@ public class FreeBoardServiceImpl implements FreeBoardService {
         FreeBoardResponse freeBoardResponse = new FreeBoardResponse(
                 freeBoard.getBoardId(), freeBoard.getTitle(), freeBoard.getMember().getNickName(), freeBoard.getContent(),
                 freeBoard.getRegDate(), freeBoard.getUpdDate(), freeBoard.getMember().getId(), freeBoard.getViewCnt(), freeBoard.getRecommendation(),
-                freeBoard.getUnRecommendation()
+                freeBoard.getUnRecommendation(),null
         );
         return freeBoardResponse;
     }
@@ -309,10 +308,11 @@ public class FreeBoardServiceImpl implements FreeBoardService {
         List<FreeBoardResponse> freeBoardResponses = new ArrayList<>();
 
         for (FreeBoard freeBoard : freeBoards) {
+            Long commentCount = (long) freeBoard.getFreeBoardCommentList().size();
             FreeBoardResponse freeBoardResponse = new FreeBoardResponse(
                     freeBoard.getBoardId(), freeBoard.getTitle(), freeBoard.getMember().getNickName(),
                     freeBoard.getContent(), freeBoard.getRegDate(), freeBoard.getUpdDate(), freeBoard.getMember().getId(),
-                    freeBoard.getViewCnt(), freeBoard.getRecommendation(), freeBoard.getUnRecommendation()
+                    freeBoard.getViewCnt(), freeBoard.getRecommendation(), freeBoard.getUnRecommendation(),commentCount
             );
             freeBoardResponses.add(freeBoardResponse);
             //response에 담아서 return
