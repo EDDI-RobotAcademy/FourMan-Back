@@ -13,6 +13,7 @@ import fourman.backend.domain.member.repository.PointRepository;
 import fourman.backend.domain.order.controller.form.requestForm.CartItemRequestForm;
 import fourman.backend.domain.order.controller.form.requestForm.OrderInfoRequestForm;
 import fourman.backend.domain.order.controller.form.requestForm.OrderReservationRequestForm;
+import fourman.backend.domain.order.controller.form.responseForm.CafeOrderInfoResponseForm;
 import fourman.backend.domain.order.controller.form.responseForm.OrderInfoResponseForm;
 import fourman.backend.domain.order.entity.OrderInfo;
 import fourman.backend.domain.order.entity.OrderProduct;
@@ -174,13 +175,11 @@ public class OrderServiceImpl implements OrderService {
             Optional<Cafe> maybeCafe = cafeRepository.findById(orderInfo.getCafe().getCafeId());
             Cafe cafe = maybeCafe.get();
 
+            Optional<CafeCode> maybeCafeCode = cafeCodeRepository.findById(orderInfo.getCafe().getCafeId());
+            CafeCode cafeCode = maybeCafeCode.get();
+
             if(orderInfo.getOrderReservation() == null) { // 포장 주문
                 System.out.println("orderReservation값: null -> 포장 주문");
-
-                Optional<CafeCode> maybeCafeCode = cafeCodeRepository.findById(orderInfo.getCafe().getCafeId());
-
-                CafeCode cafeCode = maybeCafeCode.get();
-                System.out.println("cafeCode: " + cafeCode.getCafeName());
 
                 orderInfoResponseList.add(new OrderInfoResponseForm(orderInfo.getOrderId(), orderInfo.getOrderNo(), customer, orderDate,
                         orderInfo.getTotalQuantity(), orderInfo.getTotalPrice(), orderInfo.getUsePoint(), orderInfo.isPacking(), orderInfo.isReady(),
@@ -193,10 +192,6 @@ public class OrderServiceImpl implements OrderService {
                     System.out.println("maybeOrderReservation값이 존재하지 않습니다.");
                 }
                 OrderReservation orderReservation = maybeOrderReservation.get();
-
-                Optional<CafeCode> maybeCafeCode = cafeCodeRepository.findById(orderInfo.getCafe().getCafeId());
-
-                CafeCode cafeCode = maybeCafeCode.get();
 
                 orderInfoResponseList.add(new OrderInfoResponseForm(orderInfo.getOrderId(), orderInfo.getOrderNo(), customer, orderDate,
                                           orderInfo.getTotalQuantity(), orderInfo.getTotalPrice(), orderInfo.getUsePoint(), orderInfo.isPacking(), orderInfo.isReady(),
@@ -241,5 +236,64 @@ public class OrderServiceImpl implements OrderService {
         orderInfoRepository.save(orderInfo);
 
 
+    }
+
+    @Override
+    public List<CafeOrderInfoResponseForm> cafeOrderList(Long cafeId) {
+
+        Optional<Cafe> maybeCafe = cafeRepository.findById(cafeId);
+        Cafe cafe = maybeCafe.get();
+
+        List<OrderInfo> orderInfoList = orderInfoRepository.findOrderInfoByCafe(cafe);
+        List<CafeOrderInfoResponseForm> cafeOrderInfoResponseList = new ArrayList<>();
+
+        for(OrderInfo orderInfo: orderInfoList) {
+            Optional<Member> maybeMember = memberRepository.findByMemberId(orderInfo.getMember().getId());
+            Member member = maybeMember.get();
+
+            String customer = member.getNickName();
+            String phoneNumber = member.getMemberProfile().getPhoneNumber();
+
+            SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy년 MM월 dd일 HH시 mm분");
+            String orderDate = simpleDateFormat.format(orderInfo.getOrderDate());
+            String canceledAt;
+
+            Optional<CafeCode> maybeCafeCode = cafeCodeRepository.findById(orderInfo.getCafe().getCafeId());
+
+            CafeCode cafeCode = maybeCafeCode.get();
+
+            if(orderInfo.getCanceledAt() == null) {
+                canceledAt = null;
+            } else {
+                canceledAt = simpleDateFormat.format(orderInfo.getCanceledAt());
+            }
+
+            List<OrderProduct> orderProductList = orderProductRepository.findOrderProductByOrderId(orderInfo.getOrderId());
+
+            if(orderInfo.getOrderReservation() == null) { // 포장 주문
+                System.out.println("orderReservation값: null -> 포장 주문");
+
+                System.out.println("cafeCode: " + cafeCode.getCafeName());
+
+                cafeOrderInfoResponseList.add(new CafeOrderInfoResponseForm(orderInfo.getOrderId(), orderInfo.getOrderNo(), customer, phoneNumber,
+                        orderDate, orderInfo.getTotalQuantity(), orderInfo.getTotalPrice(), orderInfo.getUsePoint(), orderInfo.isPacking(), orderInfo.isReady(),
+                        canceledAt, cafeCode.getCafeName(), null, null, orderProductList));
+            } else { // 예약 주문
+                System.out.println("orderReservation값 존재 -> 예약 주문");
+
+                Optional<OrderReservation> maybeOrderReservation = orderReservationRepository.findByReservationId(orderInfo.getOrderReservation().getId());
+                if(maybeOrderReservation.isEmpty()) {
+                    System.out.println("maybeOrderReservation값이 존재하지 않습니다.");
+                }
+                OrderReservation orderReservation = maybeOrderReservation.get();
+
+                cafeOrderInfoResponseList.add(new CafeOrderInfoResponseForm(orderInfo.getOrderId(), orderInfo.getOrderNo(), customer, phoneNumber, orderDate,
+                        orderInfo.getTotalQuantity(), orderInfo.getTotalPrice(), orderInfo.getUsePoint(), orderInfo.isPacking(), orderInfo.isReady(),
+                        canceledAt, cafeCode.getCafeName(), orderReservation.getTime(), orderReservation.getSeatNoList(),
+                        orderProductList));
+            }
+        }
+
+        return cafeOrderInfoResponseList;
     }
 }
