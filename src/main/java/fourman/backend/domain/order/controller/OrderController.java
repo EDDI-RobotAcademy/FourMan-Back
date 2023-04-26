@@ -1,6 +1,7 @@
 package fourman.backend.domain.order.controller;
 
 import fourman.backend.domain.order.controller.form.requestForm.OrderInfoRequestForm;
+import fourman.backend.domain.order.controller.form.responseForm.CafeOrderInfoResponseForm;
 import fourman.backend.domain.order.controller.form.responseForm.OrderInfoResponseForm;
 import fourman.backend.domain.order.service.OrderService;
 import lombok.RequiredArgsConstructor;
@@ -44,5 +45,12 @@ public class OrderController {
         log.info("orderCancel()");
 
         orderService.orderCancel(orderId);
+    }
+
+    @GetMapping("/cafeOrderList/{cafeId}")
+    public List<CafeOrderInfoResponseForm> cafeOrderList(@PathVariable("cafeId") Long cafeId) {
+        log.info("cafeOrderList()");
+
+        return orderService.cafeOrderList(cafeId);
     }
 }
