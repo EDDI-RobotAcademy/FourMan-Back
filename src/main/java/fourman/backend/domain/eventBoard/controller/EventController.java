@@ -78,6 +78,12 @@ public class EventController {
         return eventService.getCafeByEventId(eventId);
     }
 
+    @GetMapping(path = "/mylist/{cafeId}")
+    public List<EventListResponse> eventListByCafeId(@PathVariable("cafeId") Long cafeId) {
+        return eventService.eventListByCafeId(cafeId);
+    }
+
+
 
 
 }

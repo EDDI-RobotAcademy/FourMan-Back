@@ -19,4 +19,6 @@ public interface CafeIntroduceService {
     Long modifyCafe(Long cafeId,List<MultipartFile> thumbnail, List<MultipartFile> fileList, CafeIntroRequestForm cafeIntroRequestForm);
 
     void deleteCafe(Long cafeId);
+
+    List<CafeIntroListResponse> favoriteList(long memberId);
 }

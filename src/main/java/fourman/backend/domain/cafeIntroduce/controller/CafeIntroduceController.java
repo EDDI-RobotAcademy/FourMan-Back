@@ -72,5 +72,9 @@ public class CafeIntroduceController {
         cafeIntroduceService.deleteCafe(cafeId);
         return ResponseEntity.ok().build();
     }
+    @GetMapping(path = "/list/{memberId}")
+    public List<CafeIntroListResponse> cafeFavoriteList(@PathVariable("memberId") Long memberId) {
+        return cafeIntroduceService.favoriteList(memberId);
+    }
 
 }
