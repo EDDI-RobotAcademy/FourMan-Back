@@ -17,4 +17,6 @@ public interface OrderService {
     void orderCancel(Long orderId);
 
     List<CafeOrderInfoResponseForm> cafeOrderList(Long cafeId);
+
+    void orderReady(Long orderId);
 }

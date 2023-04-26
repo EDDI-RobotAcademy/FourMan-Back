@@ -296,4 +296,14 @@ public class OrderServiceImpl implements OrderService {
 
         return cafeOrderInfoResponseList;
     }
+
+    @Override
+    public void orderReady(Long orderId) {
+        Optional<OrderInfo> maybeOrderInfo = orderInfoRepository.findById(orderId);
+        OrderInfo orderInfo = maybeOrderInfo.get();
+
+        orderInfo.setReady(true);
+
+        orderInfoRepository.save(orderInfo);
+    }
 }
