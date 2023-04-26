@@ -10,16 +10,17 @@ import java.util.Date;
 @AllArgsConstructor
 public class QuestionBoardResponse {
 
-    private Long memberId;
-    private Long boardId;
-    private String title;
-    private String writer;
-    private String questionType;
-    private String content;
-    private Date regDate;
-    private Date updDate;
-    private boolean secret;
-    private Long viewCnt;
+    final private Long memberId;
+    final private Long boardId;
+    final private String title;
+    final private String writer;
+    final private String questionType;
+    final private String content;
+    final private Date regDate;
+    final private Date updDate;
+    final private boolean secret;
+    final private Long viewCnt;
+    final private Long commentCount;
 
 
 
