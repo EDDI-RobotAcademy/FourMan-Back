@@ -213,7 +213,7 @@ public class MemberServiceImpl implements MemberService {
     public Member returnMemberInfo(String token) {
         Long id = redisService.getValueByKey(token);
         System.out.println("검색된id:"+id);
-        log.info("검색된 id:",id);
+        log.info("검색된 id: {}", id);
         Optional<Member> member = memberRepository.findByMemberId(id);
         if(!member.isPresent()) {
             log.info("멤버가 존재하지 않습니다.");
