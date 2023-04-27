@@ -64,22 +64,27 @@ public class OrderServiceImpl implements OrderService {
         Optional<Cafe> maybeCafe = cafeRepository.findById(orderInfoRequestForm.getCafeId());
         Optional<Member> maybeMember = memberRepository.findByMemberId(orderInfoRequestForm.getMemberId());
         Member member = maybeMember.get();
+        Optional<Point> maybePoint = pointRepository.findByMemberId(member);
+        Point point = maybePoint.get();
+        PointInfo savedPointInfo = new PointInfo();
 
         // 포인트 사용 정보 처리
+        Long savedPoint = (long)(orderInfoRequestForm.getTotalPrice() * 0.01);
+        Long usedPoint = orderInfoRequestForm.getUsePoint();
+        Long remainPoint = point.getPoint() - usedPoint + savedPoint;
+        String savedHistory = "주문 적립";
+        savedPointInfo.setPointInfo(savedHistory, +savedPoint, false, point);
+        point.setPoint(remainPoint);
+        pointInfoRepository.save(savedPointInfo);
         if(orderInfoRequestForm.getUsePoint() != 0) {
-            Optional<Point> maybePoint = pointRepository.findByMemberId(member);
-            Point point = maybePoint.get();
-            Long usedPoint = orderInfoRequestForm.getUsePoint();
-            Long remainPoint = point.getPoint() - usedPoint;
-            PointInfo pointInfo = new PointInfo();
-            String history = "포인트 사용";
+            PointInfo usePointInfo = new PointInfo();
+            String useHistory = "포인트 사용";
 
-            point.setPoint(remainPoint);
-            pointInfo.setPointInfo(history, -usedPoint, true, point);
+            usePointInfo.setPointInfo(useHistory, -usedPoint, true, point);
 
-            pointRepository.save(point);
-            pointInfoRepository.save(pointInfo);
+            pointInfoRepository.save(usePointInfo);
         }
+        pointRepository.save(point);
 
         // 랜덤 주문번호 생성, 주문번호 중복 확인
         LocalDate localDate = LocalDate.now();
@@ -101,6 +106,7 @@ public class OrderServiceImpl implements OrderService {
         orderInfo.setTotalQuantity(orderInfoRequestForm.getTotalQuantity());
         orderInfo.setTotalPrice(orderInfoRequestForm.getTotalPrice());
         orderInfo.setUsePoint(orderInfoRequestForm.getUsePoint());
+        orderInfo.setSavedPoint(savedPoint);
         orderInfo.setPacking(orderInfoRequestForm.isPacking());
         orderInfo.setReady(false);
         orderInfo.setCanceledAt(null);
