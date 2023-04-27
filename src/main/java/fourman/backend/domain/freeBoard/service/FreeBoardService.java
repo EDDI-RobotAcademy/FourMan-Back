@@ -4,6 +4,7 @@ import fourman.backend.domain.freeBoard.controller.requestForm.FreeBoardRequestF
 import fourman.backend.domain.freeBoard.controller.requestForm.RecommendationRequestForm;
 import fourman.backend.domain.freeBoard.entity.FreeBoard;
 import fourman.backend.domain.freeBoard.service.responseForm.FreeBoardImageResourceResponse;
+import fourman.backend.domain.freeBoard.service.responseForm.FreeBoardReadResponse;
 import fourman.backend.domain.freeBoard.service.responseForm.FreeBoardResponse;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -15,7 +16,7 @@ public interface FreeBoardService {
 
     List<FreeBoardResponse> list();
 
-    FreeBoardResponse read(Long boardId);
+    FreeBoardReadResponse read(Long boardId);
 
     void remove(Long boardId);
 
