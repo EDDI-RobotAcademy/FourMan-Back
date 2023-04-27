@@ -151,9 +151,13 @@ public class MemberServiceImpl implements MemberService {
                 else{
                     log.info("카페코드를 못찾았습니다");
                 }
-            }else {
-                log.info("카페사업자가 아닙니다.");
-                memberLoginResponse = new MemberLoginResponse(userToken.toString(), member.getId(), member.getNickName(), member.getAuthority().getAuthorityName(), null ,member.getCafeCode().getCodeOfCafe(), null, member.getEmail());
+            }else if(member.getAuthority().getAuthorityName().equals(AuthorityType.MANAGER)){
+                log.info("매니저입니다");
+                memberLoginResponse = new MemberLoginResponse(userToken.toString(), member.getId(), member.getNickName(), member.getAuthority().getAuthorityName(), null ,member.getManagerCode().getCodeOfManager(),null, member.getEmail());
+            }else{
+                log.info("일반회원입니다");
+                memberLoginResponse = new MemberLoginResponse(userToken.toString(), member.getId(), member.getNickName(), member.getAuthority().getAuthorityName(), null ,null, null, member.getEmail());
+
             }
             return memberLoginResponse;
         }
