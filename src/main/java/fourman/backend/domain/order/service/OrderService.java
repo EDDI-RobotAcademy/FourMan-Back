@@ -12,7 +12,7 @@ public interface OrderService {
 
     List<OrderInfoResponseForm> orderList(Long memberId);
 
-    Number getHoldPoint(Long memberId);
+    Long getHoldPoint(Long memberId);
 
     void orderCancel(Long orderId);
 

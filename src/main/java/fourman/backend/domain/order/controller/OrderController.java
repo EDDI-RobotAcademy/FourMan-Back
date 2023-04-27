@@ -34,7 +34,7 @@ public class OrderController {
     }
 
     @GetMapping("/point/{memberId}")
-    public Number getHoldPoint(@PathVariable("memberId") Long memberId) {
+    public Long getHoldPoint(@PathVariable("memberId") Long memberId) {
         log.info("getHoldPoint()");
 
         return orderService.getHoldPoint(memberId);

@@ -210,7 +210,7 @@ public class OrderServiceImpl implements OrderService {
     }
 
     @Override
-    public Number getHoldPoint(Long memberId) {
+    public Long getHoldPoint(Long memberId) {
         Optional<Member> maybeMember = memberRepository.findByMemberId(memberId);
         Member member = maybeMember.get();
         Long point = member.getPoint().getPoint();
