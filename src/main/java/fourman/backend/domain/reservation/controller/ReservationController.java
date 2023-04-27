@@ -1,5 +1,6 @@
 package fourman.backend.domain.reservation.controller;
 
+import fourman.backend.domain.aop.aspect.SecurityAnnotations;
 import fourman.backend.domain.reservation.controller.form.ReservationForm;
 import fourman.backend.domain.reservation.entity.Seat;
 import fourman.backend.domain.reservation.service.ReservationService;
@@ -24,7 +25,7 @@ public class ReservationController {
         return reservationService.getSeats(cafeId,time);
 
     }
-
+    @SecurityAnnotations.SecurityCheck(SecurityAnnotations.UserType.AUTHENTICATED)
     @PostMapping("/register")
     public ResponseEntity<?> makeReservation(@RequestBody ReservationForm reservationForm) {
         return reservationService.makeReservation(reservationForm);

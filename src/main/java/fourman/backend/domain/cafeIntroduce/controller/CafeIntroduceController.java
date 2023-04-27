@@ -1,10 +1,10 @@
 package fourman.backend.domain.cafeIntroduce.controller;
 
+import fourman.backend.domain.aop.aspect.SecurityAnnotations;
 import fourman.backend.domain.cafeIntroduce.controller.requestForm.CafeIntroRequestForm;
 import fourman.backend.domain.cafeIntroduce.service.CafeIntroduceService;
 import fourman.backend.domain.cafeIntroduce.service.response.CafeIntroDetailResponse;
 import fourman.backend.domain.cafeIntroduce.service.response.CafeIntroListResponse;
-import fourman.backend.domain.eventBoard.controller.requestForm.EventRequestForm;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.MediaType;
@@ -20,7 +20,7 @@ import java.util.List;
 public class CafeIntroduceController {
 
     private final CafeIntroduceService cafeIntroduceService;
-
+    @SecurityAnnotations.SecurityCheck(SecurityAnnotations.UserType.CAFE)
     @PostMapping(value = "/register",
             consumes = {  MediaType.MULTIPART_FORM_DATA_VALUE, MediaType.MULTIPART_FORM_DATA_VALUE, MediaType.APPLICATION_JSON_VALUE }) // 이미지+텍스트 업로드하는 경우 value , consumes 정보(이미지타입, json타입) 추가
     public Long registerCafe(
@@ -53,6 +53,7 @@ public class CafeIntroduceController {
         log.info("cafeRead()");
         return cafeIntroduceService.read(cafeId);
     }
+    @SecurityAnnotations.SecurityCheck(SecurityAnnotations.UserType.CAFE)
     @PutMapping(value = "/modify/{cafeId}",
             consumes = {  MediaType.MULTIPART_FORM_DATA_VALUE, MediaType.MULTIPART_FORM_DATA_VALUE, MediaType.APPLICATION_JSON_VALUE }) // 이미지+텍스트 업로드하는 경우 value , consumes 정보(이미지타입, json타입) 추가
     public Long modifyEvent(
@@ -65,13 +66,15 @@ public class CafeIntroduceController {
 
         return cafeIntroduceService.modifyCafe(cafeId,thumbnail, fileList, cafeIntroRequestForm);
     }
-
+    @SecurityAnnotations.SecurityCheck(SecurityAnnotations.UserType.CAFE)
     @DeleteMapping("/delete/{cafeId}")
     public ResponseEntity<Void> deleteCafe(@PathVariable Long cafeId) {
         log.info("cafe 삭제 컨트롤러");
         cafeIntroduceService.deleteCafe(cafeId);
         return ResponseEntity.ok().build();
     }
+
+    @SecurityAnnotations.SecurityCheck(SecurityAnnotations.UserType.AUTHENTICATED)
     @GetMapping(path = "/list/{memberId}")
     public List<CafeIntroListResponse> cafeFavoriteList(@PathVariable("memberId") Long memberId) {
         return cafeIntroduceService.favoriteList(memberId);
