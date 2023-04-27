@@ -144,11 +144,12 @@ public class FreeBoardServiceImpl implements FreeBoardService {
         freeBoard.increaseViewCnt();
         freeBoardRepository.save(freeBoard);
 
-        List<Recommendation> recommendationList = recommendationRepository.findByMemberId(memberId);
+        Recommendation recommendation = recommendationRepository.findByFreeBoardAndMemberId(freeBoard, memberId);
 
         boolean incRecommendationStatus = false;
         boolean decRecommendationStatus = false;
-        for(Recommendation recommendation: recommendationList) {
+
+        if(recommendation != null) {
             incRecommendationStatus = recommendation.isIncRecommendationStatus();
             decRecommendationStatus = recommendation.isDecRecommendationStatus();
         }
