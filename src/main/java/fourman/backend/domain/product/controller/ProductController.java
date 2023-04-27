@@ -31,21 +31,6 @@ public class ProductController {
         productService.register(imageFileList, productRequestForm);
     }
 
-    @GetMapping("/list")
-    public List<ProductListResponseForm> productList() {
-        log.info("productList()");
-
-        return productService.list();
-    }
-
-    @GetMapping("/imageList")
-    public List<ImageResourceResponseForm> readProductImageResource() {
-
-        log.info("readProuductImageResource(): ");
-
-        return productService.loadProductImage();
-    }
-
     @GetMapping("/all/{cafeId}")
     public List<AllProductResponseForm> allProductList (@PathVariable("cafeId") Long cafeId) {
         log.info("allProductList()");

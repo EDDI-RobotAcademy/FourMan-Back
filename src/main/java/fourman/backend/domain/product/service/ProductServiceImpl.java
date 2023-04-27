@@ -78,38 +78,6 @@ public class ProductServiceImpl implements ProductService {
     }
 
     @Override
-    public List<ProductListResponseForm> list() {
-        List<Product> productList = productRepository.findAll();
-        List<ProductListResponseForm> productResponseList = new ArrayList<>();
-
-        for(Product product: productList) {
-            productResponseList.add(new ProductListResponseForm(
-                    product.getProductId(), product.getProductName(),
-                    product.getPrice(),
-                    product.getDrinkType()
-            ));
-        }
-
-        return productResponseList;
-    }
-
-    @Override
-    public List<ImageResourceResponseForm> loadProductImage() {
-        List<ImageResource> imageResourceList = imageResourceRepository.findAll();
-        List<ImageResourceResponseForm> imageResourceResponseFormList = new ArrayList<>();
-
-        for(ImageResource imageResource: imageResourceList) {
-            System.out.println("imageResource Path: " + imageResource.getImageResourcePath());
-
-            imageResourceResponseFormList.add(new ImageResourceResponseForm(
-                    imageResource.getImageResourcePath()
-            ));
-        }
-
-        return imageResourceResponseFormList;
-    }
-
-    @Override
     public List<AllProductResponseForm> all(Long cafeId) {
         Optional<Cafe> maybeCafe = cafeRepository.findById(cafeId);
         Cafe cafe = maybeCafe.get();
