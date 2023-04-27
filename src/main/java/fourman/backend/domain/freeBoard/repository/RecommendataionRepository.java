@@ -13,4 +13,8 @@ public interface RecommendataionRepository extends JpaRepository<Recommendation,
     Recommendation findByFreeBoardAndMemberId(FreeBoard freeBoard, Long memberId);
 
     List<Recommendation> findAllByFreeBoard(FreeBoard freeBoard);
+
+    void deleteByMemberId(Long memberId);
+
+    List<Recommendation> findByMemberId(Long memberId);
 }

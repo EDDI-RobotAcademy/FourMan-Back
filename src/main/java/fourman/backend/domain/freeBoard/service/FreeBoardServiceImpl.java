@@ -133,7 +133,7 @@ public class FreeBoardServiceImpl implements FreeBoardService {
 
     @Transactional
     @Override
-    public FreeBoardReadResponse read(Long boardId) {
+    public FreeBoardReadResponse read(Long boardId, Long memberId) {
         // 일 수도 있고 아닐 수도 있고
         Optional<FreeBoard> maybeBoard = freeBoardRepository.findById(boardId);
         if (maybeBoard.isEmpty()) {
@@ -144,7 +144,7 @@ public class FreeBoardServiceImpl implements FreeBoardService {
         freeBoard.increaseViewCnt();
         freeBoardRepository.save(freeBoard);
 
-        List<Recommendation> recommendationList = recommendationRepository.findAllByFreeBoard(freeBoard);
+        List<Recommendation> recommendationList = recommendationRepository.findByMemberId(memberId);
 
         boolean incRecommendationStatus = false;
         boolean decRecommendationStatus = false;
