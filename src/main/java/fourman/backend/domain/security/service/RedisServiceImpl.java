@@ -17,7 +17,7 @@ public class RedisServiceImpl implements RedisService {
     public void setKeyAndValue(String token, Long memberId) {
         String memberIdString = String.valueOf(memberId);
         ValueOperations<String, String> value = redisTemplate.opsForValue();
-        value.set(token, memberIdString, Duration.ofMinutes(60));
+        value.set(token, memberIdString, Duration.ofMinutes(180));
     }
 
     @Override
