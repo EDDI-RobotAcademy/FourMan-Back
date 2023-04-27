@@ -14,6 +14,7 @@ import fourman.backend.domain.reservation.repository.ReservationRepository;
 import fourman.backend.domain.reservation.repository.SeatRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.io.FilenameUtils;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -65,9 +66,10 @@ public class CafeIntroduceServiceImpl implements CafeIntroduceService {
         try {
             //1. 썸네일 저장
             for (MultipartFile multipartFile: thumbnail) {
-                log.info("requestUploadFilesWithText() - Make file: " + multipartFile.getOriginalFilename());
+                String originalFilename = multipartFile.getOriginalFilename();
+                String extension = FilenameUtils.getExtension(originalFilename);
                 String thumbnailRandomName = now.format(dtf);
-                String thumbnailReName = 't'+thumbnailRandomName + multipartFile.getOriginalFilename();
+                String thumbnailReName = 't' + thumbnailRandomName + "." + extension;
 
                 //저장 경로 지정 + 파일네임
                 FileOutputStream writer1 = new FileOutputStream("../FourMan-Front/public/assets/cafe/uploadImgs/" + thumbnailReName);
@@ -83,10 +85,10 @@ public class CafeIntroduceServiceImpl implements CafeIntroduceService {
             List<String> imageList = new ArrayList<>();
 
             for (MultipartFile multipartFile: fileList) {
-                log.info("requestUploadFilesWithText() - Make file: " + multipartFile.getOriginalFilename());
-
+                String originalFilename = multipartFile.getOriginalFilename();
+                String extension = FilenameUtils.getExtension(originalFilename);
                 String fileRandomName = now.format(dtf);
-                String fileReName = 'f' + fileRandomName + multipartFile.getOriginalFilename();
+                String fileReName = 'f' + fileRandomName + "." + extension;
 
                 FileOutputStream writer2 = new FileOutputStream("../FourMan-Front/public/assets/cafe/uploadImgs/" + fileReName);
                 log.info("디렉토리에 파일 배치 성공!");
