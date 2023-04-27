@@ -39,10 +39,10 @@ public class FreeBoardController {
     }
 
     @GetMapping("/{boardId}")
-    public FreeBoardReadResponse boardRead(@PathVariable("boardId") Long boardId) {
+    public FreeBoardReadResponse boardRead(@PathVariable("boardId") Long boardId, @RequestParam(required = false) Long memberId) {
         log.info("boardRead()");
 
-        return freeBoardService.read(boardId);
+        return freeBoardService.read(boardId, memberId);
     }
 
     @DeleteMapping("/{boardId}")
