@@ -64,22 +64,27 @@ public class OrderServiceImpl implements OrderService {
         Optional<Cafe> maybeCafe = cafeRepository.findById(orderInfoRequestForm.getCafeId());
         Optional<Member> maybeMember = memberRepository.findByMemberId(orderInfoRequestForm.getMemberId());
         Member member = maybeMember.get();
+        Optional<Point> maybePoint = pointRepository.findByMemberId(member);
+        Point point = maybePoint.get();
+        PointInfo savedPointInfo = new PointInfo();
 
         // 포인트 사용 정보 처리
+        Long savedPoint = (long)(orderInfoRequestForm.getTotalPrice() * 0.01);
+        Long usedPoint = orderInfoRequestForm.getUsePoint();
+        Long remainPoint = point.getPoint() - usedPoint + savedPoint;
+        String savedHistory = "주문 적립";
+        savedPointInfo.setPointInfo(savedHistory, +savedPoint, false, point);
+        point.setPoint(remainPoint);
+        pointInfoRepository.save(savedPointInfo);
         if(orderInfoRequestForm.getUsePoint() != 0) {
-            Optional<Point> maybePoint = pointRepository.findByMemberId(member);
-            Point point = maybePoint.get();
-            Long usedPoint = orderInfoRequestForm.getUsePoint();
-            Long remainPoint = point.getPoint() - usedPoint;
-            PointInfo pointInfo = new PointInfo();
-            String history = "포인트 사용";
+            PointInfo usePointInfo = new PointInfo();
+            String useHistory = "포인트 사용";
 
-            point.setPoint(remainPoint);
-            pointInfo.setPointInfo(history, -usedPoint, true, point);
+            usePointInfo.setPointInfo(useHistory, -usedPoint, true, point);
 
-            pointRepository.save(point);
-            pointInfoRepository.save(pointInfo);
+            pointInfoRepository.save(usePointInfo);
         }
+        pointRepository.save(point);
 
         // 랜덤 주문번호 생성, 주문번호 중복 확인
         LocalDate localDate = LocalDate.now();
@@ -101,6 +106,7 @@ public class OrderServiceImpl implements OrderService {
         orderInfo.setTotalQuantity(orderInfoRequestForm.getTotalQuantity());
         orderInfo.setTotalPrice(orderInfoRequestForm.getTotalPrice());
         orderInfo.setUsePoint(orderInfoRequestForm.getUsePoint());
+        orderInfo.setSavedPoint(savedPoint);
         orderInfo.setPacking(orderInfoRequestForm.isPacking());
         orderInfo.setReady(false);
         orderInfo.setCanceledAt(null);
@@ -182,7 +188,7 @@ public class OrderServiceImpl implements OrderService {
                 System.out.println("orderReservation값: null -> 포장 주문");
 
                 orderInfoResponseList.add(new OrderInfoResponseForm(orderInfo.getOrderId(), orderInfo.getOrderNo(), customer, orderDate,
-                        orderInfo.getTotalQuantity(), orderInfo.getTotalPrice(), orderInfo.getUsePoint(), orderInfo.isPacking(), orderInfo.isReady(),
+                        orderInfo.getTotalQuantity(), orderInfo.getTotalPrice(), orderInfo.getUsePoint(), orderInfo.getSavedPoint(), orderInfo.isPacking(), orderInfo.isReady(),
                         canceledAt, cafeCode.getCafeName(), cafe.getCafeInfo().getThumbnailFileName(),null, null, orderProductList));
             } else { // 예약 주문
                 System.out.println("orderReservation값 존재 -> 예약 주문");
@@ -194,7 +200,7 @@ public class OrderServiceImpl implements OrderService {
                 OrderReservation orderReservation = maybeOrderReservation.get();
 
                 orderInfoResponseList.add(new OrderInfoResponseForm(orderInfo.getOrderId(), orderInfo.getOrderNo(), customer, orderDate,
-                                          orderInfo.getTotalQuantity(), orderInfo.getTotalPrice(), orderInfo.getUsePoint(), orderInfo.isPacking(), orderInfo.isReady(),
+                                          orderInfo.getTotalQuantity(), orderInfo.getTotalPrice(), orderInfo.getUsePoint(), orderInfo.getSavedPoint(), orderInfo.isPacking(), orderInfo.isReady(),
                         canceledAt, cafeCode.getCafeName(), cafe.getCafeInfo().getThumbnailFileName(), orderReservation.getTime(), orderReservation.getSeatNoList(),
                                           orderProductList));
             }
@@ -217,25 +223,31 @@ public class OrderServiceImpl implements OrderService {
 
         Optional<OrderInfo> maybeOrderInfo = orderInfoRepository.findById(orderId);
         OrderInfo orderInfo = maybeOrderInfo.get();
+        Optional<Point> maybePoint = pointRepository.findByMemberId(orderInfo.getMember());
+        Point point = maybePoint.get();
         Date currentDate = new Date();
         orderInfo.setCanceledAt(currentDate);
 
-        // 사용 포인트 환불
-        Optional<Point> maybePoint = pointRepository.findByMemberId(orderInfo.getMember());
-        Point point = maybePoint.get();
-        Long refundPoint = point.getPoint() + orderInfo.getUsePoint();
-        PointInfo pointInfo = new PointInfo();
-        String history = "주문 취소로 인한 포인트 환불";
-
+        Long refundPoint = point.getPoint() + orderInfo.getUsePoint() - orderInfo.getSavedPoint();
         point.setPoint(refundPoint);
-        pointInfo.setPointInfo(history, +orderInfo.getUsePoint(), false, point);
+
+        // 결제 시 적립되었던 포인트 반환
+        PointInfo restorePointInfo = new PointInfo();
+        String restoreHistory = "결제 취소로 인한 주문 적립 포인트 반환";
+        restorePointInfo.setPointInfo(restoreHistory, -orderInfo.getSavedPoint(), true, point);
+
+        // 사용 포인트 환불
+        if(orderInfo.getUsePoint() != 0) {
+            PointInfo refundPointInfo = new PointInfo();
+            String cancelHistory = "결제 취소로 인한 포인트 환불";
+            refundPointInfo.setPointInfo(cancelHistory, +orderInfo.getUsePoint(), false, point);
+            pointInfoRepository.save(refundPointInfo);
+        }
 
         pointRepository.save(point);
-        pointInfoRepository.save(pointInfo);
+        pointInfoRepository.save(restorePointInfo);
 
         orderInfoRepository.save(orderInfo);
-
-
     }
 
     @Override
