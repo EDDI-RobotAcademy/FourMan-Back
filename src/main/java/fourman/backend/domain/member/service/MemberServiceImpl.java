@@ -212,10 +212,19 @@ public class MemberServiceImpl implements MemberService {
     @Override
     public Member returnMemberInfo(String token) {
         Long id = redisService.getValueByKey(token);
+        if(token == null || token.isEmpty()){
+            log.info("토큰이 null입니다,");
+            return null;
+        }
         System.out.println("검색된id:"+id);
-        log.info("검색된 id:",id);
+        log.info("검색된 id: {}", id);
+        System.out.println("token:"+token);
+        if (id == null && token !=null) {
+            log.info(" 토큰이 있는데 검색이 안되니 레디스에서 토큰이 만료된 것입니다. 로그아웃 처리됩니다.");
+            return null;
+        }
         Optional<Member> member = memberRepository.findByMemberId(id);
-        if(!member.isPresent()) {
+        if (!member.isPresent()) {
             log.info("멤버가 존재하지 않습니다.");
             return null;
         }
