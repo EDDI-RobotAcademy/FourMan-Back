@@ -223,25 +223,31 @@ public class OrderServiceImpl implements OrderService {
 
         Optional<OrderInfo> maybeOrderInfo = orderInfoRepository.findById(orderId);
         OrderInfo orderInfo = maybeOrderInfo.get();
+        Optional<Point> maybePoint = pointRepository.findByMemberId(orderInfo.getMember());
+        Point point = maybePoint.get();
         Date currentDate = new Date();
         orderInfo.setCanceledAt(currentDate);
 
-        // 사용 포인트 환불
-        Optional<Point> maybePoint = pointRepository.findByMemberId(orderInfo.getMember());
-        Point point = maybePoint.get();
-        Long refundPoint = point.getPoint() + orderInfo.getUsePoint();
-        PointInfo pointInfo = new PointInfo();
-        String history = "주문 취소로 인한 포인트 환불";
-
+        Long refundPoint = point.getPoint() + orderInfo.getUsePoint() - orderInfo.getSavedPoint();
         point.setPoint(refundPoint);
-        pointInfo.setPointInfo(history, +orderInfo.getUsePoint(), false, point);
+
+        // 결제 시 적립되었던 포인트 반환
+        PointInfo restorePointInfo = new PointInfo();
+        String restoreHistory = "결제 취소로 인한 주문 적립 포인트 반환";
+        restorePointInfo.setPointInfo(restoreHistory, -orderInfo.getSavedPoint(), true, point);
+
+        // 사용 포인트 환불
+        if(orderInfo.getUsePoint() != 0) {
+            PointInfo refundPointInfo = new PointInfo();
+            String cancelHistory = "결제 취소로 인한 포인트 환불";
+            refundPointInfo.setPointInfo(cancelHistory, +orderInfo.getUsePoint(), false, point);
+            pointInfoRepository.save(refundPointInfo);
+        }
 
         pointRepository.save(point);
-        pointInfoRepository.save(pointInfo);
+        pointInfoRepository.save(restorePointInfo);
 
         orderInfoRepository.save(orderInfo);
-
-
     }
 
     @Override
