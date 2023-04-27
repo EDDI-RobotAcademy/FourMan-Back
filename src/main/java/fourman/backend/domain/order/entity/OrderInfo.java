@@ -31,6 +31,8 @@ public class OrderInfo {
     @Column(nullable = false)
     private Long usePoint;
     @Column(nullable = false)
+    private Long savedPoint;
+    @Column(nullable = false)
     private boolean isPacking;
     @Column(nullable = false)
     private boolean isReady;

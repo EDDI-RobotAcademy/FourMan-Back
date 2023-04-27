@@ -17,6 +17,7 @@ public class OrderInfoResponseForm {
     final private int totalQuantity;
     final int totalPrice;
     final Long usePoint;
+    final Long savedPoint;
     final boolean isPacking;
     final boolean isReady;
     final String canceledAt;
@@ -27,7 +28,7 @@ public class OrderInfoResponseForm {
     final List<OrderProduct> orderProductList;
 
     public OrderInfoResponseForm(Long orderId, String orderNo, String customer, String orderDate, int totalQuantity,
-                                 int totalPrice, Long usePoint, boolean isPacking, boolean isReady, String canceledAt,
+                                 int totalPrice, Long usePoint, Long savedPoint, boolean isPacking, boolean isReady, String canceledAt,
                                  String cafeName, String cafeThumbnailFile ,String reservationTime,
                                  List<OrderSeat> seatNoList, List<OrderProduct> orderProductList) {
         this.orderId = orderId;
@@ -37,6 +38,7 @@ public class OrderInfoResponseForm {
         this.totalQuantity = totalQuantity;
         this.totalPrice = totalPrice;
         this.usePoint = usePoint;
+        this.savedPoint = savedPoint;
         this.isPacking = isPacking;
         this.isReady = isReady;
         this.canceledAt = canceledAt;
