@@ -9,6 +9,7 @@ import fourman.backend.domain.member.entity.CafeCode;
 import fourman.backend.domain.member.repository.CafeCodeRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.io.FilenameUtils;
 import org.springframework.data.crossstore.ChangeSetPersister;
 import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
@@ -53,9 +54,10 @@ public class EventServiceImpl implements EventService {
         try {
             //1. 썸네일 저장
             for (MultipartFile multipartFile: thumbnail) {
-                log.info("requestUploadFilesWithText() - Make file: " + multipartFile.getOriginalFilename());
+                String originalFilename = multipartFile.getOriginalFilename();
+                String extension = FilenameUtils.getExtension(originalFilename);
                 String thumbnailRandomName = now.format(dtf);
-                String thumbnailReName = 't'+thumbnailRandomName + multipartFile.getOriginalFilename();
+                String thumbnailReName = 't' + thumbnailRandomName + "." + extension;
 
                 //저장 경로 지정 + 파일네임
                 FileOutputStream writer1 = new FileOutputStream("../FourMan-Front/public/assets/event/uploadImgs/" + thumbnailReName);
