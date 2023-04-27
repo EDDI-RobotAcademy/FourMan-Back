@@ -9,7 +9,7 @@ import org.springframework.stereotype.Component;
 @Component
 public class LoggingAspect {
 
-    @Pointcut("execution(* fourman.backend.*.*(..))")
+    @Pointcut("execution(* fourman.backend.domain..*.service.*.*(..))")
     private void serviceLayer() {}
 
     @Around("serviceLayer()")
