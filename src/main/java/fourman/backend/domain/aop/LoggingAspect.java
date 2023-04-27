@@ -1,4 +1,4 @@
-package fourman.backend.domain.AOP;
+package fourman.backend.domain.aop;
 
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.annotation.Around;

@@ -1,5 +1,6 @@
 package fourman.backend.domain.eventBoard.controller;
 
+import fourman.backend.domain.aop.aspect.SecurityAnnotations;
 import fourman.backend.domain.cafeIntroduce.entity.Cafe;
 import fourman.backend.domain.cafeIntroduce.service.response.CafeIntroDetailResponse;
 import fourman.backend.domain.cafeIntroduce.service.response.CafeIntroListResponse;
@@ -23,7 +24,7 @@ import java.util.List;
 public class EventController {
 
     private final EventService eventService;
-
+    @SecurityAnnotations.SecurityCheck(SecurityAnnotations.UserType.CAFE)
     @PostMapping(value = "/register",
             consumes = {  MediaType.MULTIPART_FORM_DATA_VALUE, MediaType.APPLICATION_JSON_VALUE }) // 이미지+텍스트 업로드하는 경우 value , consumes 정보(이미지타입, json타입) 추가
     public Long registerEvent(
@@ -46,6 +47,7 @@ public class EventController {
         log.info("eventRead()");
         return eventService.read(eventId);
     }
+    @SecurityAnnotations.SecurityCheck(SecurityAnnotations.UserType.CAFE)
     @PutMapping(value = "/modify/{eventId}",
             consumes = {  MediaType.MULTIPART_FORM_DATA_VALUE, MediaType.APPLICATION_JSON_VALUE }) // 이미지+텍스트 업로드하는 경우 value , consumes 정보(이미지타입, json타입) 추가
     public Long modifyEvent(
@@ -57,7 +59,7 @@ public class EventController {
 
         return eventService.modifyEvent(eventId,thumbnail, eventRequestForm);
     }
-
+    @SecurityAnnotations.SecurityCheck(SecurityAnnotations.UserType.CAFE)
     @DeleteMapping("/delete/{eventId}")
     public ResponseEntity<Void> deleteEvent(@PathVariable Long eventId) {
         log.info("이벤트 삭제 컨트롤러");
@@ -77,7 +79,7 @@ public class EventController {
         log.info("getCafeByEventId");
         return eventService.getCafeByEventId(eventId);
     }
-
+    @SecurityAnnotations.SecurityCheck(SecurityAnnotations.UserType.CAFE)
     @GetMapping(path = "/mylist/{cafeId}")
     public List<EventListResponse> eventListByCafeId(@PathVariable("cafeId") Long cafeId) {
         return eventService.eventListByCafeId(cafeId);
