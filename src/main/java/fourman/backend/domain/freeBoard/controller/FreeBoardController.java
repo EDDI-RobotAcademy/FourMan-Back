@@ -1,5 +1,6 @@
 package fourman.backend.domain.freeBoard.controller;
 
+import fourman.backend.domain.aop.aspect.SecurityAnnotations;
 import fourman.backend.domain.freeBoard.controller.requestForm.FreeBoardRequestForm;
 import fourman.backend.domain.freeBoard.controller.requestForm.RecommendationRequestForm;
 import fourman.backend.domain.freeBoard.entity.FreeBoard;
@@ -23,6 +24,7 @@ public class FreeBoardController {
 
     final private FreeBoardService freeBoardService;
 
+    @SecurityAnnotations.SecurityCheck(SecurityAnnotations.UserType.AUTHENTICATED)
     @PostMapping(value = "/register",
             consumes = { MediaType.MULTIPART_FORM_DATA_VALUE, MediaType.APPLICATION_JSON_VALUE })
     public FreeBoard boardRegister (@RequestPart(value = "fileList", required = false) List<MultipartFile> fileList,
@@ -45,6 +47,7 @@ public class FreeBoardController {
         return freeBoardService.read(boardId, memberId);
     }
 
+    @SecurityAnnotations.SecurityCheck(SecurityAnnotations.UserType.AUTHENTICATED)
     @DeleteMapping("/{boardId}")
     public void boardRemove(@PathVariable("boardId") Long boardId) {
         log.info("boardRemove()");
@@ -52,6 +55,7 @@ public class FreeBoardController {
         freeBoardService.remove(boardId);
     }
 
+    @SecurityAnnotations.SecurityCheck(SecurityAnnotations.UserType.AUTHENTICATED)
     @PutMapping("/{boardId}")
     public Boolean boardModify(@PathVariable("boardId") Long boardId,
                              @RequestBody FreeBoardRequestForm boardRequest) {

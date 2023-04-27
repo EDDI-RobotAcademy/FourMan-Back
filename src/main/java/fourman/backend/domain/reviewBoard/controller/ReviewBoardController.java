@@ -1,5 +1,6 @@
 package fourman.backend.domain.reviewBoard.controller;
 
+import fourman.backend.domain.aop.aspect.SecurityAnnotations;
 import fourman.backend.domain.reviewBoard.controller.requestForm.ReviewBoardRequestForm;
 import fourman.backend.domain.reviewBoard.service.responseForm.ReviewBoardImageResourceResponse;
 import fourman.backend.domain.reviewBoard.service.responseForm.ReviewBoardReadResponse;
@@ -21,6 +22,7 @@ public class ReviewBoardController {
 
     final private ReviewBoardService reviewBoardService;
 
+    @SecurityAnnotations.SecurityCheck(SecurityAnnotations.UserType.AUTHENTICATED)
     @PostMapping(value = "/register",
             consumes = { MediaType.MULTIPART_FORM_DATA_VALUE, MediaType.APPLICATION_JSON_VALUE })
     public void reviewBoardRegister(
@@ -56,6 +58,7 @@ public class ReviewBoardController {
         return reviewBoardService.findReviewBoardImage(reviewBoardId);
     }
 
+    @SecurityAnnotations.SecurityCheck(SecurityAnnotations.UserType.AUTHENTICATED)
     @DeleteMapping("/{reviewBoardId}")
     public void reviewBoardRemove(@PathVariable("reviewBoardId") Long reviewBoardId) {
         log.info("productRemove()");
@@ -63,6 +66,7 @@ public class ReviewBoardController {
         reviewBoardService.remove(reviewBoardId);
     }
 
+    @SecurityAnnotations.SecurityCheck(SecurityAnnotations.UserType.AUTHENTICATED)
     @PutMapping("/{reviewBoardId}")
     public Boolean reviewBoardModify(@PathVariable("reviewBoardId") Long reviewBoardId,
                                      @RequestBody ReviewBoardRequestForm reviewBoardRequest) {
