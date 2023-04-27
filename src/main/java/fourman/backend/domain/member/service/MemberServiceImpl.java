@@ -56,7 +56,7 @@ public class MemberServiceImpl implements MemberService {
 
     @Override
     public Boolean cafeCodeValidation(String cafeCode) {
-        Optional<CafeCode> maybeCafe = cafeCodeRepository.findByCode(cafeCode);
+        Optional<CafeCode> maybeCafe = cafeCodeRepository.findByCodeOfCafe(cafeCode);
         if (maybeCafe.isPresent()) {
             return true;
         }
@@ -65,9 +65,9 @@ public class MemberServiceImpl implements MemberService {
 
     @Override
     public Boolean signUp(MemberRegisterRequest memberRegisterRequest) {
-        final Member member = memberRegisterRequest.toMember();
-
-        if(member.getAuthority().getAuthorityName().equals(AuthorityType.MEMBER)) {
+        Member member = null;
+        if(memberRegisterRequest.getAuthorityName().equals(AuthorityType.MEMBER)) {
+            member = memberRegisterRequest.toMember();
             List<PointInfo> infoList = new ArrayList<>();
             String history = "회원가입 축하 포인트";
             PointInfo pointInfo = new PointInfo(history, 1000l, false);
@@ -77,8 +77,26 @@ public class MemberServiceImpl implements MemberService {
             pointRepository.save(point);
             pointInfoRepository.saveAll(infoList);
         }
+        else if(memberRegisterRequest.getAuthorityName().equals(AuthorityType.CAFE)){
+            Optional<CafeCode> cafeCode=cafeCodeRepository.findByCodeOfCafe(memberRegisterRequest.getCode());
+            if(!cafeCode.isPresent()){
+                log.info("카페코드가 없습니다");
+                return null;
+            }
+            member = memberRegisterRequest.toCafeMember(cafeCode.get());
 
-        memberRepository.save(member);
+
+        }else  if(memberRegisterRequest.getAuthorityName().equals(AuthorityType.MANAGER)){
+            Optional<ManagerCode> managerCode=managerCodeRepository.findByCodeOfManager(memberRegisterRequest.getCode());
+            if(!managerCode.isPresent()){
+                log.info("매니저코드가 없습니다");
+                return null;
+            }
+            member = memberRegisterRequest.toManagerMember(managerCode.get());
+
+        }
+
+            memberRepository.save(member);
         final BasicAuthentication authentication = new BasicAuthentication(
                 member,
                 Authentication.BASIC_AUTH,//authenticationType칼럼에 값을 멤버변수 BASIC_AUTH의 값을 넣음
@@ -121,25 +139,21 @@ public class MemberServiceImpl implements MemberService {
 
             if(member.getAuthority().getAuthorityName().equals(AuthorityType.CAFE)){ //카페사업자의 경우카페명 UI로 보내줌
                 log.info("카페사업자 입니다!");
-                Optional<CafeCode> op= cafeCodeRepository.findByCode(member.getCode());
-                System.out.println("op"+op);
-                System.out.println("op.get()"+op.get());
-                System.out.println("op.get().getCafe():"+op.get().getCafe());
-                if(op.isPresent()){
-                    if(op.get().getCafe()==null){
-                        memberLoginResponse = new MemberLoginResponse(userToken.toString(), member.getId(), member.getNickName(), member.getAuthority().getAuthorityName(), null ,member.getCode(),op.get().getCafeName(), member.getEmail());
+                if(member.getCafeCode() !=null){
+                    if(member.getCafeCode().getCafe()==null){
+                        memberLoginResponse = new MemberLoginResponse(userToken.toString(), member.getId(), member.getNickName(), member.getAuthority().getAuthorityName(), null ,member.getCafeCode().getCodeOfCafe(),member.getCafeCode().getCafeName(), member.getEmail());
                         log.info("카페를 아직 등록하지않음.");
                         return memberLoginResponse;
                     }
-                    System.out.println("op.get().getCafe().getCafeId():"+op.get().getCafe().getCafeId());
-                    memberLoginResponse = new MemberLoginResponse(userToken.toString(),member.getId(),member.getNickName(), member.getAuthority().getAuthorityName(),op.get().getCafe().getCafeId(), member.getCode(),op.get().getCafeName(), member.getEmail());
+                    System.out.println("op.get().getCafe().getCafeId():"+member.getCafeCode().getCafe().getCafeId());
+                    memberLoginResponse = new MemberLoginResponse(userToken.toString(),member.getId(),member.getNickName(), member.getAuthority().getAuthorityName(),member.getCafeCode().getCafe().getCafeId(),member.getCafeCode().getCodeOfCafe(),member.getCafeCode().getCafeName(), member.getEmail());
                 }
                 else{
                     log.info("카페코드를 못찾았습니다");
                 }
             }else {
                 log.info("카페사업자가 아닙니다.");
-                memberLoginResponse = new MemberLoginResponse(userToken.toString(), member.getId(), member.getNickName(), member.getAuthority().getAuthorityName(), null ,member.getCode(), null, member.getEmail());
+                memberLoginResponse = new MemberLoginResponse(userToken.toString(), member.getId(), member.getNickName(), member.getAuthority().getAuthorityName(), null ,member.getCafeCode().getCodeOfCafe(), null, member.getEmail());
             }
             return memberLoginResponse;
         }
@@ -177,7 +191,7 @@ public class MemberServiceImpl implements MemberService {
     }
     @Override
     public Boolean managerCodeValidation(String managerCode) {
-        Optional<ManagerCode> maybeManager = managerCodeRepository.findByCode(managerCode);
+        Optional<ManagerCode> maybeManager = managerCodeRepository.findByCodeOfManager(managerCode);
         if (maybeManager.isPresent()) {
             return true;
         }

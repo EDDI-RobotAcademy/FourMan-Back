@@ -21,7 +21,7 @@ public class CafeCode {
 
     @Getter
     @Column(nullable = false ,unique=true)
-    private String code;
+    private String codeOfCafe;
     @Getter
     @Column(nullable = false ,unique=true)
     private String cafeName;
@@ -30,10 +30,12 @@ public class CafeCode {
     @JsonIgnore
     @OneToOne(mappedBy="cafeCode", cascade = CascadeType.ALL)
     private Cafe cafe;
+    @OneToOne(mappedBy="cafeCode", cascade = CascadeType.ALL)
+    private Member member;
 
 
     public CafeCode(String code, String cafeName){
-        this.code = code;
+        this.codeOfCafe = code;
         this.cafeName=cafeName;
     }
 
