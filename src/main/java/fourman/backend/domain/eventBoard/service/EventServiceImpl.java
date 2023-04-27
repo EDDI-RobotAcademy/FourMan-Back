@@ -43,7 +43,7 @@ public class EventServiceImpl implements EventService {
         event.setEventStartDate(eventRequestForm.getEventStartDate());
         event.setEventEndDate(eventRequestForm.getEventEndDate());
         event.setContent(eventRequestForm.getContent());
-        Optional<CafeCode> op= cafeCodeRepository.findByCode(eventRequestForm.getCode());
+        Optional<CafeCode> op= cafeCodeRepository.findByCodeOfCafe(eventRequestForm.getCode());
         event.setCafe(op.get().getCafe());
 
         LocalDateTime now = LocalDateTime.now(ZoneId.of("Asia/Seoul"));
@@ -156,7 +156,7 @@ public class EventServiceImpl implements EventService {
         event.setEventStartDate(eventRequestForm.getEventStartDate());
         event.setEventEndDate(eventRequestForm.getEventEndDate());
         event.setContent(eventRequestForm.getContent());
-        Optional<CafeCode> op= cafeCodeRepository.findByCode(eventRequestForm.getCode());
+        Optional<CafeCode> op= cafeCodeRepository.findByCodeOfCafe(eventRequestForm.getCode());
         event.setCafe(op.get().getCafe());
 
         LocalDateTime now = LocalDateTime.now(ZoneId.of("Asia/Seoul"));

@@ -20,10 +20,12 @@ public class ManagerCode {
 
     @Getter
     @Column(nullable = false,unique=true)
-    private String code;
+    private String codeOfManager;
+    @OneToOne(mappedBy="managerCode", cascade = CascadeType.ALL)
+    private Member member;
 
     public ManagerCode(String code){
-        this.code = code;
+        this.codeOfManager = code;
     }
 
     public static ManagerCode of(String code) {

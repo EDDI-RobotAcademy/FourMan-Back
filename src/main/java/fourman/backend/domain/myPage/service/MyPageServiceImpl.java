@@ -140,12 +140,12 @@ public class MyPageServiceImpl implements MyPageService {
         redisService.setKeyAndValue(userToken.toString(), member.getId());
 
         MyInfoModifyResponse myInfoModifyResponse;
-        Optional<CafeCode> op= cafeCodeRepository.findByCode(member.getCode());
+        Optional<CafeCode> op= cafeCodeRepository.findByCodeOfCafe(member.getCafeCode().getCodeOfCafe());
 
         if(op.isEmpty()) {
-            myInfoModifyResponse = new MyInfoModifyResponse(userToken.toString(), member.getId(), member.getNickName(), member.getAuthority().getAuthorityName(), null, member.getCode(), null, member.getEmail());
+            myInfoModifyResponse = new MyInfoModifyResponse(userToken.toString(), member.getId(), member.getNickName(), member.getAuthority().getAuthorityName(), null, member.getCafeCode().getCodeOfCafe(), null, member.getEmail());
         } else {
-            myInfoModifyResponse = new MyInfoModifyResponse(userToken.toString(), member.getId(), member.getNickName(), member.getAuthority().getAuthorityName(), op.get().getId(), member.getCode(), op.get().getCafeName(), member.getEmail());
+            myInfoModifyResponse = new MyInfoModifyResponse(userToken.toString(), member.getId(), member.getNickName(), member.getAuthority().getAuthorityName(), op.get().getId(),member.getCafeCode().getCodeOfCafe(), op.get().getCafeName(), member.getEmail());
         }
 
         return myInfoModifyResponse;
@@ -243,7 +243,7 @@ public class MyPageServiceImpl implements MyPageService {
 
         for (Cafe cafe: cafeList) {
 
-            Optional<CafeCode> maybeCafeCode = cafeCodeRepository.findByCode(cafe.getCafeCode().getCode());
+            Optional<CafeCode> maybeCafeCode = cafeCodeRepository.findByCodeOfCafe(cafe.getCafeCode().getCodeOfCafe());
 
             if (maybeCafeCode.isEmpty()) {
                 return null;
@@ -333,7 +333,7 @@ public class MyPageServiceImpl implements MyPageService {
 
         Cafe cafe = maybeCafe.get();
 
-        Optional<CafeCode> maybeCafeCode = cafeCodeRepository.findByCode(cafe.getCafeCode().getCode());
+        Optional<CafeCode> maybeCafeCode = cafeCodeRepository.findByCodeOfCafe(cafe.getCafeCode().getCodeOfCafe());
 
         if (maybeCafeCode.isEmpty()) {
             return null;

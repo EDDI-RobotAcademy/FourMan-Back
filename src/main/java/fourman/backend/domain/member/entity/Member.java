@@ -2,6 +2,7 @@ package fourman.backend.domain.member.entity;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import fourman.backend.domain.cafeIntroduce.entity.Cafe;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -34,9 +35,14 @@ public class Member {
     @Getter
     @Column(nullable = false)
     private int birthdate;
-
-    @Getter
-    private String code;
+    @JsonIgnore
+    @OneToOne
+    @JoinColumn(name="cafe_code_id")
+    private CafeCode cafeCode;
+    @JsonIgnore
+    @OneToOne
+    @JoinColumn(name="manager_code_id")
+    private ManagerCode managerCode;
 
     @Getter
     @JoinColumn(name ="authority_id")
@@ -56,12 +62,29 @@ public class Member {
     @OneToOne(mappedBy = "member", fetch = FetchType.LAZY, cascade = CascadeType.PERSIST, orphanRemoval = true)
     private Point point;
 
-    public Member(String email, String nickName, int birthdate, Authority authority,String code, MemberProfile memberProfile) {
+    public Member(String email, String nickName, int birthdate, Authority authority , MemberProfile memberProfile) {
         this.email = email;
         this.nickName = nickName;
         this.birthdate = birthdate;
         this.authority = authority;
-        this.code=code;
+        this.memberProfile = memberProfile;
+        memberProfile.setMember(this);
+    }
+    public Member(String email, String nickName, int birthdate, Authority authority,CafeCode cafeCode, MemberProfile memberProfile) {
+        this.email = email;
+        this.nickName = nickName;
+        this.birthdate = birthdate;
+        this.authority = authority;
+        this.cafeCode=cafeCode;
+        this.memberProfile = memberProfile;
+        memberProfile.setMember(this);
+    }
+    public Member(String email, String nickName, int birthdate, Authority authority ,ManagerCode managerCode, MemberProfile memberProfile) {
+        this.email = email;
+        this.nickName = nickName;
+        this.birthdate = birthdate;
+        this.authority = authority;
+        this.managerCode=managerCode;
         this.memberProfile = memberProfile;
         memberProfile.setMember(this);
     }

@@ -10,9 +10,10 @@ import java.util.Optional;
 
 public interface CafeCodeRepository extends JpaRepository<CafeCode, Long> {
 
-    @Query("select mc from CafeCode mc where mc.code = :cafeCode")
-    Optional<CafeCode> findByCode(String cafeCode);
+
 
     @Query("select cc from CafeCode cc where cc.cafeName = :cafeName")
     Optional<CafeCode> findCafeIdByCafeName(String cafeName);
+    @Query("select mc from CafeCode mc where mc.codeOfCafe = :codeOfCafe")
+    Optional<CafeCode> findByCodeOfCafe(String codeOfCafe);
 }

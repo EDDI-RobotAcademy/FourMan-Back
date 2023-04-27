@@ -50,7 +50,7 @@ public class CafeIntroduceServiceImpl implements CafeIntroduceService {
         cafe.setCafeTel(cafeIntroRequestForm.getCafeTel());
         cafe.setStartTime(cafeIntroRequestForm.getStartTime());
         cafe.setEndTime(cafeIntroRequestForm.getEndTime());
-        Optional<CafeCode> op= cafeCodeRepository.findByCode(cafeIntroRequestForm.getCode());
+        Optional<CafeCode> op= cafeCodeRepository.findByCodeOfCafe(cafeIntroRequestForm.getCode());
         cafe.setCafeCode(op.get());
         //3. cafeInfo 저장
         // cafeInfo-> String thumbnailFileName,List<String> cafeImagesName,List<String>  String subTitle,String description
@@ -124,7 +124,7 @@ public class CafeIntroduceServiceImpl implements CafeIntroduceService {
 
     @Override
     public Boolean cafeNumValidation(String code) {
-        Optional<CafeCode> maybeCafeCode = cafeCodeRepository.findByCode(code);
+        Optional<CafeCode> maybeCafeCode = cafeCodeRepository.findByCodeOfCafe(code);
         Optional<Cafe> maybeCafe = cafeRepository.findByCafeCode(maybeCafeCode.get());
         if (maybeCafe.isPresent()) {
             log.info("카페가 존재합니다");

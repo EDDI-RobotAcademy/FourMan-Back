@@ -1,9 +1,6 @@
 package fourman.backend.domain.member.service.request;
 
-import fourman.backend.domain.member.entity.Authority;
-import fourman.backend.domain.member.entity.AuthorityType;
-import fourman.backend.domain.member.entity.Member;
-import fourman.backend.domain.member.entity.MemberProfile;
+import fourman.backend.domain.member.entity.*;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.ToString;
@@ -42,16 +39,6 @@ public class MemberRegisterRequest {
 
     }
 
-    public MemberRegisterRequest(String email, String password, String username, int birthdate, AuthorityType authorityName,String code , String phoneNumber){
-        this.email = email;
-        this.password = password;
-        this.nickName= username;
-        this.birthdate = birthdate;
-        this.phoneNumber =phoneNumber;
-        this.authorityName = authorityName;
-        this.code = code;
-    }
-
 
     public Member toMember () {
         return new Member(
@@ -59,7 +46,26 @@ public class MemberRegisterRequest {
                 nickName,
                 birthdate,
                 Authority.ofMember(authorityName),
-                code,
+                MemberProfile.of(city, street, addressDetail, zipcode,phoneNumber)
+        );
+    }
+    public Member toCafeMember (CafeCode cafeCode) {
+        return new Member(
+                email,
+                nickName,
+                birthdate,
+                Authority.ofMember(authorityName),
+                cafeCode,
+                MemberProfile.of(city, street, addressDetail, zipcode,phoneNumber)
+        );
+    }
+    public Member toManagerMember (ManagerCode managerCode) {
+        return new Member(
+                email,
+                nickName,
+                birthdate,
+                Authority.ofMember(authorityName),
+                managerCode,
                 MemberProfile.of(city, street, addressDetail, zipcode,phoneNumber)
         );
     }
