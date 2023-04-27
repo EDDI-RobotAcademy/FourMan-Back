@@ -188,7 +188,7 @@ public class OrderServiceImpl implements OrderService {
                 System.out.println("orderReservation값: null -> 포장 주문");
 
                 orderInfoResponseList.add(new OrderInfoResponseForm(orderInfo.getOrderId(), orderInfo.getOrderNo(), customer, orderDate,
-                        orderInfo.getTotalQuantity(), orderInfo.getTotalPrice(), orderInfo.getUsePoint(), orderInfo.isPacking(), orderInfo.isReady(),
+                        orderInfo.getTotalQuantity(), orderInfo.getTotalPrice(), orderInfo.getUsePoint(), orderInfo.getSavedPoint(), orderInfo.isPacking(), orderInfo.isReady(),
                         canceledAt, cafeCode.getCafeName(), cafe.getCafeInfo().getThumbnailFileName(),null, null, orderProductList));
             } else { // 예약 주문
                 System.out.println("orderReservation값 존재 -> 예약 주문");
@@ -200,7 +200,7 @@ public class OrderServiceImpl implements OrderService {
                 OrderReservation orderReservation = maybeOrderReservation.get();
 
                 orderInfoResponseList.add(new OrderInfoResponseForm(orderInfo.getOrderId(), orderInfo.getOrderNo(), customer, orderDate,
-                                          orderInfo.getTotalQuantity(), orderInfo.getTotalPrice(), orderInfo.getUsePoint(), orderInfo.isPacking(), orderInfo.isReady(),
+                                          orderInfo.getTotalQuantity(), orderInfo.getTotalPrice(), orderInfo.getUsePoint(), orderInfo.getSavedPoint(), orderInfo.isPacking(), orderInfo.isReady(),
                         canceledAt, cafeCode.getCafeName(), cafe.getCafeInfo().getThumbnailFileName(), orderReservation.getTime(), orderReservation.getSeatNoList(),
                                           orderProductList));
             }
