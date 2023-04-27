@@ -9,6 +9,7 @@ import fourman.backend.domain.freeBoard.repository.FreeBoardImageResourceReposit
 import fourman.backend.domain.freeBoard.repository.FreeBoardRepository;
 import fourman.backend.domain.freeBoard.repository.RecommendataionRepository;
 import fourman.backend.domain.freeBoard.service.responseForm.FreeBoardImageResourceResponse;
+import fourman.backend.domain.freeBoard.service.responseForm.FreeBoardReadResponse;
 import fourman.backend.domain.freeBoard.service.responseForm.FreeBoardResponse;
 import fourman.backend.domain.member.entity.Member;
 import fourman.backend.domain.member.repository.MemberRepository;
@@ -132,7 +133,7 @@ public class FreeBoardServiceImpl implements FreeBoardService {
 
     @Transactional
     @Override
-    public FreeBoardResponse read(Long boardId) {
+    public FreeBoardReadResponse read(Long boardId) {
         // 일 수도 있고 아닐 수도 있고
         Optional<FreeBoard> maybeBoard = freeBoardRepository.findById(boardId);
         if (maybeBoard.isEmpty()) {
@@ -143,12 +144,22 @@ public class FreeBoardServiceImpl implements FreeBoardService {
         freeBoard.increaseViewCnt();
         freeBoardRepository.save(freeBoard);
 
-        FreeBoardResponse freeBoardResponse = new FreeBoardResponse(
+        List<Recommendation> recommendationList = recommendationRepository.findAllByFreeBoard(freeBoard);
+
+        boolean incRecommendationStatus = false;
+        boolean decRecommendationStatus = false;
+        for(Recommendation recommendation: recommendationList) {
+            incRecommendationStatus = recommendation.isIncRecommendationStatus();
+            decRecommendationStatus = recommendation.isDecRecommendationStatus();
+        }
+
+        FreeBoardReadResponse freeBoardReadResponse = new FreeBoardReadResponse(
                 freeBoard.getBoardId(), freeBoard.getTitle(), freeBoard.getMember().getNickName(), freeBoard.getContent(),
                 freeBoard.getRegDate(), freeBoard.getUpdDate(), freeBoard.getMember().getId(), freeBoard.getViewCnt(), freeBoard.getRecommendation(),
-                freeBoard.getUnRecommendation(),0L
+                freeBoard.getUnRecommendation(),0L, incRecommendationStatus, decRecommendationStatus
         );
-        return freeBoardResponse;
+
+        return freeBoardReadResponse;
     }
 
     @Override
