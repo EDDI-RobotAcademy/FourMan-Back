@@ -13,6 +13,7 @@ import fourman.backend.domain.product.repository.ImageResourceRepository;
 import fourman.backend.domain.product.repository.ProductRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.io.FilenameUtils;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -20,9 +21,13 @@ import javax.transaction.Transactional;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.time.LocalDateTime;
+import java.time.ZoneId;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.UUID;
 
 @Slf4j
 @Service
@@ -52,16 +57,19 @@ public class ProductServiceImpl implements ProductService {
 
         try{
             for(MultipartFile multipartFile: imageFileList) {
-                log.info("requestFileUploadWithText() - filename: " + multipartFile.getOriginalFilename());
-
-                String fullPath = fixedStringPath + multipartFile.getOriginalFilename();
+                UUID uuid = UUID.randomUUID();
+                String randomUUID = uuid.toString().replaceAll("-", "");
+                String originalFilename = multipartFile.getOriginalFilename();
+                String fileExtension = FilenameUtils.getExtension(originalFilename);
+                String newFileName = randomUUID + "." + fileExtension;
+                String fullPath = fixedStringPath + newFileName;
 
                 FileOutputStream writer = new FileOutputStream(fullPath);
 
                 writer.write(multipartFile.getBytes());
                 writer.close();
 
-                ImageResource imageResource = new ImageResource(multipartFile.getOriginalFilename());
+                ImageResource imageResource = new ImageResource(newFileName);
                 imageResourceList.add(imageResource);
                 product.setImageResource(imageResource);
             }
@@ -122,14 +130,19 @@ public class ProductServiceImpl implements ProductService {
 
         try {
             for(MultipartFile multipartFile: editImageFileList) {
-                String fullPath = fixedStringPath + multipartFile.getOriginalFilename();
+                UUID uuid = UUID.randomUUID();
+                String randomUUID = uuid.toString().replaceAll("-", "");
+                String originalFilename = multipartFile.getOriginalFilename();
+                String fileExtension = FilenameUtils.getExtension(originalFilename);
+                String newFileName = randomUUID + "." + fileExtension;
+                String fullPath = fixedStringPath + newFileName;
 
                 FileOutputStream writer = new FileOutputStream(fullPath);
 
                 writer.write(multipartFile.getBytes());
                 writer.close();
 
-                imageResource.setImageResourcePath(multipartFile.getOriginalFilename());
+                imageResource.setImageResourcePath(newFileName);
                 imageResourceList.set(0, imageResource);
             }
         } catch(FileNotFoundException e) {
