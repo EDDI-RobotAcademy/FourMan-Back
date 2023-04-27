@@ -7,6 +7,7 @@ import fourman.backend.domain.member.service.response.MemberLoginResponse;
 import fourman.backend.domain.security.service.RedisService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
@@ -97,13 +98,17 @@ public class MemberController {
         return ResponseEntity.ok(isFavorite);
     }
     @PostMapping("/user-verification")
-    public Member userVerification(@RequestBody String token) {
+    public ResponseEntity<?> userVerification(@RequestBody String token) {
         System.out.println("token:"+token);
         String realToken = token.substring(0, token.length() - 1);
         System.out.println("realToken:"+realToken);
         Member member = memberService.returnMemberInfo(realToken);
+        if (member == null) {
+            log.info("여기로들어오나");
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("로그아웃 처리됩니다.");
+        }
         log.info(member.getEmail());
-        return member;
+        return ResponseEntity.ok(member);
     }
 
 
