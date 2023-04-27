@@ -5,6 +5,7 @@ import fourman.backend.domain.freeBoard.controller.requestForm.RecommendationReq
 import fourman.backend.domain.freeBoard.entity.FreeBoard;
 import fourman.backend.domain.freeBoard.service.FreeBoardService;
 import fourman.backend.domain.freeBoard.service.responseForm.FreeBoardImageResourceResponse;
+import fourman.backend.domain.freeBoard.service.responseForm.FreeBoardReadResponse;
 import fourman.backend.domain.freeBoard.service.responseForm.FreeBoardResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -38,7 +39,7 @@ public class FreeBoardController {
     }
 
     @GetMapping("/{boardId}")
-    public FreeBoardResponse boardRead(@PathVariable("boardId") Long boardId) {
+    public FreeBoardReadResponse boardRead(@PathVariable("boardId") Long boardId) {
         log.info("boardRead()");
 
         return freeBoardService.read(boardId);
