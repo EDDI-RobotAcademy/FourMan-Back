@@ -6,6 +6,7 @@ import fourman.backend.domain.member.entity.Member;
 import lombok.Data;
 import org.hibernate.annotations.ColumnDefault;
 import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.DynamicInsert;
 import org.hibernate.annotations.UpdateTimestamp;
 import org.springframework.format.annotation.DateTimeFormat;
 
@@ -14,6 +15,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+@DynamicInsert
 @Data
 @Entity
 public class QuestionBoard {
@@ -53,9 +55,24 @@ public class QuestionBoard {
     @OneToMany(mappedBy = "questionBoard", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     private List<Comment> questionBoardCommentList = new ArrayList<>();
 
+    @ColumnDefault("false")
     private boolean secret;
     @ColumnDefault("0")
     private Long viewCnt;
+
+    // 부모 게시물과의 관계
+    @JsonIgnore
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "parent_board_id")
+    private QuestionBoard parentBoard;
+
+    //자식게시물(답글) 목록
+    @JsonIgnore
+    @OneToMany(mappedBy = "parentBoard", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    private List<QuestionBoard> replies = new ArrayList<>();
+
+    @ColumnDefault("0")
+    private Long replyCnt;
 
     public void increaseViewCnt() {
         this.viewCnt++;

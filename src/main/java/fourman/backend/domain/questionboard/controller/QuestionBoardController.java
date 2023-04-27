@@ -62,4 +62,12 @@ public class QuestionBoardController {
 //    public Long showViewCnt(@PathVariable("boardId") Long boardId) {
 //       return questionBoardService.showViewCnt(boardId);
 //    }
+
+    @PostMapping("/register-reply")
+    public QuestionBoard questionBoardReplyRegister(@RequestBody QuestionBoardRequestForm questionBoardRequestForm) {
+        System.out.println("secret 체크하자 : " +questionBoardRequestForm.isSecret());
+        System.out.println("parentBoardId도 체크하자 : " + questionBoardRequestForm.getParentBoardId());
+        System.out.println("title 체크 :" + questionBoardRequestForm.getTitle());
+        return questionBoardService.replyRegister(questionBoardRequestForm);
+    }
 }
