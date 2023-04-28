@@ -30,6 +30,7 @@ public class MyPageController {
         return myPageService.myInfo(memberId);
     }
 
+    @SecurityAnnotations.SecurityCheck(SecurityAnnotations.UserType.AUTHENTICATED)
     @GetMapping("/side-bar/{memberId}")
     public MyInfoSideBarResponse myInfoSideBar(@PathVariable("memberId") Long memberId) {
         log.info("myInfoSideBar()");
