@@ -1,5 +1,6 @@
 package fourman.backend.domain.product.controller;
 
+import fourman.backend.domain.aop.aspect.SecurityAnnotations;
 import fourman.backend.domain.product.controller.requestForm.EditProductRequestForm;
 import fourman.backend.domain.product.controller.responseForm.AllProductResponseForm;
 import fourman.backend.domain.product.controller.responseForm.ImageResourceResponseForm;
@@ -23,6 +24,7 @@ public class ProductController {
 
     private final ProductService productService;
 
+    @SecurityAnnotations.SecurityCheck(SecurityAnnotations.UserType.CAFE)
     @PostMapping(value = "/register", consumes = { MediaType.MULTIPART_FORM_DATA_VALUE, MediaType.APPLICATION_JSON_VALUE })
     public void productRegister(@RequestPart(value = "imageFileList") List<MultipartFile> imageFileList,
                                 @RequestPart(value = "productInfo") ProductRequestForm productRequestForm) {
@@ -31,6 +33,7 @@ public class ProductController {
         productService.register(imageFileList, productRequestForm);
     }
 
+    @SecurityAnnotations.SecurityCheck(SecurityAnnotations.UserType.AUTHENTICATED)
     @GetMapping("/all/{cafeId}")
     public List<AllProductResponseForm> allProductList (@PathVariable("cafeId") Long cafeId) {
         log.info("allProductList()");
@@ -38,6 +41,7 @@ public class ProductController {
         return productService.all(cafeId);
     }
 
+    @SecurityAnnotations.SecurityCheck(SecurityAnnotations.UserType.CAFE)
     @PostMapping(value = "/editProductWithImage", consumes = { MediaType.MULTIPART_FORM_DATA_VALUE, MediaType.APPLICATION_JSON_VALUE })
     public Product editProductWithImage(@RequestPart(value = "editedProductImage") List<MultipartFile> editImageFileList,
                                         @RequestPart(value = "editedProductInfo") EditProductRequestForm editProductRequestForm) {
@@ -46,6 +50,7 @@ public class ProductController {
         return productService.editProductWithImage(editImageFileList, editProductRequestForm);
     }
 
+    @SecurityAnnotations.SecurityCheck(SecurityAnnotations.UserType.CAFE)
     @PostMapping(value = "/editProductWithoutImage", consumes = { MediaType.MULTIPART_FORM_DATA_VALUE, MediaType.APPLICATION_JSON_VALUE })
     public Product editProductWithoutImage(@RequestPart(value = "editedProductInfo") EditProductRequestForm editProductRequestForm) {
         log.info("productModifyWithoutImage()");
@@ -53,6 +58,7 @@ public class ProductController {
         return productService.editProductWithoutImage(editProductRequestForm);
     }
 
+    @SecurityAnnotations.SecurityCheck(SecurityAnnotations.UserType.CAFE)
     @DeleteMapping("/{productId}")
     public void productRemove(@PathVariable("productId") Long productId) {
         log.info("productRemove()");

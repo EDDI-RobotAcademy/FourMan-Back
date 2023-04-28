@@ -1,5 +1,6 @@
 package fourman.backend.domain.order.controller;
 
+import fourman.backend.domain.aop.aspect.SecurityAnnotations;
 import fourman.backend.domain.order.controller.form.requestForm.OrderInfoRequestForm;
 import fourman.backend.domain.order.controller.form.responseForm.CafeOrderInfoResponseForm;
 import fourman.backend.domain.order.controller.form.responseForm.OrderInfoResponseForm;
@@ -17,8 +18,9 @@ import java.util.List;
 @RequestMapping("/order")
 public class OrderController {
 
-    final OrderService orderService;
+    private final OrderService orderService;
 
+    @SecurityAnnotations.SecurityCheck(SecurityAnnotations.UserType.AUTHENTICATED)
     @PostMapping(value = "/register", consumes = { MediaType.MULTIPART_FORM_DATA_VALUE, MediaType.APPLICATION_JSON_VALUE })
     public void orderRegister(@RequestPart(value = "orderInfo") OrderInfoRequestForm orderInfoRequestForm) {
         log.info("orderRegister()");
@@ -26,6 +28,7 @@ public class OrderController {
         orderService.register(orderInfoRequestForm);
     }
 
+    @SecurityAnnotations.SecurityCheck(SecurityAnnotations.UserType.AUTHENTICATED)
     @GetMapping("/orderList/{memberId}")
     public List<OrderInfoResponseForm> orderList(@PathVariable("memberId") Long memberId) {
         log.info("orderList()");
@@ -33,6 +36,7 @@ public class OrderController {
         return orderService.orderList(memberId);
     }
 
+    @SecurityAnnotations.SecurityCheck(SecurityAnnotations.UserType.AUTHENTICATED)
     @GetMapping("/point/{memberId}")
     public Long getHoldPoint(@PathVariable("memberId") Long memberId) {
         log.info("getHoldPoint()");
@@ -40,6 +44,7 @@ public class OrderController {
         return orderService.getHoldPoint(memberId);
     }
 
+    @SecurityAnnotations.SecurityCheck(SecurityAnnotations.UserType.AUTHENTICATED)
     @PostMapping("/cancel/{orderId}")
     public void orderCancel(@PathVariable("orderId") Long orderId) {
         log.info("orderCancel()");
@@ -47,6 +52,7 @@ public class OrderController {
         orderService.orderCancel(orderId);
     }
 
+    @SecurityAnnotations.SecurityCheck(SecurityAnnotations.UserType.CAFE)
     @GetMapping("/cafeOrderList/{cafeId}")
     public List<CafeOrderInfoResponseForm> cafeOrderList(@PathVariable("cafeId") Long cafeId) {
         log.info("cafeOrderList()");
@@ -54,6 +60,7 @@ public class OrderController {
         return orderService.cafeOrderList(cafeId);
     }
 
+    @SecurityAnnotations.SecurityCheck(SecurityAnnotations.UserType.CAFE)
     @PostMapping("/ready/{orderId}")
     public void orderReady(@PathVariable("orderId") Long orderId) {
         log.info("orderReady()");
