@@ -18,6 +18,7 @@ import javax.transaction.Transactional;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Slf4j
 @Service
@@ -32,23 +33,23 @@ public class QuestionBoardServiceImpl implements QuestionBoardService {
     @Autowired
     final private MemberRepository memberRepository;
 
-
-    @Transactional
-    @Override
-    public List<QuestionBoardResponse> list() {
-        List<QuestionBoard> questionBoardList = questionBoardRepository.findAll(Sort.by(Sort.Direction.DESC, "boardId"));
-        List<QuestionBoardResponse> questionBoardResponseList = new ArrayList<>();
-
-        for(QuestionBoard questionBoard: questionBoardList) {
-            Long commentCount = (long) questionBoard.getQuestionBoardCommentList().size();
-            QuestionBoardResponse questionBoardResponse = new QuestionBoardResponse(
-                   questionBoard.getMember().getId(), questionBoard.getBoardId(), questionBoard.getTitle(),
-                    questionBoard.getWriter(), questionBoard.getQuestionType(), questionBoard.getContent(),
-                    questionBoard.getRegDate(), questionBoard.getUpdDate(), questionBoard.isSecret(), questionBoard.getViewCnt(), commentCount);
-            questionBoardResponseList.add(questionBoardResponse);
-        }
-            return questionBoardResponseList;
-        }
+//
+//    @Transactional
+//    @Override
+//    public List<QuestionBoardResponse> list() {
+//        List<QuestionBoard> questionBoardList = questionBoardRepository.findAll(Sort.by(Sort.Direction.DESC, "boardId"));
+//        List<QuestionBoardResponse> questionBoardResponseList = new ArrayList<>();
+//
+//        for(QuestionBoard questionBoard: questionBoardList) {
+//            Long commentCount = (long) questionBoard.getQuestionBoardCommentList().size();
+//            QuestionBoardResponse questionBoardResponse = new QuestionBoardResponse(
+//                   questionBoard.getMember().getId(), questionBoard.getBoardId(), questionBoard.getTitle(),
+//                    questionBoard.getWriter(), questionBoard.getQuestionType(), questionBoard.getContent(),
+//                    questionBoard.getRegDate(), questionBoard.getUpdDate(), questionBoard.isSecret(), questionBoard.getViewCnt(), commentCount);
+//            questionBoardResponseList.add(questionBoardResponse);
+//        }
+//            return questionBoardResponseList;
+//        }
 
 
     @Override
@@ -69,6 +70,7 @@ public class QuestionBoardServiceImpl implements QuestionBoardService {
 
         //게시글 생성 시 viewCnt 0으로 설정
         questionBoard.setViewCnt(0L);
+        questionBoard.setDepth(0);
         questionBoardRepository.save(questionBoard);
         return questionBoard;
     }
@@ -90,7 +92,7 @@ public class QuestionBoardServiceImpl implements QuestionBoardService {
         QuestionBoardResponse questionBoardResponse = new QuestionBoardResponse(
                 questionBoard.getMember().getId(), questionBoard.getBoardId(), questionBoard.getTitle(),
                 questionBoard.getWriter(), questionBoard.getQuestionType(), questionBoard.getContent(),
-                questionBoard.getRegDate(), questionBoard.getUpdDate(), questionBoard.isSecret(), questionBoard.getViewCnt(), 0L);
+                questionBoard.getRegDate(), questionBoard.getUpdDate(), questionBoard.isSecret(), questionBoard.getViewCnt(), 0L, null, questionBoard.getDepth());
 
         return questionBoardResponse;
         //처리 로직
@@ -158,11 +160,65 @@ public class QuestionBoardServiceImpl implements QuestionBoardService {
         questionBoard.setSecret(questionBoardRequestForm.isSecret());
         questionBoard.setViewCnt(0L);
 
+
+        // 부모 게시물이 최상위 게시물인 경우, 자식 게시물의 depth 값을 1로 설정
+        if (parentBoard.getDepth() == 0) {
+            questionBoard.setDepth(1);
+        } else {
+            // 부모 게시물이 이미 자식 게시물인 경우, 부모 게시물의 depth 값을 가져와 +1 한 뒤 자식 게시물의 depth 값을 설정
+            questionBoard.setDepth(parentBoard.getDepth() + 1);
+        }
+
         //부모 게시글의 replyCnt 증가
         parentBoard.setReplyCnt(parentBoard.getReplyCnt() +1);
         questionBoardRepository.save(questionBoard);
+        questionBoardRepository.save(parentBoard);
         return questionBoard;
     }
+
+    //QuestionBoardResponse를 반환하는 부분에서 자식 게시물(replies) 정보를 포함해 반환
+    private QuestionBoardResponse convertToQuestionBoardResponse(QuestionBoard questionBoard) {
+        List<QuestionBoardResponse> replies = questionBoard.getReplies().stream()
+                .map(this::convertToQuestionBoardResponse)
+                .collect(Collectors.toList());
+
+        Long commentCount = (long) questionBoard.getQuestionBoardCommentList().size();
+
+        return new QuestionBoardResponse(
+                questionBoard.getMember().getId(),
+                questionBoard.getBoardId(),
+                questionBoard.getTitle(),
+                questionBoard.getWriter(),
+                questionBoard.getQuestionType(),
+                questionBoard.getContent(),
+                questionBoard.getRegDate(),
+                questionBoard.getUpdDate(),
+                questionBoard.isSecret(),
+                questionBoard.getViewCnt(),
+                commentCount,
+                replies,
+                questionBoard.getDepth()
+        );
+    }
+
+        @Transactional
+        @Override
+        public List<QuestionBoardResponse> listWithReplies() {
+            List<QuestionBoard> questionBoardList = questionBoardRepository.findAll(Sort.by(Sort.Direction.DESC, "boardId"));
+            List<QuestionBoardResponse> questionBoardResponseList = new ArrayList<>();
+
+            for (QuestionBoard questionBoard : questionBoardList) {
+                if (questionBoard.getParentBoard() == null) { // only process parent boards
+                    // 부모 게시물과 자식 게시물 정보를 포함한 QuestionBoardResponse 객체 생성
+                    QuestionBoardResponse questionBoardResponse = convertToQuestionBoardResponse(questionBoard);
+                    questionBoardResponseList.add(questionBoardResponse);
+                }
+            }
+            return questionBoardResponseList;
+        }
+
+    }
+
 
 //    @Override
 //    public Long showViewCnt(Long boardId) {
@@ -179,4 +235,3 @@ public class QuestionBoardServiceImpl implements QuestionBoardService {
 
 
 
-}

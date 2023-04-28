@@ -2,7 +2,9 @@ package fourman.backend.domain.questionboard.service.response;
 
 import lombok.*;
 
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 @Getter
 @Setter
@@ -21,8 +23,6 @@ public class QuestionBoardResponse {
     final private boolean secret;
     final private Long viewCnt;
     final private Long commentCount;
-
-
-
-
+    final private List<QuestionBoardResponse> replies;
+    final private int depth;
 }

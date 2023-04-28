@@ -21,9 +21,14 @@ public class QuestionBoardController {
     final private QuestionBoardService questionBoardService;
 
 
-    @GetMapping("/list")
-    public List<QuestionBoardResponse> questionBoardList() {
-        return questionBoardService.list();
+//    @GetMapping("/list")
+//    public List<QuestionBoardResponse> questionBoardList() {
+//        return questionBoardService.list();
+//    }
+
+    @GetMapping("/all-list")
+    public List<QuestionBoardResponse> questionBoardAllList() {
+        return questionBoardService.listWithReplies();
     }
 
     @PostMapping("/register")

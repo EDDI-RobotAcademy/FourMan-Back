@@ -11,6 +11,7 @@ import org.hibernate.annotations.UpdateTimestamp;
 import org.springframework.format.annotation.DateTimeFormat;
 
 import javax.persistence.*;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -69,10 +70,25 @@ public class QuestionBoard {
     //자식게시물(답글) 목록
     @JsonIgnore
     @OneToMany(mappedBy = "parentBoard", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @OrderBy("regDate ASC")
     private List<QuestionBoard> replies = new ArrayList<>();
 
     @ColumnDefault("0")
     private Long replyCnt;
+
+    @ColumnDefault("0")
+    private int depth;
+
+    public void addChild(QuestionBoard child) {
+        child.setDepth(child.getDepth()+1);
+        replies.add(child);
+        child.setParentBoard(this);
+    }
+
+    public void removeChild(QuestionBoard child) {
+        replies.remove(child);
+        child.setParentBoard(null);
+    }
 
     public void increaseViewCnt() {
         this.viewCnt++;
