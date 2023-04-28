@@ -31,6 +31,7 @@ dependencies {
 	implementation 'org.apache.commons:commons-lang3:3.12.0'
 	implementation 'commons-io:commons-io:2.11.0'
 	implementation 'org.springframework.boot:spring-boot-starter-mail'
+	implementation 'net.nurigo:sdk:4.2.7'
 
 }
 
