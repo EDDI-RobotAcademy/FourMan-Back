@@ -134,6 +134,36 @@ public class QuestionBoardServiceImpl implements QuestionBoardService {
         return questionBoardRepository.findMyQuestionBoardByMemberId(memberId);
     }
 
+    @Override
+    public QuestionBoard replyRegister(QuestionBoardRequestForm questionBoardRequestForm) {
+        Optional<Member> maybeMember = memberRepository.findById(questionBoardRequestForm.getMemberId());
+        if(maybeMember.isEmpty()){
+            return null;
+        }
+        Optional<QuestionBoard> maybeParentBoard = questionBoardRepository.findById(questionBoardRequestForm.getParentBoardId());
+        if(maybeParentBoard.isEmpty()) {
+            return null;
+        }
+
+        QuestionBoard parentBoard = maybeParentBoard.get();
+        Member member = maybeMember.get();
+
+        QuestionBoard questionBoard = new QuestionBoard();
+        questionBoard.setTitle(questionBoardRequestForm.getTitle());
+        questionBoard.setWriter(questionBoardRequestForm.getWriter());
+        questionBoard.setQuestionType(questionBoardRequestForm.getQuestionType());
+        questionBoard.setContent(questionBoardRequestForm.getContent());
+        questionBoard.setParentBoard(parentBoard);
+        questionBoard.setMember(member);
+        questionBoard.setSecret(questionBoardRequestForm.isSecret());
+        questionBoard.setViewCnt(0L);
+
+        //부모 게시글의 replyCnt 증가
+        parentBoard.setReplyCnt(parentBoard.getReplyCnt() +1);
+        questionBoardRepository.save(questionBoard);
+        return questionBoard;
+    }
+
 //    @Override
 //    public Long showViewCnt(Long boardId) {
 //        Optional<QuestionBoard> maybeQuestionBoard = questionBoardRepository.findById(boardId);
