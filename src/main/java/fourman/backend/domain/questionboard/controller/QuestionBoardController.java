@@ -1,6 +1,7 @@
 package fourman.backend.domain.questionboard.controller;
 
 
+import fourman.backend.domain.aop.aspect.SecurityAnnotations;
 import fourman.backend.domain.questionboard.controller.requestForm.QuestionBoardRequestForm;
 import fourman.backend.domain.questionboard.entity.QuestionBoard;
 import fourman.backend.domain.questionboard.service.QuestionBoardService;
@@ -21,11 +22,17 @@ public class QuestionBoardController {
     final private QuestionBoardService questionBoardService;
 
 
-    @GetMapping("/list")
-    public List<QuestionBoardResponse> questionBoardList() {
-        return questionBoardService.list();
+//    @GetMapping("/list")
+//    public List<QuestionBoardResponse> questionBoardList() {
+//        return questionBoardService.list();
+//    }
+
+    @GetMapping("/all-list")
+    public List<QuestionBoardResponse> questionBoardAllList() {
+        return questionBoardService.listWithReplies();
     }
 
+    @SecurityAnnotations.SecurityCheck(SecurityAnnotations.UserType.AUTHENTICATED)
     @PostMapping("/register")
     public QuestionBoard questionBoardRegister(@RequestBody QuestionBoardRequestForm questionBoardRequestForm) {
         return questionBoardService.register(questionBoardRequestForm);
@@ -35,13 +42,13 @@ public class QuestionBoardController {
     public QuestionBoardResponse questionBoardRead(@PathVariable("boardId") Long boardId) {
         return questionBoardService.read(boardId);
     }
-
+    @SecurityAnnotations.SecurityCheck(SecurityAnnotations.UserType.AUTHENTICATED)
     @PutMapping("/{boardId}")
     public QuestionBoard questionBoardModify(@PathVariable("boardId") Long boardId,
                                              @RequestBody QuestionBoardRequestForm questionBoardRequestForm) {
         return questionBoardService.modify(boardId, questionBoardRequestForm);
     }
-
+    @SecurityAnnotations.SecurityCheck(SecurityAnnotations.UserType.AUTHENTICATED)
     @DeleteMapping("/{boardId}")
     public void questionBoardDelete(@PathVariable("boardId") Long boardId) {
         questionBoardService.delete(boardId);
@@ -63,6 +70,7 @@ public class QuestionBoardController {
 //       return questionBoardService.showViewCnt(boardId);
 //    }
 
+    @SecurityAnnotations.SecurityCheck(SecurityAnnotations.UserType.MANAGER)
     @PostMapping("/register-reply")
     public QuestionBoard questionBoardReplyRegister(@RequestBody QuestionBoardRequestForm questionBoardRequestForm) {
         System.out.println("secret 체크하자 : " +questionBoardRequestForm.isSecret());

@@ -1,10 +1,12 @@
 package fourman.backend.domain.questionboard.controller;
 
 
+import fourman.backend.domain.aop.aspect.SecurityAnnotations;
 import fourman.backend.domain.questionboard.controller.requestForm.CommentRequestForm;
 import fourman.backend.domain.questionboard.entity.Comment;
 import fourman.backend.domain.questionboard.service.CommentService;
 import fourman.backend.domain.questionboard.service.response.CommentResponse;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -13,12 +15,13 @@ import java.util.List;
 
 @Slf4j
 @RestController
+@RequiredArgsConstructor
 @RequestMapping("/question-board/comment")
 public class CommentController {
 
-    @Autowired
-    CommentService commentService;
+    final private CommentService commentService;
 
+    @SecurityAnnotations.SecurityCheck(SecurityAnnotations.UserType.AUTHENTICATED)
     @PostMapping("/register")
     public void commentRegister(@RequestBody CommentRequestForm commentRequestForm) {
         log.info("commentRequestForm");
@@ -31,11 +34,13 @@ public class CommentController {
         return commentService.commentList(boardId);
     }
 
+    @SecurityAnnotations.SecurityCheck(SecurityAnnotations.UserType.AUTHENTICATED)
     @DeleteMapping("/{commentId}")
         public void commentDelete(@PathVariable("commentId") Long commentId) {
             log.info("commentDelete()");
             commentService.commentDelete(commentId);
     }
+    @SecurityAnnotations.SecurityCheck(SecurityAnnotations.UserType.AUTHENTICATED)
     @PutMapping("/{commentId}")
     public Comment commentModify(@PathVariable("commentId") Long commentId,
                                  @RequestBody CommentRequestForm commentRequestForm) {
