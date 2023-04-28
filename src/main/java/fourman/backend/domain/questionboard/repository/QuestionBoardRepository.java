@@ -14,4 +14,6 @@ public interface QuestionBoardRepository extends JpaRepository<QuestionBoard, Lo
 
     @Query("SELECT q FROM QuestionBoard q join fetch q.member m where m.id = :memberId")
     List<QuestionBoard> findMyQuestionBoardByMemberId(Long memberId);
+
+    void deleteByMemberId(Long memberId);
 }

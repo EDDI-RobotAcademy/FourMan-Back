@@ -18,4 +18,5 @@ public interface ReviewBoardRepository extends JpaRepository<ReviewBoard, Long> 
     @Query("select r from ReviewBoard r join fetch r.member m where m.id = :memberId")
     List<ReviewBoard> findReviewBoardByMemberId(Long memberId);
 
+    void deleteByMemberId(Long memberId);
 }
