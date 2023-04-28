@@ -1,6 +1,7 @@
 package fourman.backend.domain.order.controller;
 
 import fourman.backend.domain.aop.aspect.SecurityAnnotations;
+import fourman.backend.domain.order.controller.form.requestForm.OrderCancelRequestForm;
 import fourman.backend.domain.order.controller.form.requestForm.OrderInfoRequestForm;
 import fourman.backend.domain.order.controller.form.responseForm.CafeOrderInfoResponseForm;
 import fourman.backend.domain.order.controller.form.responseForm.OrderInfoResponseForm;
@@ -46,10 +47,11 @@ public class OrderController {
 
     @SecurityAnnotations.SecurityCheck(SecurityAnnotations.UserType.AUTHENTICATED)
     @PostMapping("/cancel/{orderId}")
-    public void orderCancel(@PathVariable("orderId") Long orderId) {
+    public void orderCancel(@PathVariable("orderId") Long orderId,
+                            @RequestBody OrderCancelRequestForm orderCancelRequestForm) {
         log.info("orderCancel()");
 
-        orderService.orderCancel(orderId);
+        orderService.orderCancel(orderId, orderCancelRequestForm);
     }
 
     @SecurityAnnotations.SecurityCheck(SecurityAnnotations.UserType.CAFE)
