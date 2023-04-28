@@ -4,14 +4,18 @@ import fourman.backend.domain.cafeIntroduce.entity.Cafe;
 import fourman.backend.domain.cafeIntroduce.repository.CafeRepository;
 import fourman.backend.domain.freeBoard.entity.FreeBoard;
 import fourman.backend.domain.freeBoard.entity.FreeBoardComment;
+import fourman.backend.domain.freeBoard.entity.Recommendation;
 import fourman.backend.domain.freeBoard.repository.FreeBoardCommentRepository;
 import fourman.backend.domain.freeBoard.repository.FreeBoardRepository;
+import fourman.backend.domain.freeBoard.repository.RecommendataionRepository;
 import fourman.backend.domain.member.entity.*;
 import fourman.backend.domain.member.repository.*;
 import fourman.backend.domain.myPage.controller.requestForm.AddPointRequestForm;
 import fourman.backend.domain.myPage.controller.requestForm.CafeInfoModifyRequestForm;
 import fourman.backend.domain.myPage.controller.requestForm.MyInfoModifyRequestForm;
 import fourman.backend.domain.myPage.service.responseForm.*;
+import fourman.backend.domain.noticeBoard.entity.NoticeBoard;
+import fourman.backend.domain.noticeBoard.repository.NoticeBoardRepository;
 import fourman.backend.domain.order.entity.OrderInfo;
 import fourman.backend.domain.order.repository.OrderInfoRepository;
 import fourman.backend.domain.questionboard.entity.Comment;
@@ -44,7 +48,6 @@ public class MyPageServiceImpl implements MyPageService {
     final private FreeBoardRepository freeBoardRepository;
     final private QuestionBoardRepository questionBoardRepository;
     final private CommentRepository commentRepository;
-    final private ReservationRepository reservationRepository;
     final private FreeBoardCommentRepository freeBoardCommentRepository;
     final private RedisService redisService;
     final private CafeRepository cafeRepository;
@@ -52,6 +55,8 @@ public class MyPageServiceImpl implements MyPageService {
     final private CafeCodeRepository cafeCodeRepository;
     final private OrderInfoRepository orderInfoRepository;
     final private PointInfoRepository pointInfoRepository;
+    final private RecommendataionRepository recommendataionRepository;
+    final private FavoriteRepository favoriteRepository;
 
     @Override
     public MyInfoResponse myInfo(Long memberId) {
@@ -151,58 +156,35 @@ public class MyPageServiceImpl implements MyPageService {
         return myInfoModifyResponse;
     }
 
+    @Transactional
     @Override
     public void withdrawal(Long memberId) {
         // 등록한 리뷰 삭제
-        List<ReviewBoard> reviewBoardList = reviewBoardRepository.findReviewBoardByMemberId(memberId);
-        for(ReviewBoard reviewBoard: reviewBoardList) {
-            reviewBoardRepository.delete(reviewBoard);
-        }
+        reviewBoardRepository.deleteByMemberId(memberId);
 
         // 본인이 작성한 자유게시물 댓글 삭제
-        List<FreeBoardComment> freeBoardCommentList = freeBoardCommentRepository.findFreeBoardCommentByMemberId(memberId);
-        for(FreeBoardComment freeBoardComment: freeBoardCommentList) {
-            freeBoardCommentRepository.delete(freeBoardComment);
-        }
+        freeBoardCommentRepository.deleteByMemberId(memberId);
 
         // 등록한 자유게시물 삭제
-        List<FreeBoard> freeBoardList = freeBoardRepository.findFreeBoardByMemberId(memberId);
-
-        for(FreeBoard freeBoard: freeBoardList) {
-            List<FreeBoardComment> freeBoardCommentList2 = freeBoardCommentRepository.findFreeBoardCommentByBoardId(freeBoard.getBoardId());
-            for (FreeBoardComment freeBoardComment: freeBoardCommentList2) {
-                freeBoardCommentRepository.delete(freeBoardComment);
-            }
-            freeBoardRepository.delete(freeBoard);
-        }
+        freeBoardRepository.deleteByMemberId(memberId);
 
         // 본인이 작성한 Q&A 댓글 삭제
-        List<Comment> commentList = commentRepository.findCommentByMemberId(memberId);
-        for(Comment comment: commentList) {
-            commentRepository.delete(comment);
-        }
+        commentRepository.deleteByMemberId(memberId);
 
         // 등록한 Q&A게시물 삭제
-        List<QuestionBoard> questionBoardList = questionBoardRepository.findMyQuestionBoardByMemberId(memberId);
+        questionBoardRepository.deleteByMemberId(memberId);
 
-        for(QuestionBoard questionBoard: questionBoardList) {
-            List<Comment> commentList2 = commentRepository.findCommentByBoardId(questionBoard.getBoardId());
-            for(Comment comment: commentList2) {
-                commentRepository.delete(comment);
-            }
-            questionBoardRepository.delete(questionBoard);
-        }
+        // 주문정보 삭제
+        orderInfoRepository.deleteByMemberId(memberId);
 
-        //예약정보 삭제시 자리도 같이 삭제되는 오류
-//        // 예약정보 삭제
-//        List<Reservation> reservationList = reservationRepository.findReservationByMemberId(memberId);
-//        for(Reservation reservation: reservationList) {
-//            reservationRepository.delete(reservation);
-//        }
+        // Recommendation 삭제
+        recommendataionRepository.deleteByMemberId(memberId);
+
+        // 찜 카페 삭제
+        favoriteRepository.deleteByMemberId(memberId);
 
         // 회원 정보 삭제
         memberRepository.deleteById(memberId);
-
     }
 
     @Transactional
