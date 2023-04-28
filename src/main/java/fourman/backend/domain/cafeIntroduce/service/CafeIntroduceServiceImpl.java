@@ -161,10 +161,25 @@ public class CafeIntroduceServiceImpl implements CafeIntroduceService {
             log.info("카페가 없습니다.");
             return null;
         }
+
+        // 해당 카페의 별점 계산
+        List<ReviewBoard> reviewBoardList = reviewBoardRepository.findByCafeCafeId(cafeId);
+
+        double avgRating = 0;
+        Long totalRating = 0L;
+
+        for(ReviewBoard reviewBoard: reviewBoardList) {
+            totalRating += reviewBoard.getRating();
+        }
+
+        if (reviewBoardList.size() > 0) {
+            avgRating = (double) totalRating / reviewBoardList.size();
+        }
+
         Cafe cafe = maybeCafe.get();
         CafeIntroDetailResponse cafeIntroDetailResponse = new CafeIntroDetailResponse(
                 cafe.getCafeId(),cafe.getCafeCode().getCafeName(),cafe.getCafeAddress(),cafe.getCafeTel(),
-                cafe.getStartTime(),cafe.getEndTime(),cafe.getCafeInfo());
+                cafe.getStartTime(),cafe.getEndTime(),cafe.getCafeInfo(), avgRating, reviewBoardList.size());
         //글내용만 보내기
         log.info("카페read 서비스 완료");
         return cafeIntroDetailResponse;
