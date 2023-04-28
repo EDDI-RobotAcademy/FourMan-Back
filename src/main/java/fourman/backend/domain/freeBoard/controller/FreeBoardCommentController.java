@@ -18,7 +18,7 @@ public class FreeBoardCommentController {
 
 
     final private FreeBoardCommentService freeBoardCommentService;
-
+    
     @PostMapping("/register")
     public void freeBoardCommentRegister(@RequestBody FreeBoardCommentRequestForm freeBoardCommentRequestForm) {
         log.info("freeBoardCommentRegister()");

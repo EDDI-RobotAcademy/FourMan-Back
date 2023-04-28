@@ -1,6 +1,7 @@
 package fourman.backend.domain.questionboard.controller;
 
 
+import fourman.backend.domain.aop.aspect.SecurityAnnotations;
 import fourman.backend.domain.questionboard.controller.requestForm.CommentRequestForm;
 import fourman.backend.domain.questionboard.entity.Comment;
 import fourman.backend.domain.questionboard.service.CommentService;
@@ -20,6 +21,7 @@ public class CommentController {
 
     final private CommentService commentService;
 
+    @SecurityAnnotations.SecurityCheck(SecurityAnnotations.UserType.AUTHENTICATED)
     @PostMapping("/register")
     public void commentRegister(@RequestBody CommentRequestForm commentRequestForm) {
         log.info("commentRequestForm");
@@ -32,11 +34,13 @@ public class CommentController {
         return commentService.commentList(boardId);
     }
 
+    @SecurityAnnotations.SecurityCheck(SecurityAnnotations.UserType.AUTHENTICATED)
     @DeleteMapping("/{commentId}")
         public void commentDelete(@PathVariable("commentId") Long commentId) {
             log.info("commentDelete()");
             commentService.commentDelete(commentId);
     }
+    @SecurityAnnotations.SecurityCheck(SecurityAnnotations.UserType.AUTHENTICATED)
     @PutMapping("/{commentId}")
     public Comment commentModify(@PathVariable("commentId") Long commentId,
                                  @RequestBody CommentRequestForm commentRequestForm) {
