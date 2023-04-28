@@ -8,7 +8,7 @@ import java.util.List;
 
 public interface QuestionBoardService {
 
-    List<QuestionBoardResponse> list();
+//    List<QuestionBoardResponse> list();
 
     public QuestionBoard register(QuestionBoardRequestForm questionBoardRequestForm);
 
@@ -23,6 +23,8 @@ public interface QuestionBoardService {
     List<QuestionBoard> myQuestionBoardList(Long memberId);
 
     QuestionBoard replyRegister(QuestionBoardRequestForm questionBoardRequestForm);
+
+    List<QuestionBoardResponse> listWithReplies();
 
 
 //    Long showViewCnt(Long boardId);
