@@ -292,9 +292,24 @@ public class CafeIntroduceServiceImpl implements CafeIntroduceService {
             List<Cafe> cafeList= cafeRepository.findCafesByMemberIdOrderByCafeIdDesc(memberId);
             List<CafeIntroListResponse> cafeReponseList= new ArrayList<>();
             for(Cafe cafe: cafeList){
+
+                // 해당 카페의 별점 계산
+                List<ReviewBoard> reviewBoardList = reviewBoardRepository.findByCafeCafeId(cafe.getCafeId());
+
+                double avgRating = 0;
+                Long totalRating = 0L;
+
+                for(ReviewBoard reviewBoard: reviewBoardList) {
+                    totalRating += reviewBoard.getRating();
+                }
+
+                if (reviewBoardList.size() > 0) {
+                    avgRating = (double) totalRating / reviewBoardList.size();
+                }
+
                 cafeReponseList.add(new CafeIntroListResponse(
                         cafe.getCafeId(),cafe.getCafeCode().getCafeName(),cafe.getCafeAddress(),cafe.getCafeTel(),
-                        cafe.getStartTime(),cafe.getEndTime(), cafe.getCafeInfo() ));
+                        cafe.getStartTime(),cafe.getEndTime(), cafe.getCafeInfo(), avgRating, reviewBoardList.size() ));
             }
             return cafeReponseList;
     }
