@@ -17,4 +17,6 @@ public interface FreeBoardRepository extends JpaRepository<FreeBoard, Long> {
     List<FreeBoard> findSearchFreeBoardBySearchText(String searchText);
     @Query("select fb from FreeBoard fb order by fb.recommendation desc")
     List<FreeBoard> findThreeBoardByRecommendation(Pageable pageable);
+
+    void deleteByMemberId(Long memberId);
 }

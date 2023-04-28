@@ -25,4 +25,6 @@ public interface OrderInfoRepository extends JpaRepository<OrderInfo, Long> {
 
     @Query("select oi from OrderInfo oi where oi.cafe = :cafe")
     List<OrderInfo> findOrderInfoByCafe(Cafe cafe);
+
+    void deleteByMemberId(Long memberId);
 }
