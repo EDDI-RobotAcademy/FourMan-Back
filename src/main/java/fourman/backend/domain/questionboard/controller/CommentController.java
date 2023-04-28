@@ -5,6 +5,7 @@ import fourman.backend.domain.questionboard.controller.requestForm.CommentReques
 import fourman.backend.domain.questionboard.entity.Comment;
 import fourman.backend.domain.questionboard.service.CommentService;
 import fourman.backend.domain.questionboard.service.response.CommentResponse;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -13,11 +14,11 @@ import java.util.List;
 
 @Slf4j
 @RestController
+@RequiredArgsConstructor
 @RequestMapping("/question-board/comment")
 public class CommentController {
 
-    @Autowired
-    CommentService commentService;
+    final private CommentService commentService;
 
     @PostMapping("/register")
     public void commentRegister(@RequestBody CommentRequestForm commentRequestForm) {
