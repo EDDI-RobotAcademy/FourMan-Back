@@ -12,8 +12,6 @@ import java.util.List;
 
 public interface ProductService {
     void register(List<MultipartFile> imageFileList, ProductRequestForm productRequestForm);
-    List<ProductListResponseForm> list();
-    List<ImageResourceResponseForm> loadProductImage();
     List<AllProductResponseForm> all(Long cafeId);
     Product editProductWithImage(List<MultipartFile> editImageFileList, EditProductRequestForm editProductRequestForm);
     Product editProductWithoutImage(EditProductRequestForm editProductRequestForm);
