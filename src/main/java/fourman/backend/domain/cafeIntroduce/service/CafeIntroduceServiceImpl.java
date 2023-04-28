@@ -9,9 +9,12 @@ import fourman.backend.domain.eventBoard.entity.Event;
 import fourman.backend.domain.member.entity.CafeCode;
 import fourman.backend.domain.member.repository.CafeCodeRepository;
 import fourman.backend.domain.member.repository.FavoriteRepository;
+import fourman.backend.domain.order.repository.OrderInfoRepository;
+import fourman.backend.domain.product.repository.ProductRepository;
 import fourman.backend.domain.reservation.repository.CafeTableRepository;
 import fourman.backend.domain.reservation.repository.ReservationRepository;
 import fourman.backend.domain.reservation.repository.SeatRepository;
+import fourman.backend.domain.reviewBoard.repository.ReviewBoardRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.io.FilenameUtils;
@@ -41,7 +44,9 @@ public class CafeIntroduceServiceImpl implements CafeIntroduceService {
     private final ReservationRepository reservationRepository;
     private final CafeTableRepository cafeTableRepository;
     private final FavoriteRepository favoriteRepository;
-
+    private final OrderInfoRepository orderInfoRepository;
+    private final ProductRepository productRepository;
+    private final ReviewBoardRepository reviewBoardRepository;
     //
     @Override
     public Long registerCafe(List<MultipartFile> thumbnail, List<MultipartFile> fileList, CafeIntroRequestForm cafeIntroRequestForm) {
@@ -241,12 +246,16 @@ public class CafeIntroduceServiceImpl implements CafeIntroduceService {
     @Override
     public void deleteCafe(Long cafeId) {
         Optional<Cafe> maycafe = cafeRepository.findById(cafeId);
+        Cafe cafe=maycafe.get();
+        CafeCode cafeCode = cafe.getCafeCode();
+
+        productRepository.deleteByCafeCafeId(cafeId);
+        orderInfoRepository.deleteByCafeCafeId(cafeId);
+        reviewBoardRepository.deleteByCafeCafeId(cafeId);
         seatRepository.deleteByCafeCafeId(cafeId);
         cafeTableRepository.deleteByCafeCafeId(cafeId);
         reservationRepository.deleteByCafeCafeId(cafeId);
         favoriteRepository.deleteByCafeCafeId(cafeId);
-        Cafe cafe=maycafe.get();
-        CafeCode cafeCode = cafe.getCafeCode();
         if (cafeCode != null) {
             cafeCode.setCafe(null);
             cafe.setCafeCode(null);

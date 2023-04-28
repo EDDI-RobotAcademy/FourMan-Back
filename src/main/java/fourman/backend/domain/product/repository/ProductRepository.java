@@ -15,4 +15,6 @@ public interface ProductRepository extends JpaRepository<Product, Long> {
 
     @Query("select p from Product p join fetch p.imageResourceList where p.cafe = :cafe")
     List<Product> findAllByCafe(Cafe cafe);
+
+    void deleteByCafeCafeId(Long cafeId);
 }
