@@ -100,8 +100,9 @@ public class ReviewBoardServiceImpl implements ReviewBoardService {
                 for (MultipartFile multipartFile: fileList) {
                     log.info("requestFileUploadWithText() - filename: " + multipartFile.getOriginalFilename());
 
-                    String thumbnailRandomName = now.format(dtf);
-                    String thumbnailReName = 't'+thumbnailRandomName + multipartFile.getOriginalFilename();
+                    String originalFileName = multipartFile.getOriginalFilename();
+                    String englishFileName = originalFileName.replaceAll("[ㄱ-ㅎ가-힣]", "");//한글을 제거
+                    String thumbnailReName = 'r' + now.format(dtf) + englishFileName;
 
                     // 파일 저장 위치에 파일 이름을 더해 fullPath 문자열 저장
                     String fullPath = fixedStringPath + thumbnailReName;
