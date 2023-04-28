@@ -14,6 +14,7 @@ import fourman.backend.domain.product.repository.ProductRepository;
 import fourman.backend.domain.reservation.repository.CafeTableRepository;
 import fourman.backend.domain.reservation.repository.ReservationRepository;
 import fourman.backend.domain.reservation.repository.SeatRepository;
+import fourman.backend.domain.reviewBoard.entity.ReviewBoard;
 import fourman.backend.domain.reviewBoard.repository.ReviewBoardRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -47,6 +48,7 @@ public class CafeIntroduceServiceImpl implements CafeIntroduceService {
     private final OrderInfoRepository orderInfoRepository;
     private final ProductRepository productRepository;
     private final ReviewBoardRepository reviewBoardRepository;
+
     //
     @Override
     public Long registerCafe(List<MultipartFile> thumbnail, List<MultipartFile> fileList, CafeIntroRequestForm cafeIntroRequestForm) {
@@ -122,9 +124,24 @@ public class CafeIntroduceServiceImpl implements CafeIntroduceService {
         List<Cafe> cafeList= cafeRepository.findAll(Sort.by(Sort.Direction.DESC, "cafeId"));
         List<CafeIntroListResponse> cafeReponseList= new ArrayList<>();
         for(Cafe cafe: cafeList){
+            // 해당 카페의 별점 계산
+            List<ReviewBoard> reviewBoardList = reviewBoardRepository.findByCafeCafeId(cafe.getCafeId());
+
+            double avgRating = 0;
+            Long totalRating = 0L;
+
+            for(ReviewBoard reviewBoard: reviewBoardList) {
+                totalRating += reviewBoard.getRating();
+            }
+
+            if (reviewBoardList.size() > 0) {
+                avgRating = (double) totalRating / reviewBoardList.size();
+            }
+
+
             cafeReponseList.add(new CafeIntroListResponse(
                     cafe.getCafeId(),cafe.getCafeCode().getCafeName(),cafe.getCafeAddress(),cafe.getCafeTel(),
-                    cafe.getStartTime(),cafe.getEndTime(), cafe.getCafeInfo() ));
+                    cafe.getStartTime(),cafe.getEndTime(), cafe.getCafeInfo(), avgRating, reviewBoardList.size() ));
         }
         return cafeReponseList;
     }
@@ -148,10 +165,25 @@ public class CafeIntroduceServiceImpl implements CafeIntroduceService {
             log.info("카페가 없습니다.");
             return null;
         }
+
+        // 해당 카페의 별점 계산
+        List<ReviewBoard> reviewBoardList = reviewBoardRepository.findByCafeCafeId(cafeId);
+
+        double avgRating = 0;
+        Long totalRating = 0L;
+
+        for(ReviewBoard reviewBoard: reviewBoardList) {
+            totalRating += reviewBoard.getRating();
+        }
+
+        if (reviewBoardList.size() > 0) {
+            avgRating = (double) totalRating / reviewBoardList.size();
+        }
+
         Cafe cafe = maybeCafe.get();
         CafeIntroDetailResponse cafeIntroDetailResponse = new CafeIntroDetailResponse(
                 cafe.getCafeId(),cafe.getCafeCode().getCafeName(),cafe.getCafeAddress(),cafe.getCafeTel(),
-                cafe.getStartTime(),cafe.getEndTime(),cafe.getCafeInfo());
+                cafe.getStartTime(),cafe.getEndTime(),cafe.getCafeInfo(), avgRating, reviewBoardList.size());
         //글내용만 보내기
         log.info("카페read 서비스 완료");
         return cafeIntroDetailResponse;
@@ -268,9 +300,24 @@ public class CafeIntroduceServiceImpl implements CafeIntroduceService {
             List<Cafe> cafeList= cafeRepository.findCafesByMemberIdOrderByCafeIdDesc(memberId);
             List<CafeIntroListResponse> cafeReponseList= new ArrayList<>();
             for(Cafe cafe: cafeList){
+
+                // 해당 카페의 별점 계산
+                List<ReviewBoard> reviewBoardList = reviewBoardRepository.findByCafeCafeId(cafe.getCafeId());
+
+                double avgRating = 0;
+                Long totalRating = 0L;
+
+                for(ReviewBoard reviewBoard: reviewBoardList) {
+                    totalRating += reviewBoard.getRating();
+                }
+
+                if (reviewBoardList.size() > 0) {
+                    avgRating = (double) totalRating / reviewBoardList.size();
+                }
+
                 cafeReponseList.add(new CafeIntroListResponse(
                         cafe.getCafeId(),cafe.getCafeCode().getCafeName(),cafe.getCafeAddress(),cafe.getCafeTel(),
-                        cafe.getStartTime(),cafe.getEndTime(), cafe.getCafeInfo() ));
+                        cafe.getStartTime(),cafe.getEndTime(), cafe.getCafeInfo(), avgRating, reviewBoardList.size() ));
             }
             return cafeReponseList;
     }

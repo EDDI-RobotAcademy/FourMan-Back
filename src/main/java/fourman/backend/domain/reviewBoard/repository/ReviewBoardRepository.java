@@ -20,4 +20,6 @@ public interface ReviewBoardRepository extends JpaRepository<ReviewBoard, Long> 
 
     void deleteByCafeCafeId(Long cafeId);
     void deleteByMemberId(Long memberId);
+
+    List<ReviewBoard> findByCafeCafeId(Long cafeId);
 }

@@ -16,5 +16,7 @@ public class CafeIntroDetailResponse {
     final private String startTime;
     final private String endTime;
     final private CafeInfo cafeInfo;
+    final private double avgRating;
+    final private int totalRating;
 
 }
