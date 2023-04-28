@@ -11,6 +11,7 @@ import fourman.backend.domain.member.repository.MemberRepository;
 import fourman.backend.domain.member.repository.PointInfoRepository;
 import fourman.backend.domain.member.repository.PointRepository;
 import fourman.backend.domain.order.controller.form.requestForm.CartItemRequestForm;
+import fourman.backend.domain.order.controller.form.requestForm.OrderCancelRequestForm;
 import fourman.backend.domain.order.controller.form.requestForm.OrderInfoRequestForm;
 import fourman.backend.domain.order.controller.form.requestForm.OrderReservationRequestForm;
 import fourman.backend.domain.order.controller.form.responseForm.CafeOrderInfoResponseForm;
@@ -219,7 +220,7 @@ public class OrderServiceImpl implements OrderService {
     }
 
     @Override
-    public void orderCancel(Long orderId) {
+    public void orderCancel(Long orderId, OrderCancelRequestForm orderCancelRequestForm) {
 
         Optional<OrderInfo> maybeOrderInfo = orderInfoRepository.findById(orderId);
         OrderInfo orderInfo = maybeOrderInfo.get();
@@ -230,6 +231,14 @@ public class OrderServiceImpl implements OrderService {
 
         Long refundPoint = point.getPoint() + orderInfo.getUsePoint() - orderInfo.getSavedPoint();
         point.setPoint(refundPoint);
+
+        for(Integer seatNo :orderCancelRequestForm.getSeatNoList()) {
+            Optional<Time> maybeTime = timeRepository.findByTime(orderCancelRequestForm.getReservationTime());
+            Optional<Seat> existSeat = seatRepository.findSeatNoByCafeAndTimeAndSeatNo(orderInfo.getCafe(), maybeTime.get(), seatNo);
+            Seat seat = existSeat.get();
+            seat.setReserved(false);
+            seatRepository.save(seat);
+        }
 
         // 결제 시 적립되었던 포인트 반환
         PointInfo restorePointInfo = new PointInfo();
