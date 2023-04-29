@@ -5,11 +5,16 @@ import fourman.backend.domain.cafeIntroduce.entity.CafeInfo;
 import fourman.backend.domain.cafeIntroduce.repository.CafeRepository;
 import fourman.backend.domain.cafeIntroduce.service.response.CafeIntroDetailResponse;
 import fourman.backend.domain.cafeIntroduce.service.response.CafeIntroListResponse;
+import fourman.backend.domain.cafeIntroduce.service.response.CafeTop3ProductListResponse;
+import fourman.backend.domain.cafeIntroduce.service.response.CafeTop3ProductResponse;
 import fourman.backend.domain.eventBoard.entity.Event;
 import fourman.backend.domain.member.entity.CafeCode;
 import fourman.backend.domain.member.repository.CafeCodeRepository;
 import fourman.backend.domain.member.repository.FavoriteRepository;
+import fourman.backend.domain.order.entity.OrderProduct;
 import fourman.backend.domain.order.repository.OrderInfoRepository;
+import fourman.backend.domain.order.repository.OrderProductRepository;
+import fourman.backend.domain.product.entity.Product;
 import fourman.backend.domain.product.repository.ProductRepository;
 import fourman.backend.domain.reservation.repository.CafeTableRepository;
 import fourman.backend.domain.reservation.repository.ReservationRepository;
@@ -34,6 +39,7 @@ import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Slf4j
 @Transactional
@@ -50,6 +56,7 @@ public class CafeIntroduceServiceImpl implements CafeIntroduceService {
     private final ProductRepository productRepository;
     private final ReviewBoardRepository reviewBoardRepository;
     private final CafeService cafeService;
+    private final OrderProductRepository orderProductRepository;
 
 
     //
@@ -327,6 +334,15 @@ public class CafeIntroduceServiceImpl implements CafeIntroduceService {
                         cafe.getStartTime(),cafe.getEndTime(), cafe.getCafeInfo(), avgRating, reviewBoardList.size() ));
             }
             return cafeReponseList;
+    }
+
+    @Override
+    public CafeTop3ProductListResponse top3Product(Long cafeId) {
+        List<CafeTop3ProductResponse> results = orderProductRepository.findTopProductByCafeId(cafeId).stream().limit(3).collect(Collectors.toList());
+
+        return new CafeTop3ProductListResponse(results);
+
+
     }
 
 
