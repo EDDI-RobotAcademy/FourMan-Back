@@ -1,5 +1,6 @@
 package fourman.backend.domain.myPage.service;
 
+import fourman.backend.domain.myPage.controller.requestForm.AddCafeCodeRequestForm;
 import fourman.backend.domain.myPage.controller.requestForm.AddPointRequestForm;
 import fourman.backend.domain.myPage.controller.requestForm.CafeInfoModifyRequestForm;
 import fourman.backend.domain.myPage.controller.requestForm.MyInfoModifyRequestForm;
@@ -30,4 +31,6 @@ public interface MyPageService {
     List<PointDetailsResponse> pointDetailsList();
 
     List<PointDetailsResponse> memberPointDetails(Long memberId);
+
+    Boolean addCafeCode(AddCafeCodeRequestForm cafeCodeRequestForm);
 }
