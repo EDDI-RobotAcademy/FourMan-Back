@@ -12,6 +12,6 @@ import lombok.ToString;
 public class AddCafeCodeRequestForm {
 
     private String cafeName;
-
     private String codeOfCafe;
+    private String layoutIndex;
 }

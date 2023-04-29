@@ -516,9 +516,12 @@ public class MyPageServiceImpl implements MyPageService {
 
     @Override
     public Boolean addCafeCode(AddCafeCodeRequestForm cafeCodeRequestForm) {
+        System.out.println("addCafeCode진행");
         CafeCode newCafeCode = new CafeCode();
+        System.out.println("cafeCodeRequestForm.getLayoutIndex()"+cafeCodeRequestForm.getLayoutIndex());
         newCafeCode.setCafeName(cafeCodeRequestForm.getCafeName());
         newCafeCode.setCodeOfCafe(cafeCodeRequestForm.getCodeOfCafe());
+        newCafeCode.setLayoutIndex(cafeCodeRequestForm.getLayoutIndex());
 
         CafeCode savedCafeCode = cafeCodeRepository.save(newCafeCode);
 

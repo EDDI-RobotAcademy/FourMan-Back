@@ -14,6 +14,7 @@ import fourman.backend.domain.product.repository.ProductRepository;
 import fourman.backend.domain.reservation.repository.CafeTableRepository;
 import fourman.backend.domain.reservation.repository.ReservationRepository;
 import fourman.backend.domain.reservation.repository.SeatRepository;
+import fourman.backend.domain.reservation.service.CafeService;
 import fourman.backend.domain.reviewBoard.entity.ReviewBoard;
 import fourman.backend.domain.reviewBoard.repository.ReviewBoardRepository;
 import lombok.RequiredArgsConstructor;
@@ -48,6 +49,8 @@ public class CafeIntroduceServiceImpl implements CafeIntroduceService {
     private final OrderInfoRepository orderInfoRepository;
     private final ProductRepository productRepository;
     private final ReviewBoardRepository reviewBoardRepository;
+    private final CafeService cafeService;
+
 
     //
     @Override
@@ -110,6 +113,10 @@ public class CafeIntroduceServiceImpl implements CafeIntroduceService {
             cafeInfo.setCafeImagesName(imageList);
             cafe.setCafeInfo(cafeInfo);
             cafeRepository.save(cafe);
+
+            cafeService.insertDataForCafe(cafe,cafe.getCafeCode().getLayoutIndex());
+
+
             return cafe.getCafeId();
 
         } catch (FileNotFoundException e) {
