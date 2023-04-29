@@ -105,7 +105,7 @@ public class MyPageController {
     @SecurityAnnotations.SecurityCheck(SecurityAnnotations.UserType.MANAGER)
     @PutMapping("/add-cafe-code")
     public Boolean addCafeCode(@RequestBody AddCafeCodeRequestForm cafeCodeRequestForm) {
-
+        System.out.println(" addCafeCode 실행");
         return myPageService.addCafeCode(cafeCodeRequestForm);
     }
 
