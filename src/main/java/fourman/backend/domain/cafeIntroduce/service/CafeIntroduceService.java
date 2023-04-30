@@ -3,6 +3,8 @@ package fourman.backend.domain.cafeIntroduce.service;
 import fourman.backend.domain.cafeIntroduce.controller.requestForm.CafeIntroRequestForm;
 import fourman.backend.domain.cafeIntroduce.service.response.CafeIntroDetailResponse;
 import fourman.backend.domain.cafeIntroduce.service.response.CafeIntroListResponse;
+import fourman.backend.domain.cafeIntroduce.service.response.CafeTop3ProductListResponse;
+import fourman.backend.domain.cafeIntroduce.service.response.CafeTop3ProductResponse;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
@@ -21,4 +23,6 @@ public interface CafeIntroduceService {
     void deleteCafe(Long cafeId);
 
     List<CafeIntroListResponse> favoriteList(long memberId);
+
+    CafeTop3ProductListResponse top3Product(Long cafeId);
 }

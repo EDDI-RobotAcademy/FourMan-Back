@@ -5,6 +5,8 @@ import fourman.backend.domain.cafeIntroduce.controller.requestForm.CafeIntroRequ
 import fourman.backend.domain.cafeIntroduce.service.CafeIntroduceService;
 import fourman.backend.domain.cafeIntroduce.service.response.CafeIntroDetailResponse;
 import fourman.backend.domain.cafeIntroduce.service.response.CafeIntroListResponse;
+import fourman.backend.domain.cafeIntroduce.service.response.CafeTop3ProductListResponse;
+import fourman.backend.domain.cafeIntroduce.service.response.CafeTop3ProductResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.MediaType;
@@ -78,6 +80,12 @@ public class CafeIntroduceController {
     @GetMapping(path = "/list/{memberId}")
     public List<CafeIntroListResponse> cafeFavoriteList(@PathVariable("memberId") Long memberId) {
         return cafeIntroduceService.favoriteList(memberId);
+    }
+
+    @GetMapping("top3/{cafeId}")
+    public CafeTop3ProductListResponse top3Product(@PathVariable("cafeId") Long cafeId) {
+        log.info("top3Product");
+        return cafeIntroduceService.top3Product(cafeId);
     }
 
 }

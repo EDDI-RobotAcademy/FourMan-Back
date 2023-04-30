@@ -1,6 +1,7 @@
 package fourman.backend.domain.myPage.controller;
 
 import fourman.backend.domain.aop.aspect.SecurityAnnotations;
+import fourman.backend.domain.myPage.controller.requestForm.AddCafeCodeRequestForm;
 import fourman.backend.domain.myPage.controller.requestForm.AddPointRequestForm;
 import fourman.backend.domain.myPage.controller.requestForm.CafeInfoModifyRequestForm;
 import fourman.backend.domain.myPage.controller.requestForm.MyInfoModifyRequestForm;
@@ -108,6 +109,13 @@ public class MyPageController {
         log.info("modifyProfileImage()");
 
         myPageService.modifyProfileImage(memberId, imageFile);
+    }
+    
+    @SecurityAnnotations.SecurityCheck(SecurityAnnotations.UserType.MANAGER)
+    @PutMapping("/add-cafe-code")
+    public Boolean addCafeCode(@RequestBody AddCafeCodeRequestForm cafeCodeRequestForm) {
+        System.out.println(" addCafeCode 실행");
+        return myPageService.addCafeCode(cafeCodeRequestForm);
     }
 
 }

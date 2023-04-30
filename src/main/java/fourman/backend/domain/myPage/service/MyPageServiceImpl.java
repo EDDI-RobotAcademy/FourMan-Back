@@ -10,6 +10,7 @@ import fourman.backend.domain.freeBoard.repository.FreeBoardRepository;
 import fourman.backend.domain.freeBoard.repository.RecommendataionRepository;
 import fourman.backend.domain.member.entity.*;
 import fourman.backend.domain.member.repository.*;
+import fourman.backend.domain.myPage.controller.requestForm.AddCafeCodeRequestForm;
 import fourman.backend.domain.myPage.controller.requestForm.AddPointRequestForm;
 import fourman.backend.domain.myPage.controller.requestForm.CafeInfoModifyRequestForm;
 import fourman.backend.domain.myPage.controller.requestForm.MyInfoModifyRequestForm;
@@ -551,6 +552,18 @@ public class MyPageServiceImpl implements MyPageService {
 
         memberProfile.setProfileImage(uniqueFilename);
         memberProfileRepository.save(memberProfile);
+    }
+    
+    public Boolean addCafeCode(AddCafeCodeRequestForm cafeCodeRequestForm) {
+        System.out.println("addCafeCode진행");
+        CafeCode newCafeCode = new CafeCode();
+        System.out.println("cafeCodeRequestForm.getLayoutIndex()"+cafeCodeRequestForm.getLayoutIndex());
+        newCafeCode.setCafeName(cafeCodeRequestForm.getCafeName());
+        newCafeCode.setCodeOfCafe(cafeCodeRequestForm.getCodeOfCafe());
+        newCafeCode.setLayoutIndex(cafeCodeRequestForm.getLayoutIndex());
 
+        CafeCode savedCafeCode = cafeCodeRepository.save(newCafeCode);
+
+        return savedCafeCode != null;
     }
 }

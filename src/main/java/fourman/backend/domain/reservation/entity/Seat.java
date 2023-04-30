@@ -44,5 +44,17 @@ public class Seat {
     @JoinColumn(name = "reservation_id")
     private Reservation reservation;
 
+    public Seat(int seatNo, int x, int y, int width, int height, Cafe cafe, Time time, boolean isReserved) {
+        this.seatNo = seatNo;
+        this.x = x;
+        this.y = y;
+        this.width = width;
+        this.height = height;
+        this.cafe = cafe;
+        this.time = time;
+        this.isReserved = isReserved;
+    }
+
+
 
 }

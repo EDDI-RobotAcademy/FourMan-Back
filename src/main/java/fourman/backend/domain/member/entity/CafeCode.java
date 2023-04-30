@@ -14,17 +14,17 @@ import javax.persistence.*;
 public class CafeCode {
 
     @Id
-    @Getter
     @Column(name = "cafe_code_id")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Getter
     @Column(nullable = false ,unique=true)
     private String codeOfCafe;
-    @Getter
     @Column(nullable = false ,unique=true)
     private String cafeName;
+
+    @Column(nullable = false )
+    private String layoutIndex;
 
 
     @JsonIgnore
