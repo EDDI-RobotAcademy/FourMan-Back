@@ -28,4 +28,6 @@ public interface OrderInfoRepository extends JpaRepository<OrderInfo, Long> {
 
     void deleteByCafeCafeId(Long cafeId);
     void deleteByMemberId(Long memberId);
+
+    List<OrderInfo> findByCafe(Cafe cafe);
 }
