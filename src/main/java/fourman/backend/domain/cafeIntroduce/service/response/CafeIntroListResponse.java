@@ -19,4 +19,6 @@ public class CafeIntroListResponse {
     final private CafeInfo cafeInfo;
     final private double avgRating;
     final private int totalRating;
+    final  private int favorites;
+    final  private int sellCount;
 }

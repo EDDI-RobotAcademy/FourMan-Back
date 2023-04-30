@@ -9,8 +9,10 @@ import fourman.backend.domain.cafeIntroduce.service.response.CafeTop3ProductList
 import fourman.backend.domain.cafeIntroduce.service.response.CafeTop3ProductResponse;
 import fourman.backend.domain.eventBoard.entity.Event;
 import fourman.backend.domain.member.entity.CafeCode;
+import fourman.backend.domain.member.entity.Favorite;
 import fourman.backend.domain.member.repository.CafeCodeRepository;
 import fourman.backend.domain.member.repository.FavoriteRepository;
+import fourman.backend.domain.order.entity.OrderInfo;
 import fourman.backend.domain.order.entity.OrderProduct;
 import fourman.backend.domain.order.repository.OrderInfoRepository;
 import fourman.backend.domain.order.repository.OrderProductRepository;
@@ -135,29 +137,36 @@ public class CafeIntroduceServiceImpl implements CafeIntroduceService {
 
     @Override
     public List<CafeIntroListResponse> list() {
-        List<Cafe> cafeList= cafeRepository.findAll(Sort.by(Sort.Direction.DESC, "cafeId"));
-        List<CafeIntroListResponse> cafeReponseList= new ArrayList<>();
-        for(Cafe cafe: cafeList){
+        List<Cafe> cafeList = cafeRepository.findAll(Sort.by(Sort.Direction.DESC, "cafeId"));
+        List<CafeIntroListResponse> cafeResponseList = new ArrayList<>();
+        for (Cafe cafe : cafeList) {
             // 해당 카페의 별점 계산
             List<ReviewBoard> reviewBoardList = reviewBoardRepository.findByCafeCafeId(cafe.getCafeId());
 
             double avgRating = 0;
             Long totalRating = 0L;
 
-            for(ReviewBoard reviewBoard: reviewBoardList) {
+            for (ReviewBoard reviewBoard : reviewBoardList) {
                 totalRating += reviewBoard.getRating();
             }
 
             if (reviewBoardList.size() > 0) {
                 avgRating = (double) totalRating / reviewBoardList.size();
             }
+            // Calculate the number of favorites
+            List<Favorite> favoritesList = favoriteRepository.findByCafe(cafe);
+            int favorites = favoritesList.size();
 
+            List<OrderInfo> orderInfoList = orderInfoRepository.findByCafe(cafe);
+            int sellCount = orderInfoList.size();
 
-            cafeReponseList.add(new CafeIntroListResponse(
-                    cafe.getCafeId(),cafe.getCafeCode().getCafeName(),cafe.getCafeAddress(),cafe.getCafeTel(),
-                    cafe.getStartTime(),cafe.getEndTime(), cafe.getCafeInfo(), avgRating, reviewBoardList.size() ));
+            cafeResponseList.add(new CafeIntroListResponse(
+                    cafe.getCafeId(), cafe.getCafeCode().getCafeName(), cafe.getCafeAddress(), cafe.getCafeTel(),
+                    cafe.getStartTime(), cafe.getEndTime(), cafe.getCafeInfo(), avgRating, reviewBoardList.size(),
+                    favorites, sellCount));
         }
-        return cafeReponseList;
+            return cafeResponseList;
+
     }
 
     @Override
@@ -194,10 +203,13 @@ public class CafeIntroduceServiceImpl implements CafeIntroduceService {
             avgRating = (double) totalRating / reviewBoardList.size();
         }
 
+
         Cafe cafe = maybeCafe.get();
+        List<Favorite> favoritesList = favoriteRepository.findByCafe(cafe);
+        int favorites = favoritesList.size();
         CafeIntroDetailResponse cafeIntroDetailResponse = new CafeIntroDetailResponse(
                 cafe.getCafeId(),cafe.getCafeCode().getCafeName(),cafe.getCafeAddress(),cafe.getCafeTel(),
-                cafe.getStartTime(),cafe.getEndTime(),cafe.getCafeInfo(), avgRating, reviewBoardList.size());
+                cafe.getStartTime(),cafe.getEndTime(),cafe.getCafeInfo(), avgRating, reviewBoardList.size(),favorites);
         //글내용만 보내기
         log.info("카페read 서비스 완료");
         return cafeIntroDetailResponse;
@@ -312,7 +324,7 @@ public class CafeIntroduceServiceImpl implements CafeIntroduceService {
     @Override
     public List<CafeIntroListResponse> favoriteList(long memberId) {
             List<Cafe> cafeList= cafeRepository.findCafesByMemberIdOrderByCafeIdDesc(memberId);
-            List<CafeIntroListResponse> cafeReponseList= new ArrayList<>();
+            List<CafeIntroListResponse> cafeResponseList= new ArrayList<>();
             for(Cafe cafe: cafeList){
 
                 // 해당 카페의 별점 계산
@@ -329,11 +341,19 @@ public class CafeIntroduceServiceImpl implements CafeIntroduceService {
                     avgRating = (double) totalRating / reviewBoardList.size();
                 }
 
-                cafeReponseList.add(new CafeIntroListResponse(
-                        cafe.getCafeId(),cafe.getCafeCode().getCafeName(),cafe.getCafeAddress(),cafe.getCafeTel(),
-                        cafe.getStartTime(),cafe.getEndTime(), cafe.getCafeInfo(), avgRating, reviewBoardList.size() ));
+                // Calculate the number of favorites
+                List<Favorite> favoritesList = favoriteRepository.findByCafe(cafe);
+                int favorites = favoritesList.size();
+
+                List<OrderInfo> orderInfoList = orderInfoRepository.findByCafe(cafe);
+                int sellCount = orderInfoList.size();
+
+                cafeResponseList.add(new CafeIntroListResponse(
+                        cafe.getCafeId(), cafe.getCafeCode().getCafeName(), cafe.getCafeAddress(), cafe.getCafeTel(),
+                        cafe.getStartTime(), cafe.getEndTime(), cafe.getCafeInfo(), avgRating, reviewBoardList.size(),
+                        favorites, sellCount));
             }
-            return cafeReponseList;
+            return cafeResponseList;
     }
 
     @Override
@@ -341,8 +361,6 @@ public class CafeIntroduceServiceImpl implements CafeIntroduceService {
         List<CafeTop3ProductResponse> results = orderProductRepository.findTopProductByCafeId(cafeId).stream().limit(3).collect(Collectors.toList());
 
         return new CafeTop3ProductListResponse(results);
-
-
     }
 
 
