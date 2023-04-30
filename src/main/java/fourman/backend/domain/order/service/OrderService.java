@@ -2,6 +2,7 @@ package fourman.backend.domain.order.service;
 
 import fourman.backend.domain.order.controller.form.requestForm.OrderCancelRequestForm;
 import fourman.backend.domain.order.controller.form.requestForm.OrderInfoRequestForm;
+import fourman.backend.domain.order.controller.form.requestForm.OrderReservationRequestForm;
 import fourman.backend.domain.order.controller.form.responseForm.CafeOrderInfoResponseForm;
 import fourman.backend.domain.order.controller.form.responseForm.OrderInfoResponseForm;
 
@@ -20,4 +21,6 @@ public interface OrderService {
     List<CafeOrderInfoResponseForm> cafeOrderList(Long cafeId);
 
     void orderReady(Long orderId);
+
+    boolean isAvailable(Long cafeId, OrderReservationRequestForm orderReservationRequestForm);
 }

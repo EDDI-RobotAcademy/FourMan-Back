@@ -327,4 +327,26 @@ public class OrderServiceImpl implements OrderService {
 
         orderInfoRepository.save(orderInfo);
     }
+
+    @Override
+    public boolean isAvailable(Long cafeId, OrderReservationRequestForm orderReservationRequestForm) {
+
+        Optional<Cafe> maybeCafe = cafeRepository.findById(cafeId);
+        Cafe cafe = maybeCafe.get();
+
+        try {
+            for(Integer seatNo :orderReservationRequestForm.getSeatList()) {
+                Optional<Time> maybeTime = timeRepository.findByTime(orderReservationRequestForm.getTime());
+                Optional<Seat> existSeat = seatRepository.findSeatNoByCafeAndTimeAndSeatNo(cafe, maybeTime.get(), seatNo);
+                Seat seat = existSeat.get();
+                if(seat.isReserved() == true) {
+                    return false;
+                }
+            }
+        } catch(NullPointerException e) {
+            e.printStackTrace();
+        }
+
+        return true;
+    }
 }

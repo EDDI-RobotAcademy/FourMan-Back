@@ -3,6 +3,7 @@ package fourman.backend.domain.order.controller;
 import fourman.backend.domain.aop.aspect.SecurityAnnotations;
 import fourman.backend.domain.order.controller.form.requestForm.OrderCancelRequestForm;
 import fourman.backend.domain.order.controller.form.requestForm.OrderInfoRequestForm;
+import fourman.backend.domain.order.controller.form.requestForm.OrderReservationRequestForm;
 import fourman.backend.domain.order.controller.form.responseForm.CafeOrderInfoResponseForm;
 import fourman.backend.domain.order.controller.form.responseForm.OrderInfoResponseForm;
 import fourman.backend.domain.order.service.OrderService;
@@ -68,5 +69,13 @@ public class OrderController {
         log.info("orderReady()");
 
         orderService.orderReady(orderId);
+    }
+
+    @SecurityAnnotations.SecurityCheck(SecurityAnnotations.UserType.AUTHENTICATED)
+    @PostMapping("/isReservationAvailable/{cafeId}")
+    public boolean isReservationAvailable(@PathVariable("cafeId") Long cafeId, @RequestPart(value = "reservationInfo") OrderReservationRequestForm orderReservationRequestForm) {
+        log.info("isReservationAvailable()");
+
+        return orderService.isAvailable(cafeId, orderReservationRequestForm);
     }
 }
