@@ -4,6 +4,7 @@ import fourman.backend.domain.myPage.controller.requestForm.AddPointRequestForm;
 import fourman.backend.domain.myPage.controller.requestForm.CafeInfoModifyRequestForm;
 import fourman.backend.domain.myPage.controller.requestForm.MyInfoModifyRequestForm;
 import fourman.backend.domain.myPage.service.responseForm.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 
@@ -30,4 +31,6 @@ public interface MyPageService {
     List<PointDetailsResponse> pointDetailsList();
 
     List<PointDetailsResponse> memberPointDetails(Long memberId);
+
+    void modifyProfileImage(Long memberId, MultipartFile imageFile);
 }

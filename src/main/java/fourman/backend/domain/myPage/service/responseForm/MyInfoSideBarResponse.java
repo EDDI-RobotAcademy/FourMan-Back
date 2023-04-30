@@ -10,4 +10,5 @@ public class MyInfoSideBarResponse {
     final private String nickName;
     final private String memberType;
     final private Long point;
+    final private String profileImage;
 }
