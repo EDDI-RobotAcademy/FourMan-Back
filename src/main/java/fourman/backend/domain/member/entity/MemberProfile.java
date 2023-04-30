@@ -1,6 +1,7 @@
 package fourman.backend.domain.member.entity;
 
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import lombok.*;
 
 import javax.persistence.*;
@@ -27,6 +28,7 @@ public class MemberProfile {
     @Embedded//주소라는 의미의 객체가  MemberProfile 엔티티에 삽입되었다는 의미.
     private Address address;
 
+    @JsonBackReference
     @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "member_id")
     private Member member;

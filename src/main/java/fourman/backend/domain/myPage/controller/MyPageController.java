@@ -104,7 +104,7 @@ public class MyPageController {
     }
 
     @SecurityAnnotations.SecurityCheck(SecurityAnnotations.UserType.AUTHENTICATED)
-    @PostMapping("/side-bar/profile-image/{memberId}")
+    @PutMapping("/side-bar/profile-image/{memberId}")
     public void modifyProfileImage(@PathVariable("memberId") Long memberId, @RequestPart("imageFile") MultipartFile imageFile) {
         log.info("modifyProfileImage()");
 
