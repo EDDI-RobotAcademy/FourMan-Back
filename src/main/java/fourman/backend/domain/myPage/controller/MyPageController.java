@@ -10,6 +10,7 @@ import fourman.backend.domain.myPage.service.responseForm.*;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 
@@ -102,6 +103,14 @@ public class MyPageController {
         return myPageService.memberPointDetails(memberId);
     }
 
+    @SecurityAnnotations.SecurityCheck(SecurityAnnotations.UserType.AUTHENTICATED)
+    @PutMapping("/side-bar/profile-image/{memberId}")
+    public void modifyProfileImage(@PathVariable("memberId") Long memberId, @RequestPart("imageFile") MultipartFile imageFile) {
+        log.info("modifyProfileImage()");
+
+        myPageService.modifyProfileImage(memberId, imageFile);
+    }
+    
     @SecurityAnnotations.SecurityCheck(SecurityAnnotations.UserType.MANAGER)
     @PutMapping("/add-cafe-code")
     public Boolean addCafeCode(@RequestBody AddCafeCodeRequestForm cafeCodeRequestForm) {

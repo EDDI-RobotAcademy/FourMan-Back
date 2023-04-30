@@ -31,8 +31,14 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
 import javax.transaction.Transactional;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.nio.file.StandardCopyOption;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -101,7 +107,7 @@ public class MyPageServiceImpl implements MyPageService {
 
 
         MyInfoSideBarResponse myInfoSideBarResponse = new MyInfoSideBarResponse(
-                member.getNickName(), member.getAuthority().getAuthorityName().getAUTHORITY_TYPE(), point
+                member.getNickName(), member.getAuthority().getAuthorityName().getAUTHORITY_TYPE(), point, member.getMemberProfile().getProfileImage()
         );
 
         return myInfoSideBarResponse;
@@ -515,6 +521,39 @@ public class MyPageServiceImpl implements MyPageService {
     }
 
     @Override
+    public void modifyProfileImage(Long memberId, MultipartFile imageFile) {
+        Optional<Member> maybeMember  = memberRepository.findById(memberId);
+        Member member = maybeMember.get();
+        Optional<MemberProfile> maybeMemberProfile = memberProfileRepository.findById(member.getMemberProfile().getId());
+        MemberProfile memberProfile = maybeMemberProfile.get();
+        final String fixedStringPath = "../FourMan-Front/src/assets/myPage/";
+
+        Path uploadPath = Paths.get(fixedStringPath);
+        if (!Files.exists(uploadPath)) {
+            try {
+                Files.createDirectories(uploadPath);
+            } catch (IOException e) {
+                throw new RuntimeException("업로드 경로 폴더를 만들 수 없습니다.");
+            }
+        }
+
+
+        String originalFilename = imageFile.getOriginalFilename();
+        String fileExtension = originalFilename.substring(originalFilename.lastIndexOf("."));
+        String uniqueFilename = UUID.randomUUID().toString() + fileExtension;
+
+        Path targetLocation = uploadPath.resolve(uniqueFilename);
+        try {
+            Files.copy(imageFile.getInputStream(), targetLocation, StandardCopyOption.REPLACE_EXISTING);
+        } catch (IOException e) {
+            throw new RuntimeException("이미지 파일을 저장할 수 없습니다.");
+        }
+
+
+        memberProfile.setProfileImage(uniqueFilename);
+        memberProfileRepository.save(memberProfile);
+    }
+    
     public Boolean addCafeCode(AddCafeCodeRequestForm cafeCodeRequestForm) {
         System.out.println("addCafeCode진행");
         CafeCode newCafeCode = new CafeCode();

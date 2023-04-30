@@ -95,7 +95,6 @@ public class MemberServiceImpl implements MemberService {
             member = memberRegisterRequest.toManagerMember(managerCode.get());
 
         }
-
             memberRepository.save(member);
         final BasicAuthentication authentication = new BasicAuthentication(
                 member,
