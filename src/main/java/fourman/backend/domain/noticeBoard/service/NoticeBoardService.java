@@ -4,6 +4,8 @@ import fourman.backend.domain.noticeBoard.controller.requestForm.NoticeBoardRequ
 import fourman.backend.domain.noticeBoard.entity.NoticeBoard;
 import fourman.backend.domain.noticeBoard.service.response.NoticeBoardResponse;
 
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import java.util.List;
 
 public interface NoticeBoardService {
@@ -11,7 +13,7 @@ public interface NoticeBoardService {
 
     List<NoticeBoardResponse> list();
 
-    NoticeBoardResponse read(Long boardId);
+    NoticeBoardResponse read(Long boardId, HttpServletResponse response , HttpServletRequest request);
 
     NoticeBoard modify(Long boardId, NoticeBoardRequestForm noticeBoardRequestForm);
 
