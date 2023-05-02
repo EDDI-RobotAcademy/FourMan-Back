@@ -14,6 +14,8 @@ import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import java.util.List;
 
 @Slf4j
@@ -41,10 +43,11 @@ public class FreeBoardController {
     }
 
     @GetMapping("/{boardId}")
-    public FreeBoardReadResponse boardRead(@PathVariable("boardId") Long boardId, @RequestParam(required = false) Long memberId) {
+    public FreeBoardReadResponse boardRead(@PathVariable("boardId") Long boardId, @RequestParam(required = false) Long memberId
+                                                                        , HttpServletRequest request, HttpServletResponse response) {
         log.info("boardRead()");
 
-        return freeBoardService.read(boardId, memberId);
+        return freeBoardService.read(boardId, memberId,request,response);
     }
 
     @SecurityAnnotations.SecurityCheck(SecurityAnnotations.UserType.AUTHENTICATED)

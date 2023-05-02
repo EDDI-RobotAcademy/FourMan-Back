@@ -8,6 +8,8 @@ import fourman.backend.domain.freeBoard.service.responseForm.FreeBoardReadRespon
 import fourman.backend.domain.freeBoard.service.responseForm.FreeBoardResponse;
 import org.springframework.web.multipart.MultipartFile;
 
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import java.util.List;
 
 public interface FreeBoardService {
@@ -16,7 +18,7 @@ public interface FreeBoardService {
 
     List<FreeBoardResponse> list();
 
-    FreeBoardReadResponse read(Long boardId, Long memberId);
+    FreeBoardReadResponse read(Long boardId, Long memberId, HttpServletRequest request, HttpServletResponse response);
 
     void remove(Long boardId);
 
