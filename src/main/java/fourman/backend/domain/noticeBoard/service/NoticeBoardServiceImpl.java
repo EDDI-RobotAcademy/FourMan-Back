@@ -11,6 +11,10 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
+import javax.servlet.http.Cookie;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import javax.transaction.Transactional;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -58,8 +62,9 @@ public class NoticeBoardServiceImpl implements NoticeBoardService{
         return noticeBoardResponseList;
     }
 
+    @Transactional
     @Override
-    public NoticeBoardResponse read(Long boardId) {
+    public NoticeBoardResponse read(Long boardId, HttpServletResponse response , HttpServletRequest request) {
         Optional<NoticeBoard> maybeNoticeBoard = noticeBoardRepository.findById(boardId);
 
         if(maybeNoticeBoard.isEmpty()) {
@@ -67,8 +72,32 @@ public class NoticeBoardServiceImpl implements NoticeBoardService{
             return null;
         }
         NoticeBoard noticeBoard = maybeNoticeBoard.get();
-        noticeBoard.increaseViewCnt();
-        noticeBoardRepository.save(noticeBoard);
+        // 조회 수 중복 방지
+        Cookie oldCookie = null;
+        Cookie[] cookies = request.getCookies();
+        if (cookies != null) {
+            for (Cookie cookie : cookies) {
+                if (cookie.getName().equals("noticeBoardView")) {
+                    oldCookie = cookie;
+                }
+            }
+        }
+        if (oldCookie != null) {
+            if (!oldCookie.getValue().contains("["+ boardId.toString() +"]")) {
+                noticeBoard.increaseViewCnt();
+                oldCookie.setValue(oldCookie.getValue() + "_[" + boardId + "]");
+                oldCookie.setPath("/");
+                oldCookie.setMaxAge(60 * 60 * 24);
+                response.addCookie(oldCookie);
+            }
+        } else {
+            noticeBoard.increaseViewCnt();
+            Cookie newCookie = new Cookie("noticeBoardView", "[" + boardId + "]");
+            newCookie.setPath("/");
+            newCookie.setMaxAge(60 * 60 * 24);
+            response.addCookie(newCookie);
+            System.out.println(newCookie);
+        }
 
         NoticeBoardResponse noticeBoardResponse = new NoticeBoardResponse(
                 noticeBoard.getBoardId(), noticeBoard.getTitle(), noticeBoard.getWriter(), noticeBoard.getNotice(),

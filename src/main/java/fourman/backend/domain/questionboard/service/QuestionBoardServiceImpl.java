@@ -14,6 +14,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
+import javax.servlet.http.Cookie;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import javax.transaction.Transactional;
 import java.util.ArrayList;
 import java.util.List;
@@ -75,8 +78,9 @@ public class QuestionBoardServiceImpl implements QuestionBoardService {
         return questionBoard;
     }
 
+    @Transactional
     @Override
-    public QuestionBoardResponse read(Long boardId) {
+    public QuestionBoardResponse read(Long boardId, HttpServletResponse response, HttpServletRequest request) {
         Optional<QuestionBoard> maybeQuestionBoard = questionBoardRepository.findById(boardId);
 
         if (maybeQuestionBoard.isEmpty()) {
@@ -84,10 +88,35 @@ public class QuestionBoardServiceImpl implements QuestionBoardService {
             System.out.println("읽을 수 없음");
             return null;
         }
-        //viewCnt를 증가시켜서 저장후 QuestionBoard를 반환함
         QuestionBoard questionBoard = maybeQuestionBoard.get();
-        questionBoard.increaseViewCnt();
-        questionBoardRepository.save(questionBoard);
+
+        // 조회 수 중복 방지
+        Cookie oldCookie = null;
+        Cookie[] cookies = request.getCookies();
+        if (cookies != null) {
+            for (Cookie cookie : cookies) {
+                if (cookie.getName().equals("questionBoardView")) {
+                    oldCookie = cookie;
+                }
+            }
+        }
+        if (oldCookie != null) {
+            if (!oldCookie.getValue().contains("["+ boardId.toString() +"]")) {
+                questionBoard.increaseViewCnt();
+                oldCookie.setValue(oldCookie.getValue() + "_[" + boardId + "]");
+                oldCookie.setPath("/");
+                oldCookie.setMaxAge(60 * 60 * 24);
+                response.addCookie(oldCookie);
+            }
+        } else {
+            questionBoard.increaseViewCnt();
+            Cookie newCookie = new Cookie("questionBoardView", "[" + boardId + "]");
+            newCookie.setPath("/");
+            newCookie.setMaxAge(60 * 60 * 24);
+            response.addCookie(newCookie);
+            System.out.println(newCookie);
+        }
+
 
         QuestionBoardResponse questionBoardResponse = new QuestionBoardResponse(
                 questionBoard.getMember().getId(), questionBoard.getBoardId(), questionBoard.getTitle(),
@@ -95,7 +124,6 @@ public class QuestionBoardServiceImpl implements QuestionBoardService {
                 questionBoard.getRegDate(), questionBoard.getUpdDate(), questionBoard.isSecret(), questionBoard.getViewCnt(), 0L, null, questionBoard.getDepth());
 
         return questionBoardResponse;
-        //처리 로직
 
 
     }

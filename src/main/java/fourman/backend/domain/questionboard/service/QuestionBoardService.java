@@ -4,6 +4,8 @@ import fourman.backend.domain.questionboard.controller.requestForm.QuestionBoard
 import fourman.backend.domain.questionboard.entity.QuestionBoard;
 import fourman.backend.domain.questionboard.service.response.QuestionBoardResponse;
 
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import java.util.List;
 
 public interface QuestionBoardService {
@@ -12,7 +14,7 @@ public interface QuestionBoardService {
 
     public QuestionBoard register(QuestionBoardRequestForm questionBoardRequestForm);
 
-    QuestionBoardResponse read(Long boardId);
+    QuestionBoardResponse read(Long boardId, HttpServletResponse response, HttpServletRequest request);
 
     QuestionBoard modify(Long boardId, QuestionBoardRequestForm questionBoardRequestForm);
 

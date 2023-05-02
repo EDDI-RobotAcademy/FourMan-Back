@@ -10,6 +10,8 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import java.util.List;
 
 @Slf4j
@@ -39,8 +41,9 @@ public class QuestionBoardController {
     }
 
     @GetMapping("/{boardId}") //boardId 받기
-    public QuestionBoardResponse questionBoardRead(@PathVariable("boardId") Long boardId) {
-        return questionBoardService.read(boardId);
+    public QuestionBoardResponse questionBoardRead(@PathVariable("boardId") Long boardId
+                                                    , HttpServletResponse response, HttpServletRequest request) {
+        return questionBoardService.read(boardId,response,request);
     }
     @SecurityAnnotations.SecurityCheck(SecurityAnnotations.UserType.AUTHENTICATED)
     @PutMapping("/{boardId}")
