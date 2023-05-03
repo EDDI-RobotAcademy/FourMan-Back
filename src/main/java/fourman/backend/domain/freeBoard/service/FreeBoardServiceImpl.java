@@ -222,9 +222,23 @@ public class FreeBoardServiceImpl implements FreeBoardService {
         return true;
     }
 
+    @Transactional
     @Override
-    public List<FreeBoard> myPageList(Long memberId) {
-        return freeBoardRepository.findFreeBoardByMemberId(memberId);
+    public List<FreeBoardResponse> myPageList(Long memberId) {
+
+        List<FreeBoard> freeBoardList = freeBoardRepository.findFreeBoardByMemberId(memberId);
+        List<FreeBoardResponse> freeBoardResponseList = new ArrayList<>();
+
+        for (FreeBoard freeBoard : freeBoardList) {
+            Long commentCount = (long) freeBoard.getFreeBoardCommentList().size();
+            FreeBoardResponse freeBoardResponse = new FreeBoardResponse(
+                    freeBoard.getBoardId(), freeBoard.getTitle(), freeBoard.getMember().getNickName(), freeBoard.getContent(),
+                    freeBoard.getRegDate(), freeBoard.getUpdDate(), freeBoard.getMember().getId(), freeBoard.getViewCnt(), freeBoard.getRecommendation(),
+                    freeBoard.getUnRecommendation(), commentCount);
+            freeBoardResponseList.add(freeBoardResponse);
+        }
+
+        return freeBoardResponseList;
     }
 
     @Override
