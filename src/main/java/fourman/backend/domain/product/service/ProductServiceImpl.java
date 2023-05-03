@@ -38,6 +38,7 @@ public class ProductServiceImpl implements ProductService {
     final private ImageResourceRepository imageResourceRepository;
     final private CafeRepository cafeRepository;
 
+//    * AWS s3 사용을 위한 주석처리
     @Transactional
     @Override
     public void register(List<MultipartFile> imageFileList, ProductRequestForm productRequestForm) {
@@ -80,10 +81,33 @@ public class ProductServiceImpl implements ProductService {
         }
 
         productRepository.save(product);
-
         imageResourceRepository.saveAll(imageResourceList);
-
     }
+
+//    @Transactional
+//    @Override
+//    public void register(List<String> imageFileNameList, ProductRequestForm productRequestForm) {
+//
+//        List<ImageResource> imageResourceList = new ArrayList<>();
+//
+//        Product product = new Product();
+//        Optional<Cafe> maybeCafe = cafeRepository.findById(productRequestForm.getCafeId());
+//        Cafe cafe = maybeCafe.get();
+//
+//        product.setProductName(productRequestForm.getProductName());
+//        product.setPrice(productRequestForm.getPrice());
+//        product.setDrinkType(productRequestForm.getDrinkType());
+//        product.setCafe(cafe);
+//
+//        for(String imageFileName: imageFileNameList) {
+//            ImageResource imageResource = new ImageResource(imageFileName);
+//            imageResourceList.add(imageResource);
+//            product.setImageResource(imageResource);
+//        }
+//
+//        productRepository.save(product);
+//        imageResourceRepository.saveAll(imageResourceList);
+//    }
 
     @Override
     public List<AllProductResponseForm> all(Long cafeId) {
@@ -103,6 +127,7 @@ public class ProductServiceImpl implements ProductService {
         return allProductList;
     }
 
+//    AWS s3 사용을 위한 주석 처리
     @Transactional
     @Override
     public Product editProductWithImage(List<MultipartFile> editImageFileList, EditProductRequestForm editProductRequestForm) {
@@ -155,8 +180,42 @@ public class ProductServiceImpl implements ProductService {
         imageResourceRepository.saveAll(imageResourceList);
 
         return product;
-
     }
+
+//    @Transactional
+//    @Override
+//    public Product editProductWithImage(EditProductRequestForm editProductRequestForm) {
+//
+//        Long productId = editProductRequestForm.getProductId();
+//        log.info("productId: " + productId);
+//
+//        Optional<Product> maybeProduct = productRepository.findProductById(productId);
+//        List<ImageResource> imageResourceList = imageResourceRepository.findImagePathListByProductId(productId);
+//        String newFileName = editProductRequestForm.getEditedProductImageName();
+//
+//        ImageResource imageResource = imageResourceList.get(0);
+//
+//        if(maybeProduct.isEmpty()) {
+//            System.out.println("Product 정보를 찾지 못했습니다: " + productId);
+//            return null;
+//        }
+//
+//        Product product = maybeProduct.get();
+//
+//        product.setProductName(editProductRequestForm.getProductName());
+//        product.setPrice(editProductRequestForm.getPrice());
+//        product.setDrinkType(editProductRequestForm.getDrinkType());
+//
+//
+//        imageResource.setImageResourcePath(newFileName);
+//        imageResourceList.set(0, imageResource);
+//
+//
+//        productRepository.save(product);
+//        imageResourceRepository.saveAll(imageResourceList);
+//
+//        return product;
+//    }
 
     @Transactional
     @Override
