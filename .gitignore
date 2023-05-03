@@ -9,6 +9,14 @@
 .gradle/
 build/
 .DS_Store
+
+#aws
+.env
+custom.cnf
+docker-compose.yml
+Dockerfile
+
+
 # User-specific stuff
 .idea/**/workspace.xml
 .idea/**/tasks.xml

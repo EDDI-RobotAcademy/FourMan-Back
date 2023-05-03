@@ -22,6 +22,9 @@ import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
+import javax.servlet.http.Cookie;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import javax.transaction.Transactional;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
@@ -133,7 +136,7 @@ public class FreeBoardServiceImpl implements FreeBoardService {
 
     @Transactional
     @Override
-    public FreeBoardReadResponse read(Long boardId, Long memberId) {
+    public FreeBoardReadResponse read(Long boardId, Long memberId, HttpServletRequest request, HttpServletResponse response) {
         // 일 수도 있고 아닐 수도 있고
         Optional<FreeBoard> maybeBoard = freeBoardRepository.findById(boardId);
         if (maybeBoard.isEmpty()) {
@@ -141,10 +144,36 @@ public class FreeBoardServiceImpl implements FreeBoardService {
             return null;
         }
         FreeBoard freeBoard = maybeBoard.get();
-        freeBoard.increaseViewCnt();
-        freeBoardRepository.save(freeBoard);
+        // 조회 수 중복 방지
+        Cookie oldCookie = null;
+        Cookie[] cookies = request.getCookies();
+        if (cookies != null) {
+            for (Cookie cookie : cookies) {
+                if (cookie.getName().equals("boardView")) {
+                    oldCookie = cookie;
+                }
+            }
+        }
+        if (oldCookie != null) {
+            if (!oldCookie.getValue().contains("["+ boardId.toString() +"]")) {
+                freeBoard.increaseViewCnt();
+                oldCookie.setValue(oldCookie.getValue() + "_[" + boardId + "]");
+                oldCookie.setPath("/");
+                oldCookie.setMaxAge(60 * 60 * 24);
+                response.addCookie(oldCookie);
+            }
+        } else {
+            freeBoard.increaseViewCnt();
+            Cookie newCookie = new Cookie("boardView", "[" + boardId + "]");
+            newCookie.setPath("/");
+            newCookie.setMaxAge(60 * 60 * 24);
+            response.addCookie(newCookie);
+            System.out.println(newCookie);
+        }
 
-        Recommendation recommendation = recommendationRepository.findByFreeBoardAndMemberId(freeBoard, memberId);
+
+
+    Recommendation recommendation = recommendationRepository.findByFreeBoardAndMemberId(freeBoard, memberId);
 
         boolean incRecommendationStatus = false;
         boolean decRecommendationStatus = false;
@@ -193,9 +222,23 @@ public class FreeBoardServiceImpl implements FreeBoardService {
         return true;
     }
 
+    @Transactional
     @Override
-    public List<FreeBoard> myPageList(Long memberId) {
-        return freeBoardRepository.findFreeBoardByMemberId(memberId);
+    public List<FreeBoardResponse> myPageList(Long memberId) {
+
+        List<FreeBoard> freeBoardList = freeBoardRepository.findFreeBoardByMemberId(memberId);
+        List<FreeBoardResponse> freeBoardResponseList = new ArrayList<>();
+
+        for (FreeBoard freeBoard : freeBoardList) {
+            Long commentCount = (long) freeBoard.getFreeBoardCommentList().size();
+            FreeBoardResponse freeBoardResponse = new FreeBoardResponse(
+                    freeBoard.getBoardId(), freeBoard.getTitle(), freeBoard.getMember().getNickName(), freeBoard.getContent(),
+                    freeBoard.getRegDate(), freeBoard.getUpdDate(), freeBoard.getMember().getId(), freeBoard.getViewCnt(), freeBoard.getRecommendation(),
+                    freeBoard.getUnRecommendation(), commentCount);
+            freeBoardResponseList.add(freeBoardResponse);
+        }
+
+        return freeBoardResponseList;
     }
 
     @Override
