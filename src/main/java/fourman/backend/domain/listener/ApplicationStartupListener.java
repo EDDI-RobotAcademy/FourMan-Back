@@ -9,7 +9,7 @@ import org.springframework.stereotype.Component;
 @Component
 public class ApplicationStartupListener implements ApplicationListener<ApplicationReadyEvent> {
     @Autowired
-    private AdminService adminService;
+    private AdminService adminService;//
 
     @Override
     public void onApplicationEvent(ApplicationReadyEvent event) {
