@@ -69,7 +69,7 @@ public class FreeBoardController {
     }
 
     @GetMapping("/myPage/{memberId}")
-    public List<FreeBoard> freeBoardMyPageList(@PathVariable("memberId") Long memberId) {
+    public List<FreeBoardResponse> freeBoardMyPageList(@PathVariable("memberId") Long memberId) {
         return freeBoardService.myPageList(memberId);
     }
 
