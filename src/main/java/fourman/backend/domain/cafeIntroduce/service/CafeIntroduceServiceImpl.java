@@ -362,6 +362,83 @@ public class CafeIntroduceServiceImpl implements CafeIntroduceService {
 
         return new CafeTop3ProductListResponse(results);
     }
+////////////////////////////////////////////////AWS용 코드
+    @Override
+    public Long AWSregisterCafe(List<String> thumbnailFileNameList ,List<String> multipleFileNameList, CafeIntroRequestForm cafeIntroRequestForm) {
+        // 1. cafe 저장
+        Cafe cafe = new Cafe();
+        cafe.setCafeAddress(cafeIntroRequestForm.getCafeAddress());
+        cafe.setCafeTel(cafeIntroRequestForm.getCafeTel());
+        cafe.setStartTime(cafeIntroRequestForm.getStartTime());
+        cafe.setEndTime(cafeIntroRequestForm.getEndTime());
+        Optional<CafeCode> op = cafeCodeRepository.findByCodeOfCafe(cafeIntroRequestForm.getCode());
+        cafe.setCafeCode(op.get());
+        //3. cafeInfo 저장
+        // cafeInfo-> String thumbnailFileName,List<String> cafeImagesName,List<String>  String subTitle,String description
+        CafeInfo cafeInfo = new CafeInfo();
+        cafeInfo.setSubTitle(cafeIntroRequestForm.getSubTitle());
+        cafeInfo.setDescription(cafeIntroRequestForm.getDescription());
+
+        // 이미지 URL을 파일 이름으로 저장
+        String thumbnailFile = thumbnailFileNameList.get(0);
+        cafeInfo.setThumbnailFileName(thumbnailFile);
+        cafeInfo.setCafeImagesName(multipleFileNameList);
+
+        cafe.setCafeInfo(cafeInfo);
+        cafeRepository.save(cafe);
+        cafeService.insertDataForCafe(cafe, cafe.getCafeCode().getLayoutIndex());
+
+        return cafe.getCafeId();
+    }
+
+    @Override
+    public Long AWSmodifyCafe(Long cafeId, List<String> thumbnailFileNameList, List<String> multipleFileNameList, CafeIntroRequestForm cafeIntroRequestForm) {
+        Optional<Cafe> optionalCafe = cafeRepository.findById(cafeId);
+        if (!optionalCafe.isPresent()) {
+            log.info("카페가 존재하지 않습니다.");
+            return null;
+        }
+        Cafe cafe = optionalCafe.get();
+        cafe.setCafeAddress(cafeIntroRequestForm.getCafeAddress());
+        cafe.setCafeTel(cafeIntroRequestForm.getCafeTel());
+        cafe.setStartTime(cafeIntroRequestForm.getStartTime());
+        cafe.setEndTime(cafeIntroRequestForm.getEndTime());
+        Optional<CafeCode> op = cafeCodeRepository.findByCodeOfCafe(cafeIntroRequestForm.getCode());
+        cafe.setCafeCode(op.get());
+        Optional<CafeCode> maybeCafeCode= cafeCodeRepository.findById(cafe.getCafeCode().getId());
+        if (maybeCafeCode.isEmpty()) {
+            log.info("카페코드가 존재하지 않습니다.");
+            return null;
+        }
+        cafe.setCafeCode(maybeCafeCode.get());
+        CafeInfo cafeInfo= cafe.getCafeInfo();
+        cafeInfo.setSubTitle(cafeIntroRequestForm.getSubTitle());
+        cafeInfo.setDescription(cafeIntroRequestForm.getDescription());
+
+        // 이미지 URL을 파일 이름으로 저장
+        if (thumbnailFileNameList != null && !thumbnailFileNameList.isEmpty()) {
+            String thumbnailFile = thumbnailFileNameList.get(0);
+            cafeInfo.setThumbnailFileName(thumbnailFile);
+        }
+        if (multipleFileNameList != null && !multipleFileNameList.isEmpty()) {
+            List<String> imageList=null;
+
+            if(cafeIntroRequestForm.isAdd()) {//추가
+                imageList= cafeInfo.getCafeImagesName();
+            }else{//덮어쓰기
+                imageList= new ArrayList<>();
+            }
+            for( String name : multipleFileNameList){
+                imageList.add(name);
+            }
+            cafeInfo.setCafeImagesName(imageList);
+        }
+        cafe.setCafeInfo(cafeInfo);
+        cafeRepository.save(cafe);
+        cafeService.insertDataForCafe(cafe, cafe.getCafeCode().getLayoutIndex());
+
+        return cafe.getCafeId();
+    }
 
 
 }
