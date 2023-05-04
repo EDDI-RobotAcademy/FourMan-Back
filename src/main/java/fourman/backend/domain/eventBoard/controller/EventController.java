@@ -24,16 +24,29 @@ import java.util.List;
 public class EventController {
 
     private final EventService eventService;
+//    AWS S3적용을 위한 주석
+//    @SecurityAnnotations.SecurityCheck(SecurityAnnotations.UserType.CAFE)
+//    @PostMapping(value = "/register",
+//            consumes = {  MediaType.MULTIPART_FORM_DATA_VALUE, MediaType.APPLICATION_JSON_VALUE }) // 이미지+텍스트 업로드하는 경우 value , consumes 정보(이미지타입, json타입) 추가
+//    public Long registerEvent(
+//            @RequestPart(value = "thumbnail") List<MultipartFile> thumbnail,
+//            @RequestPart(value = "info") EventRequestForm eventRequestForm) {
+//
+//        log.info("이벤트등록 컨트롤러-리퀘스트내용: " + eventRequestForm);
+//
+//        return eventService.registerEvent(thumbnail, eventRequestForm);
+//    }
+
     @SecurityAnnotations.SecurityCheck(SecurityAnnotations.UserType.CAFE)
     @PostMapping(value = "/register",
-            consumes = {  MediaType.MULTIPART_FORM_DATA_VALUE, MediaType.APPLICATION_JSON_VALUE }) // 이미지+텍스트 업로드하는 경우 value , consumes 정보(이미지타입, json타입) 추가
+            consumes = {  MediaType.MULTIPART_FORM_DATA_VALUE}) // 이미지+텍스트 업로드하는 경우 value , consumes 정보(이미지타입, json타입) 추가
     public Long registerEvent(
-            @RequestPart(value = "thumbnail") List<MultipartFile> thumbnail,
+            @RequestPart(value = "thumbnailFileNameList") List<String> thumbnailFileNameList,
             @RequestPart(value = "info") EventRequestForm eventRequestForm) {
 
         log.info("이벤트등록 컨트롤러-리퀘스트내용: " + eventRequestForm);
 
-        return eventService.registerEvent(thumbnail, eventRequestForm);
+        return eventService.AWSregisterEvent(thumbnailFileNameList, eventRequestForm);
     }
     @GetMapping(path = "/list")
     public List<EventListResponse> eventList() {
@@ -47,17 +60,31 @@ public class EventController {
         log.info("eventRead()");
         return eventService.read(eventId);
     }
+//    aws s3 적용을 위한 주석처리
+//    @SecurityAnnotations.SecurityCheck(SecurityAnnotations.UserType.CAFE)
+//    @PutMapping(value = "/modify/{eventId}",
+//            consumes = {  MediaType.MULTIPART_FORM_DATA_VALUE, MediaType.APPLICATION_JSON_VALUE }) // 이미지+텍스트 업로드하는 경우 value , consumes 정보(이미지타입, json타입) 추가
+//    public Long modifyEvent(
+//            @RequestPart(value = "thumbnail", required = false) List<MultipartFile> thumbnail,
+//            @RequestPart(value = "info") EventRequestForm eventRequestForm,
+//            @PathVariable("eventId") Long eventId ) {
+//
+//        log.info("이벤트 수정 컨트롤러-리퀘스트내용: " + eventRequestForm);
+//
+//        return eventService.modifyEvent(eventId,thumbnail, eventRequestForm);
+//    }
+
     @SecurityAnnotations.SecurityCheck(SecurityAnnotations.UserType.CAFE)
     @PutMapping(value = "/modify/{eventId}",
             consumes = {  MediaType.MULTIPART_FORM_DATA_VALUE, MediaType.APPLICATION_JSON_VALUE }) // 이미지+텍스트 업로드하는 경우 value , consumes 정보(이미지타입, json타입) 추가
     public Long modifyEvent(
-            @RequestPart(value = "thumbnail", required = false) List<MultipartFile> thumbnail,
+            @RequestPart(value = "thumbnailFileNameList", required = false) List<String> thumbnailFileNameList,
             @RequestPart(value = "info") EventRequestForm eventRequestForm,
             @PathVariable("eventId") Long eventId ) {
 
         log.info("이벤트 수정 컨트롤러-리퀘스트내용: " + eventRequestForm);
 
-        return eventService.modifyEvent(eventId,thumbnail, eventRequestForm);
+        return eventService.AWSmodifyEvent(eventId,thumbnailFileNameList, eventRequestForm);
     }
     @SecurityAnnotations.SecurityCheck(SecurityAnnotations.UserType.CAFE)
     @DeleteMapping("/delete/{eventId}")
@@ -67,12 +94,17 @@ public class EventController {
         return ResponseEntity.ok().build();
     }
 
-
-    @PostMapping("/api/upload")
-    public ResponseEntity<?> uploadImage(@RequestParam("file") MultipartFile file) {
-        log.info("uploadImage()");
-        return eventService.uploadImage(file);
-    }
+//@AWS s3 적용을 위한 주석처리
+//    @PostMapping("/api/upload")
+//    public ResponseEntity<?> uploadImage(@RequestParam("file") MultipartFile file) {
+//        log.info("uploadImage()");
+//        return eventService.uploadImage(file);
+//    }
+@PostMapping("/api/upload")
+public ResponseEntity<?> uploadImage(@RequestParam("file") MultipartFile file) {
+    log.info("uploadImage()");
+    return eventService.uploadImage(file);
+}
 
     @GetMapping("/getCafe/{eventId}")
     public Cafe getCafeByEventId(@PathVariable("eventId") Long eventId) {

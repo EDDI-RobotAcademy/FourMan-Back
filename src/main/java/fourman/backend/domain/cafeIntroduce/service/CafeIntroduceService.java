@@ -28,4 +28,8 @@ public interface CafeIntroduceService {
 
     CafeTop3ProductListResponse top3Product(Long cafeId);
 
+
+    Long AWSregisterCafe(List<String> thumbnailFileNameList, List<String> multipleFileNameList, CafeIntroRequestForm cafeIntroRequestForm);
+    Long AWSmodifyCafe(Long cafeId, List<String> thumbnailFileNameList, List<String> multipleFileNameList,CafeIntroRequestForm cafeIntroRequestForm);
+
 }

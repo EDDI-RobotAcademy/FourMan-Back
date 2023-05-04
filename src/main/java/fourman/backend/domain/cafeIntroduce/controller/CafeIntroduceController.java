@@ -22,21 +22,34 @@ import java.util.List;
 public class CafeIntroduceController {
 
     private final CafeIntroduceService cafeIntroduceService;
+//    @AWS S3 업로드를 위한 주석처리
+//    @SecurityAnnotations.SecurityCheck(SecurityAnnotations.UserType.CAFE)
+//    @PostMapping(value = "/register",
+//            consumes = {  MediaType.MULTIPART_FORM_DATA_VALUE, MediaType.MULTIPART_FORM_DATA_VALUE, MediaType.APPLICATION_JSON_VALUE }) // 이미지+텍스트 업로드하는 경우 value , consumes 정보(이미지타입, json타입) 추가
+//    public Long registerCafe(
+//            @RequestPart(value = "thumbnail") List<MultipartFile> thumbnail,
+//            @RequestPart(value = "fileList") List<MultipartFile> fileList,
+//            @RequestPart(value = "info") CafeIntroRequestForm cafeIntroRequestForm) {
+//
+//        log.info("카페등록 컨트롤러-파일리스트: " + fileList.toString());
+//        log.info("카페등록 컨트롤러-리퀘스트내용: " + cafeIntroRequestForm);
+//
+//        return cafeIntroduceService.registerCafe(thumbnail, fileList, cafeIntroRequestForm);
+//    }
     @SecurityAnnotations.SecurityCheck(SecurityAnnotations.UserType.CAFE)
     @PostMapping(value = "/register",
-            consumes = {  MediaType.MULTIPART_FORM_DATA_VALUE, MediaType.MULTIPART_FORM_DATA_VALUE, MediaType.APPLICATION_JSON_VALUE }) // 이미지+텍스트 업로드하는 경우 value , consumes 정보(이미지타입, json타입) 추가
+            consumes = {MediaType.MULTIPART_FORM_DATA_VALUE})
     public Long registerCafe(
-            @RequestPart(value = "thumbnail") List<MultipartFile> thumbnail,
-            @RequestPart(value = "fileList") List<MultipartFile> fileList,
+            @RequestPart(value = "thumbnailFileNameList") List<String> thumbnailFileNameList,
+            @RequestPart(value = "multipleFileNameList") List<String> multipleFileNameList,
             @RequestPart(value = "info") CafeIntroRequestForm cafeIntroRequestForm) {
 
-        log.info("카페등록 컨트롤러-파일리스트: " + fileList.toString());
         log.info("카페등록 컨트롤러-리퀘스트내용: " + cafeIntroRequestForm);
 
-        return cafeIntroduceService.registerCafe(thumbnail, fileList, cafeIntroRequestForm);
-
-
+        return cafeIntroduceService.AWSregisterCafe(thumbnailFileNameList, multipleFileNameList, cafeIntroRequestForm);
     }
+
+
 
     @GetMapping(path = "/list")
     public List<CafeIntroListResponse> cafeList() {
@@ -55,19 +68,38 @@ public class CafeIntroduceController {
         log.info("cafeRead()");
         return cafeIntroduceService.read(cafeId);
     }
+    
+//AWS를 위한 주석처리
+//    @SecurityAnnotations.SecurityCheck(SecurityAnnotations.UserType.CAFE)
+//    @PutMapping(value = "/modify/{cafeId}",
+//            consumes = {  MediaType.MULTIPART_FORM_DATA_VALUE, MediaType.MULTIPART_FORM_DATA_VALUE, MediaType.APPLICATION_JSON_VALUE }) // 이미지+텍스트 업로드하는 경우 value , consumes 정보(이미지타입, json타입) 추가
+//    public Long modifyEvent(
+//            @RequestPart(value = "thumbnail", required = false) List<MultipartFile> thumbnail,
+//            @RequestPart(value = "fileList", required = false) List<MultipartFile> fileList,
+//            @RequestPart(value = "info") CafeIntroRequestForm cafeIntroRequestForm,
+//            @PathVariable("cafeId") Long cafeId ) {
+//
+//        log.info("카페 수정 컨트롤러-리퀘스트내용: " + cafeIntroRequestForm);
+//
+//        return cafeIntroduceService.modifyCafe(cafeId,thumbnail, fileList, cafeIntroRequestForm);
+//    }
+
     @SecurityAnnotations.SecurityCheck(SecurityAnnotations.UserType.CAFE)
     @PutMapping(value = "/modify/{cafeId}",
-            consumes = {  MediaType.MULTIPART_FORM_DATA_VALUE, MediaType.MULTIPART_FORM_DATA_VALUE, MediaType.APPLICATION_JSON_VALUE }) // 이미지+텍스트 업로드하는 경우 value , consumes 정보(이미지타입, json타입) 추가
+            consumes = {  MediaType.MULTIPART_FORM_DATA_VALUE }) // 이미지+텍스트 업로드하는 경우 value , consumes 정보(이미지타입, json타입) 추가
     public Long modifyEvent(
-            @RequestPart(value = "thumbnail", required = false) List<MultipartFile> thumbnail,
-            @RequestPart(value = "fileList", required = false) List<MultipartFile> fileList,
+            @RequestPart(value = "thumbnailFileNameList" , required = false) List<String> thumbnailFileNameList,
+            @RequestPart(value = "multipleFileNameList", required = false) List<String> multipleFileNameList,
             @RequestPart(value = "info") CafeIntroRequestForm cafeIntroRequestForm,
             @PathVariable("cafeId") Long cafeId ) {
 
         log.info("카페 수정 컨트롤러-리퀘스트내용: " + cafeIntroRequestForm);
 
-        return cafeIntroduceService.modifyCafe(cafeId,thumbnail, fileList, cafeIntroRequestForm);
+        return cafeIntroduceService.AWSmodifyCafe(cafeId, thumbnailFileNameList, multipleFileNameList, cafeIntroRequestForm);
     }
+
+
+
     @SecurityAnnotations.SecurityCheck(SecurityAnnotations.UserType.CAFE)
     @DeleteMapping("/delete/{cafeId}")
     public ResponseEntity<Void> deleteCafe(@PathVariable Long cafeId) {
