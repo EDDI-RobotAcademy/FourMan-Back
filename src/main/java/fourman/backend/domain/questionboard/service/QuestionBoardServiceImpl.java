@@ -141,6 +141,7 @@ public class QuestionBoardServiceImpl implements QuestionBoardService {
         return questionBoard;
     }
 
+    @Transactional
     @Override
     public void delete(Long boardId) {
 //        QuestionBoard, Comment 양방향 매핑 해서 추가 작업 필요 없이 바로 삭제되게끔 처리 (cascade.REMOVE)
@@ -191,10 +192,10 @@ public class QuestionBoardServiceImpl implements QuestionBoardService {
 
         // 부모 게시물이 최상위 게시물인 경우, 자식 게시물의 depth 값을 1로 설정
         if (parentBoard.getDepth() == 0) {
-            questionBoard.setDepth(1);
-        } else {
-            // 부모 게시물이 이미 자식 게시물인 경우, 부모 게시물의 depth 값을 가져와 +1 한 뒤 자식 게시물의 depth 값을 설정
             questionBoard.setDepth(parentBoard.getDepth() + 1);
+        } else if(parentBoard.getDepth() >= 1){
+            // 부모 게시물이 이미 자식 게시물인 경우, 부모 게시물의 depth 값을 가져와 +1 한 뒤 자식 게시물의 depth 값을 설정
+            questionBoard.setDepth(questionBoard.getDepth() + 1);
         }
 
         //부모 게시글의 replyCnt 증가
