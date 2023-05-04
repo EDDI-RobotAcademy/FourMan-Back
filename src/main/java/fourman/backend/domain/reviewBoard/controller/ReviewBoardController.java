@@ -22,17 +22,29 @@ public class ReviewBoardController {
 
     final private ReviewBoardService reviewBoardService;
 
+//    AWS s3 사용을 위한 주석 처리
+//    @SecurityAnnotations.SecurityCheck(SecurityAnnotations.UserType.AUTHENTICATED)
+//    @PostMapping(value = "/register",
+//            consumes = { MediaType.MULTIPART_FORM_DATA_VALUE, MediaType.APPLICATION_JSON_VALUE })
+//    public void reviewBoardRegister(
+//            // formData 형태로 받아온 상품 이미지파일 리스트와 상품 정보를 @RequestPart로 각각 받아옴
+//            @RequestPart(value = "fileList", required = false) List<MultipartFile> fileList,
+//            @RequestPart(value = "reviewBoardInfo") ReviewBoardRequestForm reviewBoardRequest) {
+//        log.info("reviewBoardRegister()");
+//
+//        // 받아온 상품 이미지파일 리스트와 상품 정보를 productService의 register 메서드의 매개변수로 넘겨줌
+//        reviewBoardService.register(fileList, reviewBoardRequest);
+//    }
+
     @SecurityAnnotations.SecurityCheck(SecurityAnnotations.UserType.AUTHENTICATED)
     @PostMapping(value = "/register",
             consumes = { MediaType.MULTIPART_FORM_DATA_VALUE, MediaType.APPLICATION_JSON_VALUE })
     public void reviewBoardRegister(
-            // formData 형태로 받아온 상품 이미지파일 리스트와 상품 정보를 @RequestPart로 각각 받아옴
-            @RequestPart(value = "fileList", required = false) List<MultipartFile> fileList,
+            @RequestPart(value = "ImageFileNameList", required = false) List<String> ImageFileNameList,
             @RequestPart(value = "reviewBoardInfo") ReviewBoardRequestForm reviewBoardRequest) {
         log.info("reviewBoardRegister()");
-
-        // 받아온 상품 이미지파일 리스트와 상품 정보를 productService의 register 메서드의 매개변수로 넘겨줌
-        reviewBoardService.register(fileList, reviewBoardRequest);
+        System.out.println();
+        reviewBoardService.register(ImageFileNameList, reviewBoardRequest);
     }
 
     @GetMapping("/list")
