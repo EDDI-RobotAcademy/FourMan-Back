@@ -23,4 +23,8 @@ public interface EventService {
     void deleteEvent(Long eventId);
 
     List<EventListResponse> eventListByCafeId(Long cafeId);
+
+    Long AWSregisterEvent(List<String> thumbnailFileNameList, EventRequestForm eventRequestForm);
+
+    Long AWSmodifyEvent(Long eventId, List<String> thumbnailFileNameList, EventRequestForm eventRequestForm);
 }
