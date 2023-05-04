@@ -524,37 +524,48 @@ public class MyPageServiceImpl implements MyPageService {
         return pointDetailsResponseList;
     }
 
-    @Override
-    public void modifyProfileImage(Long memberId, MultipartFile imageFile) {
+//    AWS s3 사용을 위한 주석
+//    @Override
+//    public void modifyProfileImage(Long memberId, MultipartFile imageFile) {
+//        Optional<Member> maybeMember  = memberRepository.findById(memberId);
+//        Member member = maybeMember.get();
+//        Optional<MemberProfile> maybeMemberProfile = memberProfileRepository.findById(member.getMemberProfile().getId());
+//        MemberProfile memberProfile = maybeMemberProfile.get();
+//        final String fixedStringPath = "../FourMan-Front/src/assets/myPage/";
+//
+//        Path uploadPath = Paths.get(fixedStringPath);
+//        if (!Files.exists(uploadPath)) {
+//            try {
+//                Files.createDirectories(uploadPath);
+//            } catch (IOException e) {
+//                throw new RuntimeException("업로드 경로 폴더를 만들 수 없습니다.");
+//            }
+//        }
+//
+//
+//        String originalFilename = imageFile.getOriginalFilename();
+//        String fileExtension = originalFilename.substring(originalFilename.lastIndexOf("."));
+//        String uniqueFilename = UUID.randomUUID().toString() + fileExtension;
+//
+//        Path targetLocation = uploadPath.resolve(uniqueFilename);
+//        try {
+//            Files.copy(imageFile.getInputStream(), targetLocation, StandardCopyOption.REPLACE_EXISTING);
+//        } catch (IOException e) {
+//            throw new RuntimeException("이미지 파일을 저장할 수 없습니다.");
+//        }
+//
+//
+//        memberProfile.setProfileImage(uniqueFilename);
+//        memberProfileRepository.save(memberProfile);
+//    }
+
+    public void modifyProfileImage(Long memberId, String imageFileName) {
         Optional<Member> maybeMember  = memberRepository.findById(memberId);
         Member member = maybeMember.get();
         Optional<MemberProfile> maybeMemberProfile = memberProfileRepository.findById(member.getMemberProfile().getId());
         MemberProfile memberProfile = maybeMemberProfile.get();
-        final String fixedStringPath = "../FourMan-Front/src/assets/myPage/";
 
-        Path uploadPath = Paths.get(fixedStringPath);
-        if (!Files.exists(uploadPath)) {
-            try {
-                Files.createDirectories(uploadPath);
-            } catch (IOException e) {
-                throw new RuntimeException("업로드 경로 폴더를 만들 수 없습니다.");
-            }
-        }
-
-
-        String originalFilename = imageFile.getOriginalFilename();
-        String fileExtension = originalFilename.substring(originalFilename.lastIndexOf("."));
-        String uniqueFilename = UUID.randomUUID().toString() + fileExtension;
-
-        Path targetLocation = uploadPath.resolve(uniqueFilename);
-        try {
-            Files.copy(imageFile.getInputStream(), targetLocation, StandardCopyOption.REPLACE_EXISTING);
-        } catch (IOException e) {
-            throw new RuntimeException("이미지 파일을 저장할 수 없습니다.");
-        }
-
-
-        memberProfile.setProfileImage(uniqueFilename);
+        memberProfile.setProfileImage(imageFileName);
         memberProfileRepository.save(memberProfile);
     }
     

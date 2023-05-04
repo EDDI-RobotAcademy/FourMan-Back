@@ -10,7 +10,11 @@ import java.util.List;
 
 public interface ReviewBoardService {
 
-    void register(List<MultipartFile> fileList,
+//    AWS s3 사용을 위한 주석 처리
+//    void register(List<MultipartFile> fileList,
+//                  ReviewBoardRequestForm reviewBoardRequest);
+
+    void register(List<String> ImageFileNameList,
                   ReviewBoardRequestForm reviewBoardRequest);
 
     List<ReviewBoardResponse> list();

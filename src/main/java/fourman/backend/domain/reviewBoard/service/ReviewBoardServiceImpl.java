@@ -44,15 +44,100 @@ public class ReviewBoardServiceImpl implements ReviewBoardService {
     final private CafeRepository cafeRepository;
     final private CafeCodeRepository cafeCodeRepository;
 
+//    AWS s3 사용을 위한 주석 처리
+//    @Transactional
+//    @Override
+//    public void register(List<MultipartFile> fileList, ReviewBoardRequestForm reviewBoardRequest) {
+//        log.info("글자 출력: " + reviewBoardRequest);
+//
+//        List<ReviewBoardImageResource> reviewBoardImageResourceList = new ArrayList<>();
+//
+//        // 현재 경로를 기준으로 프론트 엔드의 uploadImgs로 상대경로 값을 문자열로 저장함 (파일을 저장할 경로)
+//        final String fixedStringPath = "../FourMan-Front/src/assets/reviewImage/";
+//
+//        ReviewBoard reviewBoard = new ReviewBoard();
+//
+//        // 카페 이름으로 카페 코드를 받아와 해당 카페 객체 저장
+//        Optional<CafeCode> maybeCafeCode = cafeCodeRepository.findCafeIdByCafeName(reviewBoardRequest.getCafeName());
+//
+//        if(maybeCafeCode.isEmpty()) {
+//
+//        }
+//
+//        CafeCode cafeCode = maybeCafeCode.get();
+//        Optional<Cafe> maybeCafe = cafeRepository.findByCafeCode(cafeCode);
+//
+//        if(maybeCafe.isEmpty()) {
+//
+//        }
+//
+//        Cafe cafe = maybeCafe.get();
+//
+//        // 받아온 상품정보 값 setting
+//        reviewBoard.setCafe(cafe);
+//        reviewBoard.setTitle(reviewBoardRequest.getTitle());
+//        reviewBoard.setContent(reviewBoardRequest.getContent());
+//        reviewBoard.setRating(reviewBoardRequest.getRating());
+//
+//        Optional<Member> maybeMember = memberRepository.findById(reviewBoardRequest.getMemberId());
+//
+//        if(maybeMember.isEmpty()) {
+//
+//        }
+//        reviewBoard.setMember(maybeMember.get());
+//
+//        String content = reviewBoard.getContent();
+//
+//        content = content.replaceAll("!\\[[^\\]]*\\]\\([^)]*\\)", ""); // <img> 태그 제거
+//
+//        // base64로 디코딩 하지 않고 단순히 <img> <p> 태그 replace 후 저장
+//        reviewBoard.setContent(content);
+//
+//        LocalDateTime now = LocalDateTime.now(ZoneId.of("Asia/Seoul"));
+//        DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyyMMddHHmmss");
+//
+//        if(fileList != null) {
+//            try {
+//                for (MultipartFile multipartFile: fileList) {
+//                    log.info("requestFileUploadWithText() - filename: " + multipartFile.getOriginalFilename());
+//
+//                    String originalFileName = multipartFile.getOriginalFilename();
+//                    String englishFileName = originalFileName.replaceAll("[ㄱ-ㅎ가-힣]", "");//한글을 제거
+//                    String thumbnailReName = 'r' + now.format(dtf) + englishFileName;
+//
+//                    // 파일 저장 위치에 파일 이름을 더해 fullPath 문자열 저장
+//                    String fullPath = fixedStringPath + thumbnailReName;
+//
+//
+//                    FileOutputStream writer = new FileOutputStream(fullPath);
+//
+//                    writer.write(multipartFile.getBytes());
+//                    writer.close();
+//
+//                    // 이미지 경로를 DB에 저장할때 경로를 제외한 이미지파일 이름만 저장하도록 함 (프론트에서 경로 지정하여 사용하기 위함)
+//                    ReviewBoardImageResource reviewBoardImageResource = new ReviewBoardImageResource(thumbnailReName);
+//                    reviewBoardImageResourceList.add(reviewBoardImageResource);
+//                    reviewBoard.setReviewBoardImageResource(reviewBoardImageResource);
+//                }
+//            } catch (FileNotFoundException e) {
+//                e.printStackTrace();
+//            } catch (IOException e) {
+//                e.printStackTrace();
+//            }
+//
+//            reviewBoardImageResourceRepository.saveAll(reviewBoardImageResourceList);
+//        }
+//
+//        reviewBoardRepository.save(reviewBoard);
+
     @Transactional
     @Override
-    public void register(List<MultipartFile> fileList, ReviewBoardRequestForm reviewBoardRequest) {
+    public void register(List<String> ImageFileNameList, ReviewBoardRequestForm reviewBoardRequest) {
         log.info("글자 출력: " + reviewBoardRequest);
 
         List<ReviewBoardImageResource> reviewBoardImageResourceList = new ArrayList<>();
 
         // 현재 경로를 기준으로 프론트 엔드의 uploadImgs로 상대경로 값을 문자열로 저장함 (파일을 저장할 경로)
-        final String fixedStringPath = "../FourMan-Front/src/assets/reviewImage/";
 
         ReviewBoard reviewBoard = new ReviewBoard();
 
@@ -95,37 +180,14 @@ public class ReviewBoardServiceImpl implements ReviewBoardService {
         LocalDateTime now = LocalDateTime.now(ZoneId.of("Asia/Seoul"));
         DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyyMMddHHmmss");
 
-        if(fileList != null) {
-            try {
-                for (MultipartFile multipartFile: fileList) {
-                    log.info("requestFileUploadWithText() - filename: " + multipartFile.getOriginalFilename());
+        for (String fileName: ImageFileNameList) {
 
-                    String originalFileName = multipartFile.getOriginalFilename();
-                    String englishFileName = originalFileName.replaceAll("[ㄱ-ㅎ가-힣]", "");//한글을 제거
-                    String thumbnailReName = 'r' + now.format(dtf) + englishFileName;
-
-                    // 파일 저장 위치에 파일 이름을 더해 fullPath 문자열 저장
-                    String fullPath = fixedStringPath + thumbnailReName;
-
-
-                    FileOutputStream writer = new FileOutputStream(fullPath);
-
-                    writer.write(multipartFile.getBytes());
-                    writer.close();
-
-                    // 이미지 경로를 DB에 저장할때 경로를 제외한 이미지파일 이름만 저장하도록 함 (프론트에서 경로 지정하여 사용하기 위함)
-                    ReviewBoardImageResource reviewBoardImageResource = new ReviewBoardImageResource(thumbnailReName);
-                    reviewBoardImageResourceList.add(reviewBoardImageResource);
-                    reviewBoard.setReviewBoardImageResource(reviewBoardImageResource);
-                }
-            } catch (FileNotFoundException e) {
-                e.printStackTrace();
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-
-            reviewBoardImageResourceRepository.saveAll(reviewBoardImageResourceList);
+            ReviewBoardImageResource reviewBoardImageResource = new ReviewBoardImageResource(fileName);
+            reviewBoardImageResourceList.add(reviewBoardImageResource);
+            reviewBoard.setReviewBoardImageResource(reviewBoardImageResource);
         }
+
+        reviewBoardImageResourceRepository.saveAll(reviewBoardImageResourceList);
 
         reviewBoardRepository.save(reviewBoard);
     }
