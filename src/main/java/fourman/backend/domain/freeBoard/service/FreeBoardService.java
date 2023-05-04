@@ -13,8 +13,11 @@ import javax.servlet.http.HttpServletResponse;
 import java.util.List;
 
 public interface FreeBoardService {
-    public FreeBoard register(List<MultipartFile> fileList,
-                              FreeBoardRequestForm freeBoardRequest);
+
+//    AWS s3 사용을 위한 주석 처리
+//    public FreeBoard register(List<MultipartFile> fileList, FreeBoardRequestForm freeBoardRequest);
+
+    public FreeBoard register(List<String> ImageFileNameList, FreeBoardRequestForm freeBoardRequest);
 
     List<FreeBoardResponse> list();
 

@@ -26,14 +26,24 @@ public class FreeBoardController {
 
     final private FreeBoardService freeBoardService;
 
+//    AWS s3 사용을 위한 주석 처리
+//    @SecurityAnnotations.SecurityCheck(SecurityAnnotations.UserType.AUTHENTICATED)
+//    @PostMapping(value = "/register",
+//            consumes = { MediaType.MULTIPART_FORM_DATA_VALUE, MediaType.APPLICATION_JSON_VALUE })
+//    public FreeBoard boardRegister (@RequestPart(value = "fileList", required = false) List<MultipartFile> fileList,
+//                                    @RequestPart(value = "freeBoardInfo") FreeBoardRequestForm freeBoardRequest) {
+//        log.info("boardRegister()");
+//
+//        return freeBoardService.register(fileList, freeBoardRequest);
+//    }
     @SecurityAnnotations.SecurityCheck(SecurityAnnotations.UserType.AUTHENTICATED)
     @PostMapping(value = "/register",
             consumes = { MediaType.MULTIPART_FORM_DATA_VALUE, MediaType.APPLICATION_JSON_VALUE })
-    public FreeBoard boardRegister (@RequestPart(value = "fileList", required = false) List<MultipartFile> fileList,
+    public FreeBoard boardRegister (@RequestPart(value = "ImageFileNameList", required = false) List<String> ImageFileNameList,
                                     @RequestPart(value = "freeBoardInfo") FreeBoardRequestForm freeBoardRequest) {
         log.info("boardRegister()");
 
-        return freeBoardService.register(fileList, freeBoardRequest);
+        return freeBoardService.register(ImageFileNameList, freeBoardRequest);
     }
 
     @GetMapping("/list")

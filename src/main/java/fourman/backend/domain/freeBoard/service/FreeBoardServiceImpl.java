@@ -47,14 +47,82 @@ public class FreeBoardServiceImpl implements FreeBoardService {
     final private FreeBoardImageResourceRepository freeBoardImageResourceRepository;
     final private RecommendataionRepository recommendationRepository;
 
+//    AWS s3 사용을 위한 주석 처리
+//    @Transactional
+//    @Override
+//    public FreeBoard register(List<MultipartFile> fileList, FreeBoardRequestForm freeBoardRequest) {
+//
+//        List<FreeBoardImageResource> freeBoardImageResourceList = new ArrayList<>();
+//
+//        // 현재 경로를 기준으로 프론트 엔드의 uploadImgs로 상대경로 값을 문자열로 저장함 (파일을 저장할 경로)
+//        final String fixedStringPath = "../FourMan-Front/src/assets/freeBoardImages/";
+//
+//        FreeBoard freeBoard = new FreeBoard();
+//        freeBoard.setTitle(freeBoardRequest.getTitle());
+//        freeBoard.setContent(freeBoardRequest.getContent());
+//
+//        Optional<Member> maybeMember = memberRepository.findById(freeBoardRequest.getMemberId());
+//
+//        if (maybeMember.isEmpty()) {
+//            return null;
+//        }
+//        freeBoard.setMember(maybeMember.get());
+//
+//        String content = freeBoard.getContent();
+//
+//        content = content.replaceAll("!\\[[^\\]]*\\]\\([^)]*\\)", ""); // <img> 태그 제거
+//
+//        // base64로 디코딩 하지 않고 단순히 <img> <p> 태그 replace 후 저장
+//        freeBoard.setContent(content);
+//
+//
+//        LocalDateTime now = LocalDateTime.now(ZoneId.of("Asia/Seoul"));
+//        DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyyMMddHHmmss");
+//
+//        if (fileList != null) {
+//            try {
+//                for (MultipartFile multipartFile : fileList) {
+//                    log.info("requestFileUploadWithText() - filename: " + multipartFile.getOriginalFilename());
+//
+//                    String thumbnailRandomName = now.format(dtf);
+//                    String thumbnailReName = 't' + thumbnailRandomName + multipartFile.getOriginalFilename();
+//
+//                    // 파일 저장 위치에 파일 이름을 더해 fullPath 문자열 저장
+//                    String fullPath = fixedStringPath + thumbnailReName;
+//
+//
+//                    FileOutputStream writer = new FileOutputStream(fullPath);
+//
+//                    writer.write(multipartFile.getBytes());
+//                    writer.close();
+//
+//                    // 이미지 경로를 DB에 저장할때 경로를 제외한 이미지파일 이름만 저장하도록 함 (프론트에서 경로 지정하여 사용하기 위함)
+//                    FreeBoardImageResource freeBoardImageResource = new FreeBoardImageResource(thumbnailReName);
+//                    freeBoardImageResourceList.add(freeBoardImageResource);
+//                    freeBoard.setFreeBoardImageResource(freeBoardImageResource);
+//                }
+//            } catch (FileNotFoundException e) {
+//                e.printStackTrace();
+//            } catch (IOException e) {
+//                e.printStackTrace();
+//            }
+//
+//            freeBoardImageResourceRepository.saveAll(freeBoardImageResourceList);
+//        }
+//
+//        freeBoard.setViewCnt(0L);
+//        freeBoard.setRecommendation(0L);
+//        freeBoard.setUnRecommendation(0L);
+//        freeBoardRepository.save(freeBoard);
+//
+//        return freeBoard;
+//    }
+
     @Transactional
     @Override
-    public FreeBoard register(List<MultipartFile> fileList, FreeBoardRequestForm freeBoardRequest) {
+    public FreeBoard register(List<String> ImageFileNameList, FreeBoardRequestForm freeBoardRequest) {
 
         List<FreeBoardImageResource> freeBoardImageResourceList = new ArrayList<>();
-
-        // 현재 경로를 기준으로 프론트 엔드의 uploadImgs로 상대경로 값을 문자열로 저장함 (파일을 저장할 경로)
-        final String fixedStringPath = "../FourMan-Front/src/assets/freeBoardImages/";
 
         FreeBoard freeBoard = new FreeBoard();
         freeBoard.setTitle(freeBoardRequest.getTitle());
@@ -74,40 +142,16 @@ public class FreeBoardServiceImpl implements FreeBoardService {
         // base64로 디코딩 하지 않고 단순히 <img> <p> 태그 replace 후 저장
         freeBoard.setContent(content);
 
-
         LocalDateTime now = LocalDateTime.now(ZoneId.of("Asia/Seoul"));
         DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyyMMddHHmmss");
 
-        if (fileList != null) {
-            try {
-                for (MultipartFile multipartFile : fileList) {
-                    log.info("requestFileUploadWithText() - filename: " + multipartFile.getOriginalFilename());
-
-                    String thumbnailRandomName = now.format(dtf);
-                    String thumbnailReName = 't' + thumbnailRandomName + multipartFile.getOriginalFilename();
-
-                    // 파일 저장 위치에 파일 이름을 더해 fullPath 문자열 저장
-                    String fullPath = fixedStringPath + thumbnailReName;
-
-
-                    FileOutputStream writer = new FileOutputStream(fullPath);
-
-                    writer.write(multipartFile.getBytes());
-                    writer.close();
-
-                    // 이미지 경로를 DB에 저장할때 경로를 제외한 이미지파일 이름만 저장하도록 함 (프론트에서 경로 지정하여 사용하기 위함)
-                    FreeBoardImageResource freeBoardImageResource = new FreeBoardImageResource(thumbnailReName);
-                    freeBoardImageResourceList.add(freeBoardImageResource);
-                    freeBoard.setFreeBoardImageResource(freeBoardImageResource);
-                }
-            } catch (FileNotFoundException e) {
-                e.printStackTrace();
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-
-            freeBoardImageResourceRepository.saveAll(freeBoardImageResourceList);
+        for (String fileName : ImageFileNameList) {
+            FreeBoardImageResource freeBoardImageResource = new FreeBoardImageResource(fileName);
+            freeBoardImageResourceList.add(freeBoardImageResource);
+            freeBoard.setFreeBoardImageResource(freeBoardImageResource);
         }
+
+        freeBoardImageResourceRepository.saveAll(freeBoardImageResourceList);
 
         freeBoard.setViewCnt(0L);
         freeBoard.setRecommendation(0L);
