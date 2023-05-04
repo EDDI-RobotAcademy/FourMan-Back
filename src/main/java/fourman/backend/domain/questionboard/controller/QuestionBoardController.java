@@ -51,9 +51,10 @@ public class QuestionBoardController {
                                              @RequestBody QuestionBoardRequestForm questionBoardRequestForm) {
         return questionBoardService.modify(boardId, questionBoardRequestForm);
     }
-    @SecurityAnnotations.SecurityCheck(SecurityAnnotations.UserType.AUTHENTICATED)
+//    @SecurityAnnotations.SecurityCheck(SecurityAnnotations.UserType.AUTHENTICATED)
     @DeleteMapping("/{boardId}")
     public void questionBoardDelete(@PathVariable("boardId") Long boardId) {
+        log.info("boardId : " + boardId);
         questionBoardService.delete(boardId);
     }
 

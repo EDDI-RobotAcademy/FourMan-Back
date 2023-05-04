@@ -227,5 +227,50 @@ public class EventServiceImpl implements EventService {
         return eventResponseList;
     }
 
+    @Override
+    public Long AWSregisterEvent(List<String> thumbnailFileNameList, EventRequestForm eventRequestForm) {
+        // 1. event 저장
+        Event event = new Event();
+        event.setEventName(eventRequestForm.getEventName());
+        event.setEventStartDate(eventRequestForm.getEventStartDate());
+        event.setEventEndDate(eventRequestForm.getEventEndDate());
+        event.setContent(eventRequestForm.getContent());
+        Optional<CafeCode> op= cafeCodeRepository.findByCodeOfCafe(eventRequestForm.getCode());
+        event.setCafe(op.get().getCafe());
+        //1. 썸네일 저장
+        if (thumbnailFileNameList != null && !thumbnailFileNameList.isEmpty()) {
+            String thumbnailFile = thumbnailFileNameList.get(0);
+
+            event.setThumbnailFileName(thumbnailFile);
+        }
+        eventRepository.save(event);
+        return event.getEventId();
+
+
+    }
+
+    @Override
+    public Long AWSmodifyEvent(Long eventId, List<String> thumbnailFileNameList, EventRequestForm eventRequestForm) {
+        Optional<Event> optionalEvent = eventRepository.findById(eventId);
+        if (!optionalEvent.isPresent()) {
+            log.info("이벤트가존재하지 않습니다.");
+            return null;
+        }
+        Event event = optionalEvent.get();
+        event.setEventName(eventRequestForm.getEventName());
+        event.setEventStartDate(eventRequestForm.getEventStartDate());
+        event.setEventEndDate(eventRequestForm.getEventEndDate());
+        event.setContent(eventRequestForm.getContent());
+        Optional<CafeCode> op= cafeCodeRepository.findByCodeOfCafe(eventRequestForm.getCode());
+        event.setCafe(op.get().getCafe());
+        //1. 썸네일 저장
+        if (thumbnailFileNameList != null && !thumbnailFileNameList.isEmpty()) {
+            String thumbnailFile = thumbnailFileNameList.get(0);
+            event.setThumbnailFileName(thumbnailFile);
+        }
+        eventRepository.save(event);
+        return event.getEventId();
+    }
+
 
 }

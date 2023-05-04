@@ -152,10 +152,14 @@ public class MyPageServiceImpl implements MyPageService {
         redisService.setKeyAndValue(userToken.toString(), member.getId());
 
         MyInfoModifyResponse myInfoModifyResponse;
-        Optional<CafeCode> op= cafeCodeRepository.findByCodeOfCafe(member.getCafeCode().getCodeOfCafe());
+
+        Optional<CafeCode> op = Optional.empty();
+        if (member != null && member.getCafeCode() != null) {
+            op = cafeCodeRepository.findByCodeOfCafe(member.getCafeCode().getCodeOfCafe());
+        }
 
         if(op.isEmpty()) {
-            myInfoModifyResponse = new MyInfoModifyResponse(userToken.toString(), member.getId(), member.getNickName(), member.getAuthority().getAuthorityName(), null, member.getCafeCode().getCodeOfCafe(), null, member.getEmail());
+            myInfoModifyResponse = new MyInfoModifyResponse(userToken.toString(), member.getId(), member.getNickName(), member.getAuthority().getAuthorityName(), null, null, null, member.getEmail());
         } else {
             myInfoModifyResponse = new MyInfoModifyResponse(userToken.toString(), member.getId(), member.getNickName(), member.getAuthority().getAuthorityName(), op.get().getId(),member.getCafeCode().getCodeOfCafe(), op.get().getCafeName(), member.getEmail());
         }
