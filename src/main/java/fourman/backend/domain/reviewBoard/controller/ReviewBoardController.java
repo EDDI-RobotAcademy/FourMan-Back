@@ -43,7 +43,7 @@ public class ReviewBoardController {
             @RequestPart(value = "ImageFileNameList", required = false) List<String> ImageFileNameList,
             @RequestPart(value = "reviewBoardInfo") ReviewBoardRequestForm reviewBoardRequest) {
         log.info("reviewBoardRegister()");
-        System.out.println();
+
         reviewBoardService.register(ImageFileNameList, reviewBoardRequest);
     }
 
