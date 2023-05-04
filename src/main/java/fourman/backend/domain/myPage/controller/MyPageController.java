@@ -103,12 +103,21 @@ public class MyPageController {
         return myPageService.memberPointDetails(memberId);
     }
 
+//    * AWS s3 사용을 위한 주석
+//    @SecurityAnnotations.SecurityCheck(SecurityAnnotations.UserType.AUTHENTICATED)
+//    @PutMapping("/side-bar/profile-image/{memberId}")
+//    public void modifyProfileImage(@PathVariable("memberId") Long memberId, @RequestPart("imageFile") MultipartFile imageFile) {
+//        log.info("modifyProfileImage()");
+//
+//        myPageService.modifyProfileImage(memberId, imageFile);
+//    }
+
     @SecurityAnnotations.SecurityCheck(SecurityAnnotations.UserType.AUTHENTICATED)
     @PutMapping("/side-bar/profile-image/{memberId}")
-    public void modifyProfileImage(@PathVariable("memberId") Long memberId, @RequestPart("imageFile") MultipartFile imageFile) {
+    public void modifyProfileImage(@PathVariable("memberId") Long memberId, @RequestPart("imageFileName") String imageFileName) {
         log.info("modifyProfileImage()");
 
-        myPageService.modifyProfileImage(memberId, imageFile);
+        myPageService.modifyProfileImage(memberId, imageFileName);
     }
     
     @SecurityAnnotations.SecurityCheck(SecurityAnnotations.UserType.MANAGER)

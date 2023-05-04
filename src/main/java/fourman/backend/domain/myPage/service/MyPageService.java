@@ -33,7 +33,10 @@ public interface MyPageService {
 
     List<PointDetailsResponse> memberPointDetails(Long memberId);
 
-    void modifyProfileImage(Long memberId, MultipartFile imageFile);
-    
+//* AWS s3 사용을 위한 주석
+//    void modifyProfileImage(Long memberId, MultipartFile imageFile);
+
+    void modifyProfileImage(Long memberId, String imageFileName);
+
     Boolean addCafeCode(AddCafeCodeRequestForm cafeCodeRequestForm);
 }
