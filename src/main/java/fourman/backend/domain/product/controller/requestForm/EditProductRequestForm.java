@@ -13,5 +13,6 @@ public class EditProductRequestForm {
     final private String productName;
     final private Integer price;
     final private String drinkType;
+    final private String editedProductImageName;
 
 }
