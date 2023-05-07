@@ -24,7 +24,7 @@ public class OrderInfo {
     @Column(nullable = false)
     private String orderNo;
     @CreationTimestamp
-    private LocalDateTime orderDate;
+    private Date orderDate;
     @Column(nullable = false)
     private int totalQuantity;
     @Column(nullable = false)
