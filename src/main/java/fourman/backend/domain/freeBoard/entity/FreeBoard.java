@@ -46,6 +46,10 @@ public class FreeBoard {
     @OneToMany(mappedBy = "freeBoard", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     private List<FreeBoardImageResource> freeBoardImageResourceList = new ArrayList<>();
 
+    @JsonIgnore
+    @OneToMany(mappedBy = "freeBoard", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    private List<Recommendation> recommendations = new ArrayList<>();
+
     @ColumnDefault("0")
     private Long viewCnt;
 
