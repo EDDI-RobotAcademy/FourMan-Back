@@ -64,7 +64,7 @@ public class QuestionBoardController {
     }
 
     @GetMapping("/myPage/{memberId}")
-    public List<QuestionBoard> myQuestionBoardList(@PathVariable("memberId") Long memberId) {
+    public List<QuestionBoardResponse> myQuestionBoardList(@PathVariable("memberId") Long memberId) {
         return questionBoardService.myQuestionBoardList(memberId);
     }
 
