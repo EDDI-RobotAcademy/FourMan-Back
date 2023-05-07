@@ -8,6 +8,7 @@ import lombok.NoArgsConstructor;
 import org.hibernate.annotations.CreationTimestamp;
 
 import javax.persistence.*;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -23,7 +24,7 @@ public class OrderInfo {
     @Column(nullable = false)
     private String orderNo;
     @CreationTimestamp
-    private Date orderDate;
+    private LocalDateTime orderDate;
     @Column(nullable = false)
     private int totalQuantity;
     @Column(nullable = false)
