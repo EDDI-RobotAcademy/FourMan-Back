@@ -170,6 +170,9 @@ public class MyPageServiceImpl implements MyPageService {
     @Transactional
     @Override
     public void withdrawal(Long memberId) {
+        // Recommendation 삭제
+        recommendataionRepository.deleteByMemberId(memberId);
+
         // 등록한 리뷰 삭제
         reviewBoardRepository.deleteByMemberId(memberId);
 
@@ -187,9 +190,6 @@ public class MyPageServiceImpl implements MyPageService {
 
         // 주문정보 삭제
         orderInfoRepository.deleteByMemberId(memberId);
-
-        // Recommendation 삭제
-        recommendataionRepository.deleteByMemberId(memberId);
 
         // 찜 카페 삭제
         favoriteRepository.deleteByMemberId(memberId);
