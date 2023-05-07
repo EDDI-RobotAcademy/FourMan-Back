@@ -182,7 +182,7 @@ public class OrderServiceImpl implements OrderService {
             Optional<Cafe> maybeCafe = cafeRepository.findById(orderInfo.getCafe().getCafeId());
             Cafe cafe = maybeCafe.get();
 
-            Optional<CafeCode> maybeCafeCode = cafeCodeRepository.findById(orderInfo.getCafe().getCafeId());
+            Optional<CafeCode> maybeCafeCode = cafeCodeRepository.findById(cafe.getCafeCode().getId());
             CafeCode cafeCode = maybeCafeCode.get();
 
             if(orderInfo.getOrderReservation() == null) { // 포장 주문
