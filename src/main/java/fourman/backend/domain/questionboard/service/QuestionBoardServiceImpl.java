@@ -160,9 +160,17 @@ public class QuestionBoardServiceImpl implements QuestionBoardService {
 
     }
 
+    @Transactional
     @Override
-    public List<QuestionBoard> myQuestionBoardList(Long memberId) {
-        return questionBoardRepository.findMyQuestionBoardByMemberId(memberId);
+    public List<QuestionBoardResponse> myQuestionBoardList(Long memberId) {
+        List<QuestionBoard> questionBoardList = questionBoardRepository.findMyQuestionBoardByMemberId(memberId);
+        List<QuestionBoardResponse> questionBoardResponseList = new ArrayList<>();
+
+        for (QuestionBoard questionBoard : questionBoardList) {
+            QuestionBoardResponse questionBoardResponse = convertToQuestionBoardResponse(questionBoard);
+            questionBoardResponseList.add(questionBoardResponse);
+        }
+        return questionBoardResponseList;
     }
 
     @Override

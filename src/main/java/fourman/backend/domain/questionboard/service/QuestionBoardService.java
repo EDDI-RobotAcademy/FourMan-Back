@@ -22,7 +22,7 @@ public interface QuestionBoardService {
 
     List<QuestionBoard> searchBoardList(String searchText);
 
-    List<QuestionBoard> myQuestionBoardList(Long memberId);
+    List<QuestionBoardResponse> myQuestionBoardList(Long memberId);
 
     QuestionBoard replyRegister(QuestionBoardRequestForm questionBoardRequestForm);
 
