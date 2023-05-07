@@ -279,8 +279,7 @@ public class OrderServiceImpl implements OrderService {
             String orderDate = simpleDateFormat.format(orderInfo.getOrderDate());
             String canceledAt;
 
-            Optional<CafeCode> maybeCafeCode = cafeCodeRepository.findById(orderInfo.getCafe().getCafeId());
-
+            Optional<CafeCode> maybeCafeCode = cafeCodeRepository.findById(cafe.getCafeCode().getId());
             CafeCode cafeCode = maybeCafeCode.get();
 
             if(orderInfo.getCanceledAt() == null) {
