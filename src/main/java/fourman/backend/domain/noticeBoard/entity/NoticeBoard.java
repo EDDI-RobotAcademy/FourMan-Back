@@ -1,5 +1,6 @@
 package fourman.backend.domain.noticeBoard.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import fourman.backend.domain.member.entity.Member;
 import lombok.Data;
 import org.hibernate.annotations.ColumnDefault;
@@ -37,6 +38,7 @@ public class NoticeBoard {
     @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     private Date updDate;
 
+    @JsonIgnore
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "member_id")
     private Member member;
